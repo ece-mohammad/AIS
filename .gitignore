@@ -1,0 +1,8 @@
+# db
+*.sqlite3
+
+# compile python code 
+__pycache__/
+*.pyc
+
+
