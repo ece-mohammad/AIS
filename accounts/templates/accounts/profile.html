@@ -1,0 +1,54 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}{{ user.username }}'s Profile{% endblock title %}
+
+{% block body %}
+
+<h1>Account Details</h1>
+
+<div>
+
+    <table>
+        
+        <tr>
+            <td>
+                <strong>Username:</strong>
+            </td>
+            <td>
+                {{ user.username }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>First Name:</strong>
+            </td>
+            <td>
+                {{ user.first_name }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>Last Name:</strong>
+            </td>
+            <td>
+                {{ user.last_name }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>Username:</strong>
+            </td>
+            <td>
+                {{ user.username }}
+            </td>
+        </tr>
+    </table>
+
+    
+
+</div>
+
+{% endblock body %}

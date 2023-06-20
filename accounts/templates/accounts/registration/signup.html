@@ -1,0 +1,33 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}Sign Up{% endblock title %}
+
+{% block body %}
+
+<h1>Sign Up</h1>
+
+<hr>
+
+<form action="{% url 'accounts:signup' %}" method="POST">
+
+    {% csrf_token %}
+
+    {% for field in form  %}
+        <div class="FieldWrapper">
+            {{ field.error }}
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
+        </div>
+        <br>
+    {% endfor %}
+
+    <hr>
+    
+    <button type="submit">Sign Up</button>
+
+</form>
+
+{% endblock body %}

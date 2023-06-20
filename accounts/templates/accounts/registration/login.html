@@ -1,0 +1,23 @@
+{% extends 'base/base_page.html' %}
+
+{% comment %} accounts/login.html {% endcomment %}
+
+{% block title %}Login{% endblock title %}
+
+{% block body %}
+
+<h1>Login</h1>
+
+<form action="{% url 'accounts:login' %}" method="post">
+
+    {% csrf_token %}
+
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <button type="submit" value="Login">Login</button>
+
+</form>
+
+{% endblock body %}
