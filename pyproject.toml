@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "sia"
+version = "0.1.0"
+description = ""
+authors = ["Mohammad Mohsen <kuro.ece@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.2.2"
+django-rest-framework = "^0.1.0"
+paho-mqtt = "^1.6.1"
+django-debug-toolbar = "^4.1.0"
+
+[tool.pytest.ini_options]
+addopts = "-n 8 -v"
+console_output_style = "count"
+required_plugins = "pytest-django pytest-xdist pytest-cov"
+DJANGO_SETTINGS_MODULE = "sia.settings"
+python_files = [
+    "accounts/tests/test_*.py",
+    "devices/tests/test_*.py",
+    "dashboard/tests/test_*.py",
+    "mqtt/tests/test_*.py",
+]
+
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.14.0"
+pytest = "^7.3.2"
+pytest-django = "^4.5.2"
+pytest-xdist = "^3.3.1"
+pytest-cov = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

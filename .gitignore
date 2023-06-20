@@ -17,3 +17,4 @@ cleanup.sh
 coverage.lcov
 .coverage
 out.html
+poetry.lock
