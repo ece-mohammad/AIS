@@ -5,6 +5,15 @@
 __pycache__/
 *.pyc
 
-cleanup.sh
-.venv/
 *.code-workspace
+
+.venv/
+.pytest_cache/
+ipython/
+htmlcov/
+sent_emails/
+.vscode/settings.json
+cleanup.sh
+coverage.lcov
+.coverage
+out.html
