@@ -63,6 +63,7 @@ class UserLogoutView(LogoutView):
     template_name = "accounts/registration/logout.html"
     next_page = reverse_lazy("homepage")
 
+
 # -----------------------------------------------------------------------------
 # User profile view
 # -----------------------------------------------------------------------------
@@ -92,6 +93,7 @@ class UserPasswordResetView(AnonymousUserMixin, PasswordResetView):
     redirect_url = reverse_lazy("homepage")
     email_template_name = "accounts/registration/password_reset_email.html"
     subject_template_name = "accounts/registration/password_reset_subject.txt"
+
 
 class UserPasswordResetDoneView(AnonymousUserMixin, PasswordResetDoneView):
     """User password reset done view"""

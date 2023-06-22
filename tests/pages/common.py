@@ -70,3 +70,30 @@ LogOut: Final[Page] = Page(
     url=reverse_lazy("accounts:logout"),
 )
 
+PasswordReset = Page(
+    title="Password Reset",
+    template_name="accounts/registration/password_reset_form.html",
+    view_name="accounts:password_reset",
+    url=reverse_lazy("accounts:password_reset"),
+)
+
+PasswordResetDone = Page(
+    title="Password Reset Done",
+    template_name="accounts/registration/password_reset_done.html",
+    view_name="accounts:password_reset_done",
+    url=reverse_lazy("accounts:password_reset_done"),
+)
+
+PasswordResetConfirm = Page(
+    title="Password Reset Confirm",
+    template_name="accounts/registration/password_reset_confirm.html",
+    view_name="accounts:password_reset_confirm",
+    url=reverse_lazy("accounts:password_reset_confirm"),
+)
+
+PasswordResetComplete = Page(
+    title="Password Reset Complete",
+    template_name="accounts/registration/password_reset_complete.html",
+    view_name="accounts:password_reset_complete",
+    url=reverse_lazy("accounts:password_reset_complete"),
+)

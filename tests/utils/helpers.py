@@ -9,9 +9,9 @@ Functions:
     - is_same_url(page: Page, response: HttpResponse) -> bool
     - is_redirection_target(page: Page, response: HttpResponse) -> bool
     - page_in_response(page: Page, response: HttpResponse) -> Tuple[bool, Dict[str, bool]]
-    - login(client: Client, credentials: Dict[str, str]) -> bool
-    - logout(client: Client) -> HttpResponse
-    - signup(client, user_data: Dict[str, str], follow=False) -> HttpResponse
+    - client_login(client: Client, credentials: Dict[str, str]) -> bool
+    - client_logout(client: Client) -> HttpResponse
+    - member_signup(client, user_data: Dict[str, str], follow=False) -> HttpResponse
     - response_user_logged_in(response: HttpResponse) -> bool
     - create_member(username: str, password: str, first_name: str = None, last_name: str|None = None, email: str|None = None):
     
@@ -155,7 +155,7 @@ def client_logout(client: Client, follow=False) -> HttpResponse:
     return client.post(reverse_lazy("accounts:logout"), follow=follow)
 
 
-def client_signup(client: Client, user_data: Dict[str, str], follow=False) -> HttpResponse:
+def member_signup(client: Client, user_data: Dict[str, str], follow=False) -> HttpResponse:
     """ 
     Signs up a new user with given user_data, and returns the response from the signup view. 
     

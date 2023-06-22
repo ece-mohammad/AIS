@@ -6,7 +6,7 @@ from django.test.client import Client
 
 from accounts.models import Member
 from tests.pages.common import HomePage, LogIn, SignUp
-from tests.utils.helpers import (client_login, client_logout, client_signup,
+from tests.utils.helpers import (client_login, client_logout, member_signup,
                                     is_redirection_target, page_in_response,
                                     response_user_logged_in, create_member)
 
@@ -79,7 +79,7 @@ class TestSignUp(TestCase):
     def test_signup(self):
         """Test that a new user can sign up, and is added to member database"""
         members_before_signup = Member.objects.count()
-        response = client_signup(self.client, user_data=NEW_USER_SIGNUP_DATA, follow=True)
+        response = member_signup(self.client, user_data=NEW_USER_SIGNUP_DATA, follow=True)
         last_member = Member.objects.last()
         
         self.assertEqual(200, response.status_code)
@@ -98,7 +98,7 @@ class TestSignUp(TestCase):
         response = self.client.get(SignUp.url)
         self.assertFalse(response_user_logged_in(response))
         
-        client_signup(self.client, user_data=NEW_USER_SIGNUP_DATA, follow=True)
+        member_signup(self.client, user_data=NEW_USER_SIGNUP_DATA, follow=True)
         response = client_login(self.client, NEW_USER_LOGIN_CREDENTIALS)
         
         self.assertRedirects(response, HomePage.url, status_code=302, target_status_code=200, fetch_redirect_response=True)
