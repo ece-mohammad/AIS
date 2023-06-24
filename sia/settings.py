@@ -156,3 +156,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # debug toolbar
 PASSWORD_RESET_TIMEOUT_HOURS = 1
+
+# login redirect url
+LOGIN_REDIRECT_URL = "/"

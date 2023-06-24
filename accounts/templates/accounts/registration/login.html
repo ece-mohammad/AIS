@@ -13,9 +13,10 @@
     {% csrf_token %}
 
     <table>
-        {{ form.as_table }}
+        {{ form.as_table }}    
     </table>
 
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
     <button type="submit" value="Login">Login</button>
 
 </form>

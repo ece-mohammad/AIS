@@ -106,3 +106,14 @@ class TestLogin(TestCase):
         
         self.assertRedirects(response, HomePage.url, status_code=302, target_status_code=200, fetch_redirect_response=True)
         self.assertTrue(is_redirection_target(HomePage, response))
+
+    def test_login_redirects_to_next_page(self):
+        next_page = "/accounts/profile/testuser/"
+        response = self.client.post(
+            f"{LogIn.url}?next={next_page}",
+            TEST_USER_CREDENTIALS,
+            follow=True,
+        )
+        
+        self.assertRedirects(response, next_page, status_code=302, target_status_code=200, fetch_redirect_response=True)
+

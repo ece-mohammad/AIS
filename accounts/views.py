@@ -8,11 +8,9 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                         PasswordResetConfirmView,
                                         PasswordResetDoneView,
                                         PasswordResetView)
-from django.db import models
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.http.response import HttpResponse
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import CreateView, DetailView
 
@@ -55,7 +53,7 @@ class UserLoginView(LoginView):
     """User login view"""
     template_name = "accounts/registration/login.html"
     redirect_authenticated_user = True
-    next_page = reverse_lazy("homepage")
+    success_url = reverse_lazy("homepage")
 
 
 class UserLogoutView(LogoutView):
