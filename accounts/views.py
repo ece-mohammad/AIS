@@ -14,8 +14,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView
 
-from .forms import (MemberEditForm, MemberPasswordChangeForm,
-                    MemberPasswordResetForm, MemberSignUpForm)
+from .forms import MemberPasswordChangeForm, MemberSignUpForm
 from .models import Member
 
 # Create your views here.
@@ -113,17 +112,16 @@ class UserPasswordResetCompleteView(AnonymousUserMixin, PasswordResetCompleteVie
 # -----------------------------------------------------------------------------
 # User password change views
 # -----------------------------------------------------------------------------
-class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+class UserPasswordChangeView(PasswordChangeView):
     """User password change view"""
-    template_name = "accounts/registration/password_change.html"
+    form_class = MemberPasswordChangeForm
+    template_name = "accounts/registration/password_change_form.html"
     login_url = reverse_lazy("accounts:login")
-    redirect_url = reverse_lazy("homepage")
     success_url = reverse_lazy("accounts:password_change_done")
 
 
-class UserPasswordChangeDoneView(LoginRequiredMixin, PasswordChangeDoneView):
+class UserPasswordChangeDoneView(PasswordChangeDoneView):
     """User password change done view"""
     template_name = "accounts/registration/password_change_done.html"
-    redirect_url = reverse_lazy("homepage")
     login_url = reverse_lazy("accounts:login")
 

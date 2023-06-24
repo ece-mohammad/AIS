@@ -97,3 +97,17 @@ PasswordResetComplete = Page(
     view_name="accounts:password_reset_complete",
     url=reverse_lazy("accounts:password_reset_complete"),
 )
+
+PasswordChange = Page(
+    title="Password Change",
+    template_name="accounts/registration/password_change_form.html",
+    view_name="accounts:password_change",
+    url=reverse_lazy("accounts:password_change"),
+)
+
+PasswordChangeDone = Page(
+    title="Password Changed",
+    template_name="accounts/registration/password_change_done.html",
+    view_name="accounts:password_change_done",
+    url=reverse_lazy("accounts:password_change_done"),
+)

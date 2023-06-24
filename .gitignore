@@ -18,3 +18,4 @@ coverage.lcov
 .coverage
 out.html
 poetry.lock
+*.log

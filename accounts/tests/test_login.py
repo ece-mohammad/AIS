@@ -3,12 +3,13 @@ Test user login view
 
 """
 from typing import *
+from urllib.parse import urljoin, urlunparse, urlparse
 
 from django.test import TestCase
 from django.test.client import Client
 
 from accounts.models import Member
-from tests.pages.common import HomePage, LogIn
+from tests.pages.common import HomePage, LogIn, PasswordChange
 from tests.utils.helpers import (client_login, is_redirection_target,
                                     page_in_response, response_user_logged_in)
 
