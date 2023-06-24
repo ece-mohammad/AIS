@@ -22,7 +22,7 @@ class MemberEditForm(UserChangeForm):
     """Member edit form"""
     class Meta(UserChangeForm.Meta):
         model = Member 
-        # fields = ("first_name", "last_name", "email") + UserChangeForm.Meta.fields
+        # fields = ("first_name", "last_name", "email")
 
 
 # -----------------------------------------------------------------------------

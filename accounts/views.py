@@ -36,7 +36,7 @@ class AnonymousUserMixin(AccessMixin):
 # -----------------------------------------------------------------------------
 # User Sign up view
 # -----------------------------------------------------------------------------
-class UserSignUpView(AnonymousUserMixin, CreateView):
+class MemberSignUpView(AnonymousUserMixin, CreateView):
     """User signup view"""
     model = Member
     form_class = MemberSignUpForm
@@ -48,14 +48,14 @@ class UserSignUpView(AnonymousUserMixin, CreateView):
 # -----------------------------------------------------------------------------
 # User login/logout views
 # -----------------------------------------------------------------------------
-class UserLoginView(LoginView):
+class MemberLoginView(LoginView):
     """User login view"""
     template_name = "accounts/registration/login.html"
     redirect_authenticated_user = True
     success_url = reverse_lazy("homepage")
 
 
-class UserLogoutView(LogoutView):
+class MemberLogoutView(LogoutView):
     """User logout view"""
     template_name = "accounts/registration/logout.html"
     next_page = reverse_lazy("homepage")
@@ -64,7 +64,7 @@ class UserLogoutView(LogoutView):
 # -----------------------------------------------------------------------------
 # User profile view
 # -----------------------------------------------------------------------------
-class UserProfileView(LoginRequiredMixin, DetailView):
+class MemberProfileView(LoginRequiredMixin, DetailView):
     """User profile view"""
     model = Member
     template_name = "accounts/profile.html"
@@ -74,7 +74,7 @@ class UserProfileView(LoginRequiredMixin, DetailView):
     context_object_name = "user"
 
 
-class UserOwnProfileView(LoginRequiredMixin, View):
+class MemberOwnProfileView(LoginRequiredMixin, View):
     """User's own profile"""
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         return HttpResponseRedirect(reverse_lazy("accounts:profile", kwargs={"user_name": request.user.username}))
@@ -83,7 +83,7 @@ class UserOwnProfileView(LoginRequiredMixin, View):
 # -----------------------------------------------------------------------------
 # User password reset views
 # -----------------------------------------------------------------------------
-class UserPasswordResetView(AnonymousUserMixin, PasswordResetView):
+class MemberPasswordResetView(AnonymousUserMixin, PasswordResetView):
     """User password reset view"""
     template_name = "accounts/registration/password_reset_form.html"
     success_url = reverse_lazy("accounts:password_reset_done")
@@ -92,18 +92,18 @@ class UserPasswordResetView(AnonymousUserMixin, PasswordResetView):
     subject_template_name = "accounts/registration/password_reset_subject.txt"
 
 
-class UserPasswordResetDoneView(AnonymousUserMixin, PasswordResetDoneView):
+class MemberPasswordResetDoneView(AnonymousUserMixin, PasswordResetDoneView):
     """User password reset done view"""
     template_name = "accounts/registration/password_reset_done.html"
 
 
-class UserPasswordResetConfirmView(AnonymousUserMixin, PasswordResetConfirmView):
+class MemberPasswordResetConfirmView(AnonymousUserMixin, PasswordResetConfirmView):
     """User password reset confirm view"""
     template_name = "accounts/registration/password_reset_confirm.html"
     success_url = reverse_lazy("accounts:password_reset_complete")
 
 
-class UserPasswordResetCompleteView(AnonymousUserMixin, PasswordResetCompleteView):
+class MemberPasswordResetCompleteView(AnonymousUserMixin, PasswordResetCompleteView):
     """User password reset complete view"""
     template_name = "accounts/registration/password_reset_complete.html"
     redirect_url = reverse_lazy("homepage")
@@ -112,7 +112,7 @@ class UserPasswordResetCompleteView(AnonymousUserMixin, PasswordResetCompleteVie
 # -----------------------------------------------------------------------------
 # User password change views
 # -----------------------------------------------------------------------------
-class UserPasswordChangeView(PasswordChangeView):
+class MemberPasswordChangeView(PasswordChangeView):
     """User password change view"""
     form_class = MemberPasswordChangeForm
     template_name = "accounts/registration/password_change_form.html"
@@ -120,7 +120,7 @@ class UserPasswordChangeView(PasswordChangeView):
     success_url = reverse_lazy("accounts:password_change_done")
 
 
-class UserPasswordChangeDoneView(PasswordChangeDoneView):
+class MemberPasswordChangeDoneView(PasswordChangeDoneView):
     """User password change done view"""
     template_name = "accounts/registration/password_change_done.html"
     login_url = reverse_lazy("accounts:login")
