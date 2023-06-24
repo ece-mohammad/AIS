@@ -2,7 +2,7 @@
 
 ## To-Do
 
-- [ ] home page
+- [ ] home page (dashboard)
 - [ ] Accounts
   - [x] user login
     - [x] logged in user can't login again
@@ -10,7 +10,13 @@
     - [x] only available for logged in users
   - [x] sign up
     - [x] only available if not logged in
-  - [ ] password reset
+  - [x] password reset
+    - [x] only available for logged in users
+  - [x] password change
+    - [x] only available for logged in users
+  - [ ] edit account
+    - [ ] only available for logged in users
+  - [ ] delete account
     - [ ] only available for logged in users
 
 - [ ] Device Groups
