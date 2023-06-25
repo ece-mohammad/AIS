@@ -1,4 +1,5 @@
 from typing import *
+from typing import Any, Dict
 
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import (LoginView, LogoutView,
@@ -15,7 +16,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
 
-from .forms import (MemberDeactivateForm, MemberPasswordChangeForm,
+from .forms import (MemberConfirmActionForm, MemberPasswordChangeForm,
                     MemberSignUpForm)
 from .models import Member
 
@@ -62,7 +63,7 @@ class MemberSignUpView(AnonymousUserMixin, CreateView):
 class MemberDeactivateView(LoginRequiredMixin, OwnerMixin, PasswordContextMixin, UpdateView):
     """Deactivate member account"""
     model = Member
-    form_class = MemberDeactivateForm
+    form_class = MemberConfirmActionForm
     template_name = "accounts/registration/member_deactivate_form.html"
     success_url = reverse_lazy("accounts:logout")
     login_url = reverse_lazy("accounts:login")

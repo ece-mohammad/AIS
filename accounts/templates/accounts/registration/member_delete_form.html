@@ -1,0 +1,35 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}Delete Account{% endblock title %}
+
+{% block body %}
+
+<h1>Delete Account</h1>
+
+<section>
+
+    <p>
+        <strong>Warning</strong>
+    </p>
+
+    <p>
+        Deleting your account will remove all of your data from the site, including your profile, groups, and devices. This change cannot be undone!
+    </p>
+
+    <p>
+        Are you sure you want to delete your account?
+    </p>
+
+    <h3>
+        Enter your password to confirm:
+    </h3>
+
+    <form action="{% url 'accounts:account_delete' user.username %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="button" value="Delete Account">
+    </form>
+
+</section>
+
+{% endblock body %}

@@ -36,8 +36,8 @@ class MemberEditForm(UserChangeForm):
         # fields = ("first_name", "last_name", "email")
 
 
-class MemberDeactivateForm(NoSaveMixin, ModelForm):
-    """Member deactivate form"""
+class MemberConfirmActionForm(NoSaveMixin, ModelForm):
+    """Member password form to confirm an action"""
     password = CharField(
         max_length=128,
         label=_("Password"),
