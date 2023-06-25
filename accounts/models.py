@@ -10,3 +10,13 @@ class Member(User):
     class Meta(User.Meta):
         proxy = True
     
+    def get_absolute_url(self):
+        return reverse_lazy("accounts:profile", kwargs={"user_name": self.username})
+    
+    def active_members(self):
+        """Return active members"""
+        return self.objects.filter(is_active=True)
+
+    def inactive_members(self):
+        """Return inactive members"""
+        return self.objects.filter(is_active=False)

@@ -9,8 +9,8 @@ from django.test import TestCase
 from django.test.client import Client
 
 from accounts.models import Member
-from tests.pages.common import HomePage, LogIn, PasswordChange
-from tests.utils.helpers import (client_login, is_redirection_target,
+from test.pages.common import HomePage, LogIn, PasswordChange
+from test.utils.helpers import (client_login, is_redirection_target,
                                     page_in_response, response_user_logged_in)
 
 # Create your tests here.

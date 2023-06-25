@@ -1,0 +1,27 @@
+{% comment %} base/base_page.html {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    {% block styling %}{% endblock styling %}
+</head>
+
+<body>
+    <nav>
+        {% block navrbar %} {{ navrbar }} {% endblock navrbar %}
+    </nav>
+
+    <main>
+        {% block body %} {{ body }} {% endblock body %}
+    </main>
+
+    <footer>
+        {% block footer %} {{ footer }} {% endblock footer %}
+    </footer>
+</body>
+
+</html>

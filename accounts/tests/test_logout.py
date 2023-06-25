@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.test.client import Client
 from django.http import HttpResponseRedirect
 
-from tests.pages.common import HomePage, LogOut
-from tests.utils.helpers import client_login, client_logout, response_user_logged_in, create_member
+from test.pages.common import HomePage, LogOut
+from test.utils.helpers import client_login, client_logout, response_user_logged_in, create_member
 
 from typing import *
 

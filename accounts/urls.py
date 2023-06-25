@@ -31,9 +31,12 @@ urlpatterns = [
     path("my_profile/", views.MemberOwnProfileView.as_view(), name="my_profile"),
     path("profile/<slug:user_name>/", views.MemberProfileView.as_view(), name="profile"),
     
-    # # password reset
+    # password reset
     path("password_reset/", include(password_reset_urlpatterns)),
     
-    # # password change
+    # password change
     path("password_change/", include(password_change_urlpatterns)),
+    
+    # account deactivate
+    path("deactivate/<slug:user_name>/", views.MemberDeactivateView.as_view(), name="account_deactivate"),
 ]

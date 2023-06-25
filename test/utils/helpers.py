@@ -26,8 +26,8 @@ from django.urls import reverse_lazy
 from django.test.client import Client
 
 from accounts.models import Member
-from tests.pages.common import LogIn, Page, SignUp
-from tests.utils.title_parser import TitleParser
+from test.pages.common import LogIn, Page, SignUp
+from test.utils.title_parser import TitleParser
 
 
 def get_page_template(page: Page) -> Template:

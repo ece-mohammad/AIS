@@ -3,9 +3,9 @@ from typing import *
 from django.test import TestCase
 from django.test.client import Client
 
-from tests.pages.common import (HomePage, LogIn, LogOut, PasswordChange,
+from test.pages.common import (HomePage, LogIn, LogOut, PasswordChange,
                                 PasswordChangeDone)
-from tests.utils.helpers import (client_login, client_logout, create_member,
+from test.utils.helpers import (client_login, client_logout, create_member,
                                     page_title_in_response)
 
 OLD_PASSWORD: Final[str] = "old_password"

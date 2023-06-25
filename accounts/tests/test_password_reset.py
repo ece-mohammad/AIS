@@ -9,10 +9,10 @@ from django.test.client import Client
 from selenium.webdriver import firefox
 from selenium.webdriver.common.by import By
 
-from tests.pages.common import (HomePage, LogIn, PasswordReset,
+from test.pages.common import (HomePage, LogIn, PasswordReset,
                                 PasswordResetComplete, PasswordResetConfirm,
                                 PasswordResetDone)
-from tests.utils.helpers import client_login, create_member, page_in_response
+from test.utils.helpers import client_login, create_member, page_in_response
 
 GECKO_DRIVER_PATH: Final[str] = "/snap/bin/geckodriver"
 OLD_PASSWORD: Final[str] = "old_password"

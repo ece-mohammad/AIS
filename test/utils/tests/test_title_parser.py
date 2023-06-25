@@ -9,7 +9,7 @@ Test cases:
 """
 from typing import *
 
-from tests.utils.title_parser import TitleParser
+from test.utils.title_parser import TitleParser
 
 
 PAGE_WITH_TITLE: Final[str] = """<html><head><title>Test title</title></head><body></body></html>"""

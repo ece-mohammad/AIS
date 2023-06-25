@@ -1,12 +1,23 @@
 from typing import *
 
+from django.contrib.auth.forms import (BaseUserCreationForm,
+                                        PasswordChangeForm, PasswordResetForm,
+                                        UserChangeForm)
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import BaseUserCreationForm, PasswordChangeForm, PasswordResetForm, UserChangeForm
+from django.forms import CharField, ModelForm, PasswordInput
 from django.utils.translation import gettext_lazy as _
 
 from .models import Member
 
 # Create your views here.
+
+# -----------------------------------------------------------------------------
+# helper classes
+# -----------------------------------------------------------------------------
+class NoSaveMixin:
+    def save(self, commit: bool = True) -> Any:
+        commit = False
+        return super().save(commit)
 
 # -----------------------------------------------------------------------------
 # Member Sign up form
@@ -23,6 +34,34 @@ class MemberEditForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = Member 
         # fields = ("first_name", "last_name", "email")
+
+
+class MemberDeactivateForm(NoSaveMixin, ModelForm):
+    """Member deactivate form"""
+    password = CharField(
+        max_length=128,
+        label=_("Password"),
+        required=True,
+        widget=PasswordInput(attrs={"placeholder": _("Password")}),
+    )
+    
+    error_messages = {
+        "password": {
+            "required": _("Please enter your password"),
+            "wrong_password": _("The password is incorrect"),
+        }
+    }
+    
+    class Meta:
+        model = Member
+        fields = ("password",)
+    
+    def clean_password(self) -> str:
+        """Check password is correct"""
+        password = self.cleaned_data.get("password")
+        if not self.instance.check_password(password):
+            raise ValidationError(message=self.error_messages["password"]["wrong_password"], code="wrong_password")
+        return password
 
 
 # -----------------------------------------------------------------------------

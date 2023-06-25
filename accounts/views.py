@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import (LoginView, LogoutView,
                                         PasswordChangeDoneView,
                                         PasswordChangeView,
+                                        PasswordContextMixin,
                                         PasswordResetCompleteView,
                                         PasswordResetConfirmView,
                                         PasswordResetDoneView,
@@ -12,9 +13,10 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.http.response import HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 
-from .forms import MemberPasswordChangeForm, MemberSignUpForm
+from .forms import (MemberDeactivateForm, MemberPasswordChangeForm,
+                    MemberSignUpForm)
 from .models import Member
 
 # Create your views here.
@@ -33,6 +35,18 @@ class AnonymousUserMixin(AccessMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
+class OwnerMixin(AccessMixin):
+    """Verify that the current user is the owner of the object"""
+    
+    def dispatch(self, request, *args, **kwargs):
+        user_name = kwargs.get("user_name")
+        user = request.user
+        if user.username != user_name:
+            self.permission_denied_message = "You do not have permission to access this page."
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+
 # -----------------------------------------------------------------------------
 # User Sign up view
 # -----------------------------------------------------------------------------
@@ -43,6 +57,23 @@ class MemberSignUpView(AnonymousUserMixin, CreateView):
     template_name = "accounts/registration/signup.html"
     redirect_url = reverse_lazy("homepage")
     success_url = reverse_lazy("accounts:login")
+
+
+class MemberDeactivateView(LoginRequiredMixin, OwnerMixin, PasswordContextMixin, UpdateView):
+    """Deactivate member account"""
+    model = Member
+    form_class = MemberDeactivateForm
+    template_name = "accounts/registration/member_deactivate_form.html"
+    success_url = reverse_lazy("accounts:logout")
+    login_url = reverse_lazy("accounts:login")
+    title = "Deactivate Account"
+    slug_field = "username"
+    slug_url_kwarg = "user_name"
+    
+    def form_valid(self, form: Any) -> HttpResponse:
+        self.request.user.is_active = False
+        self.request.user.save()
+        return super().form_valid(form)
 
 
 # -----------------------------------------------------------------------------

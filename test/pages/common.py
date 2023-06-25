@@ -39,7 +39,8 @@ class Page:
     title: str
     template_name: str
     view_name: str
-    url: str
+    url: str = ""
+    raw_url: str = ""
 
 
 HomePage: Final[Page] = Page(
@@ -110,4 +111,11 @@ PasswordChangeDone = Page(
     template_name="accounts/registration/password_change_done.html",
     view_name="accounts:password_change_done",
     url=reverse_lazy("accounts:password_change_done"),
+)
+
+MemberDeactivate = Page(
+    title="Deactivate Account",
+    template_name="accounts/registration/member_deactivate_form.html",
+    view_name="accounts:account_deactivate",
+    raw_url="/accounts/deactivate/",
 )

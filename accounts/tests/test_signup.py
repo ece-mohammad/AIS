@@ -5,8 +5,8 @@ from django.test import TestCase
 from django.test.client import Client
 
 from accounts.models import Member
-from tests.pages.common import HomePage, LogIn, SignUp
-from tests.utils.helpers import (client_login, client_logout, member_signup,
+from test.pages.common import HomePage, LogIn, SignUp
+from test.utils.helpers import (client_login, client_logout, member_signup,
                                     is_redirection_target, page_in_response,
                                     response_user_logged_in, create_member)
 
