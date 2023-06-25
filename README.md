@@ -5,19 +5,13 @@
 - [ ] home page (dashboard)
 - [ ] Accounts
   - [x] user login
-    - [x] logged in user can't login again
   - [x] user logout
-    - [x] only available for logged in users
   - [x] sign up
-    - [x] only available if not logged in
   - [x] password reset
-    - [x] only available for logged in users
   - [x] password change
-    - [x] only available for logged in users
   - [ ] edit account
-    - [ ] only available for logged in users
+  - [x] deactivate account
   - [ ] delete account
-    - [ ] only available for logged in users
 
 - [ ] Device Groups
   - [x] device group add/create
