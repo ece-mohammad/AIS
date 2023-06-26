@@ -150,3 +150,11 @@ MemberDelete = Page(
     _kw_url="/accounts/${username}/delete/",
     kwargs=("username",),
 )
+
+MemberEdit = Page(
+    title="Edit Profile",
+    template_name="accounts/registration/member_edit.html",
+    view_name="accounts:account_edit",
+    _kw_url="/accounts/${username}/edit/",
+    kwargs=("username",),
+)

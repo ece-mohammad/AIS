@@ -19,13 +19,9 @@ password_change_urlpatterns = [
 ]
 
 account_urlpatterns = [
-    # user profile
     path("profile/", views.MemberProfileView.as_view(), name="profile"),
-    
-    # account deactivate
+    path("edit/", views.MemberEditView.as_view(), name="account_edit"),
     path("deactivate/", views.MemberDeactivateView.as_view(), name="account_deactivate"),
-    
-    # account delete
     path("delete/", views.MemberDeleteView.as_view(), name="account_delete"),
 ]
 

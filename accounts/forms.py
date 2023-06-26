@@ -31,9 +31,10 @@ class MemberSignUpForm(BaseUserCreationForm):
 
 class MemberEditForm(UserChangeForm):
     """Member edit form"""
+    password = None #?  hide password field
     class Meta(UserChangeForm.Meta):
         model = Member 
-        # fields = ("first_name", "last_name", "email")
+        fields = ("username", "first_name", "last_name", "email")
 
 
 class MemberConfirmActionForm(NoSaveMixin, ModelForm):

@@ -1,6 +1,5 @@
 from typing import *
 
-
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import (LoginView, LogoutView,
                                         PasswordChangeDoneView,
@@ -9,15 +8,14 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                         PasswordResetConfirmView,
                                         PasswordResetDoneView,
                                         PasswordResetView)
-
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.http.response import HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
-from .forms import (MemberConfirmActionForm, MemberPasswordChangeForm,
-                    MemberSignUpForm)
+from .forms import (MemberConfirmActionForm, MemberEditForm,
+                    MemberPasswordChangeForm, MemberSignUpForm)
 from .models import Member
 
 # Create your views here.
@@ -101,6 +99,16 @@ class MemberDeleteView(LoginRequiredMixin, OwnerMixin, DeleteView):
         kwargs = super().get_form_kwargs()
         kwargs["instance"] = self.get_object()
         return kwargs
+
+
+class MemberEditView(LoginRequiredMixin, OwnerMixin, UpdateView):
+    model = Member
+    form_class = MemberEditForm
+    template_name = "accounts/registration/member_edit.html"
+    login_url = reverse_lazy("accounts:login")
+    success_url = reverse_lazy("accounts:my_profile")
+    slug_field = "username"
+    slug_url_kwarg = "user_name"
 
 
 # -----------------------------------------------------------------------------
