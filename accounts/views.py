@@ -1,22 +1,20 @@
 from typing import *
-from typing import Any, Dict, Optional
-from django import http
+
 
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import (LoginView, LogoutView,
                                         PasswordChangeDoneView,
                                         PasswordChangeView,
-                                        PasswordContextMixin,
                                         PasswordResetCompleteView,
                                         PasswordResetConfirmView,
                                         PasswordResetDoneView,
                                         PasswordResetView)
-from django.db import models
+
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.http.response import HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 from .forms import (MemberConfirmActionForm, MemberPasswordChangeForm,
                     MemberSignUpForm)
@@ -51,6 +49,10 @@ class OwnerMixin(AccessMixin):
 
 
 # -----------------------------------------------------------------------------
+# ---------------------------- Registration Views -----------------------------
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 # User Sign up view
 # -----------------------------------------------------------------------------
 class MemberSignUpView(AnonymousUserMixin, CreateView):
@@ -62,21 +64,43 @@ class MemberSignUpView(AnonymousUserMixin, CreateView):
     success_url = reverse_lazy("accounts:login")
 
 
-class MemberDeactivateView(LoginRequiredMixin, OwnerMixin, PasswordContextMixin, UpdateView):
+class MemberDeactivateView(LoginRequiredMixin, OwnerMixin, UpdateView):
     """Deactivate member account"""
     model = Member
     form_class = MemberConfirmActionForm
-    template_name = "accounts/registration/member_deactivate_form.html"
+    template_name = "accounts/registration/member_deactivate_confirm.html"
     success_url = reverse_lazy("accounts:logout")
     login_url = reverse_lazy("accounts:login")
-    title = "Deactivate Account"
     slug_field = "username"
     slug_url_kwarg = "user_name"
     
     def form_valid(self, form: Any) -> HttpResponse:
+        """Override form_valid to deactivate user account, 
+        as MemberConfirmAction uses NoSaveMixin to not save the form
+        """
         self.request.user.is_active = False
         self.request.user.save()
         return super().form_valid(form)
+
+
+class MemberDeleteView(LoginRequiredMixin, OwnerMixin, DeleteView):
+    """Deactivate member account"""
+    model = Member
+    form_class = MemberConfirmActionForm
+    template_name = "accounts/registration/member_delete_confirm.html"
+    success_url = reverse_lazy("homepage")
+    login_url = reverse_lazy("accounts:login")
+    slug_field = "username"
+    slug_url_kwarg = "user_name"
+    
+    def get_form_kwargs(self):
+        """Override get_form_kwargs to pass instance to form,
+        as DeleteView uses FormMixin to manage form creation,
+        unlike ModelFromMixin which passes object instance to the form
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.get_object()
+        return kwargs
 
 
 # -----------------------------------------------------------------------------
@@ -96,6 +120,11 @@ class MemberLogoutView(LogoutView):
 
 
 # -----------------------------------------------------------------------------
+# --------------------------- Member Profile Views ----------------------------
+# -----------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------
 # User profile view
 # -----------------------------------------------------------------------------
 class MemberProfileView(LoginRequiredMixin, DetailView):
@@ -112,6 +141,11 @@ class MemberOwnProfileView(LoginRequiredMixin, View):
     """User's own profile"""
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         return HttpResponseRedirect(reverse_lazy("accounts:profile", kwargs={"user_name": request.user.username}))
+
+
+# -----------------------------------------------------------------------------
+# ------------------------- Password Management Views -------------------------
+# -----------------------------------------------------------------------------
 
 
 # -----------------------------------------------------------------------------

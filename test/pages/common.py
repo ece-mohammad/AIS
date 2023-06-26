@@ -137,8 +137,16 @@ PasswordChangeDone = Page(
 
 MemberDeactivate = Page(
     title="Deactivate Account",
-    template_name="accounts/registration/member_deactivate_form.html",
+    template_name="accounts/registration/member_deactivate_confirm.html",
     view_name="accounts:account_deactivate",
     _kw_url="/accounts/${username}/deactivate/",
+    kwargs=("username",),
+)
+
+MemberDelete = Page(
+    title="Delete Account",
+    template_name="accounts/registration/member_delete_confirm.html",
+    view_name="accounts:account_delete",
+    _kw_url="/accounts/${username}/delete/",
     kwargs=("username",),
 )

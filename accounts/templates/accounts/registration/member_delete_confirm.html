@@ -24,7 +24,7 @@
         Enter your password to confirm:
     </h3>
 
-    <form action="{% url 'accounts:account_delete' user.username %}">
+    <form action="{% url 'accounts:account_delete' user.username %}" method="POST">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="button" value="Delete Account">

@@ -18,6 +18,17 @@ password_change_urlpatterns = [
     path("done/", views.MemberPasswordChangeDoneView.as_view(), name="password_change_done"),
 ]
 
+account_urlpatterns = [
+    # user profile
+    path("profile/", views.MemberProfileView.as_view(), name="profile"),
+    
+    # account deactivate
+    path("deactivate/", views.MemberDeactivateView.as_view(), name="account_deactivate"),
+    
+    # account delete
+    path("delete/", views.MemberDeleteView.as_view(), name="account_delete"),
+]
+
 urlpatterns = [
     
     # user signup
@@ -36,9 +47,6 @@ urlpatterns = [
     # password change
     path("password_change/", include(password_change_urlpatterns)),
     
-    # user profile
-    path("<slug:user_name>/profile/", views.MemberProfileView.as_view(), name="profile"),
-    
-    # account deactivate
-    path("<slug:user_name>/deactivate/", views.MemberDeactivateView.as_view(), name="account_deactivate"),
+    # account patterns
+    path("<slug:user_name>/", include(account_urlpatterns)),
 ]
