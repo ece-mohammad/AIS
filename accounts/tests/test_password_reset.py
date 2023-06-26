@@ -46,21 +46,21 @@ class TestPasswordResetTemplates(TestCase):
         return super().setUp()
     
     def test_password_reset_template_rendering(self):
-        response = self.client.get(PasswordReset.url)
+        response = self.client.get(PasswordReset.get_url())
         is_password_reset_page = page_in_response(PasswordReset, response)
         
         self.assertTemplateUsed(response, PasswordReset.template_name)
         self.assertTrue(is_password_reset_page[0])
     
     def test_password_reset_done_template_rendering(self):
-        response = self.client.get(PasswordResetDone.url)
+        response = self.client.get(PasswordResetDone.get_url())
         is_password_reset_done_page = page_in_response(PasswordResetDone, response)
         
         self.assertTemplateUsed(response, PasswordResetDone.template_name)
         self.assertTrue(is_password_reset_done_page[0])
     
     def test_password_reset_complete_rendering(self):
-        response = self.client.get(PasswordResetComplete.url)
+        response = self.client.get(PasswordResetComplete.get_url())
         is_password_reset_complete_page = page_in_response(PasswordResetComplete, response)
         
         self.assertTemplateUsed(response, PasswordResetComplete.template_name)
@@ -73,16 +73,16 @@ class TestPasswordResetForms(TestCase):
         return super().setUp()
 
     def test_password_reset_form_email_field(self):
-        response = self.client.post(PasswordReset.url, data=dict(email=""))
+        response = self.client.post(PasswordReset.get_url(), data=dict(email=""))
         self.assertFormError(response, "form", "email", "This field is required.")
     
     def test_password_reset_form_invalid_email(self):
-        response = self.client.post(PasswordReset.url, data=dict(email="invalidemail"))
+        response = self.client.post(PasswordReset.get_url(), data=dict(email="invalidemail"))
         self.assertFormError(response, "form", "email", "Enter a valid email address.")
         
     def test_password_reset_form_valid_email(self):
-        response = self.client.post(PasswordReset.url, data=dict(email="email@mail.com"))
-        self.assertRedirects(response, PasswordResetDone.url)
+        response = self.client.post(PasswordReset.get_url(), data=dict(email="email@mail.com"))
+        self.assertRedirects(response, PasswordResetDone.get_url())
 
 
 class TestPasswordResetView(TestCase):
@@ -93,8 +93,8 @@ class TestPasswordResetView(TestCase):
         
     def test_password_reset_redirects_logged_in_user(self):
         client_login(self.client, TEST_USER_CREDENTIALS)
-        response = self.client.get(PasswordReset.url)
-        self.assertRedirects(response, HomePage.url)
+        response = self.client.get(PasswordReset.get_url())
+        self.assertRedirects(response, HomePage.get_url())
 
 
 class TestPasswordResetSequence(StaticLiveServerTestCase):
@@ -124,7 +124,7 @@ class TestPasswordResetSequence(StaticLiveServerTestCase):
                 return password_reset_url.group(0) if password_reset_url else None
     
     def test_password_reset_sequence(self):
-        self.selenium.get(f"{self.live_server_url}/{PasswordReset.url}")
+        self.selenium.get(f"{self.live_server_url}/{PasswordReset.get_url()}")
         self.assertEqual(self.selenium.title, PasswordReset.title)
         
         self.selenium.find_element(*PASSWORD_RESET_EMAIL_LOCATOR).send_keys(MEMBER_EMAIL)
@@ -142,7 +142,7 @@ class TestPasswordResetSequence(StaticLiveServerTestCase):
         self.assertEqual(self.selenium.title, PasswordResetComplete.title)
         time.sleep(5)
         
-        self.selenium.get(f"{self.live_server_url}/{LogIn.url}")
+        self.selenium.get(f"{self.live_server_url}/{LogIn.get_url()}")
         self.selenium.find_element(*LOGIN_USERNAME_LOCATOR).send_keys(TEST_USER_CREDENTIALS["username"])
         self.selenium.find_element(*LOGIN_PASSWORD_LOCATOR).send_keys(NEW_PASSWORD)
         self.selenium.find_element(*LOGIN_SUBMIT_LOCATOR).click()

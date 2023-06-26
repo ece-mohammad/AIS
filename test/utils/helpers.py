@@ -78,7 +78,7 @@ def is_same_url(page: Page, response: HttpResponse) -> bool:
     :rtype: bool
     :raises: AttributeError if response instance doesn't have url attribute
     """
-    return page.url == response.url
+    return page._url == response.url
 
 
 def is_redirection_target(page: Page, response: HttpResponse) -> bool:
@@ -94,7 +94,7 @@ def is_redirection_target(page: Page, response: HttpResponse) -> bool:
     :raises: AttributeError if response instance doesn't have redirect_chain
     attribute
     """
-    return response.redirect_chain[-1] == (page.url, 302)
+    return response.redirect_chain[-1] == (page._url, 302)
 
 
 def page_in_response(page: Page, response: HttpResponse) -> Tuple[bool, Dict[str, bool]]:
@@ -135,7 +135,7 @@ def client_login(client: Client, credentials: Dict[str, str]) -> HttpResponse:
         :rtype: HttpResponse
         """
         return client.post(
-            LogIn.url,
+            LogIn._url,
             data=credentials,
             follow=True
         )
@@ -168,8 +168,8 @@ def member_signup(client: Client, user_data: Dict[str, str], follow=False) -> Ht
     :return: The response from the signup view
     :rtype: HttpResponse
     """
-    client.get(SignUp.url)
-    return client.post(SignUp.url, data=user_data, follow=follow,)
+    client.get(SignUp._url)
+    return client.post(SignUp._url, data=user_data, follow=follow,)
 
 
 def response_user_logged_in(response: HttpResponse) -> bool:

@@ -1,5 +1,6 @@
 from typing import *
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+from django import http
 
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import (LoginView, LogoutView,
@@ -10,6 +11,7 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                         PasswordResetConfirmView,
                                         PasswordResetDoneView,
                                         PasswordResetView)
+from django.db import models
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.http.response import HttpResponse
 from django.urls import reverse_lazy

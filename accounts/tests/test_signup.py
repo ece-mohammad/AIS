@@ -55,14 +55,14 @@ class TestSignUp(TestCase):
     
     def test_signup_rendering(self):
         """Test that the sign up page renders correctly"""
-        response = self.client.get(SignUp.url)
+        response = self.client.get(SignUp.get_url())
         
         self.assertEqual(response.resolver_match.view_name, SignUp.view_name)
         self.assertTemplateUsed(response, SignUp.template_name)
     
     def test_signup_anonymous_user_allowed(self):
         """Test that an anonymous user can access the sign up page"""
-        response = self.client.get(SignUp.url)
+        response = self.client.get(SignUp.get_url())
         is_current_page = page_in_response(SignUp, response)
         self.assertTrue(is_current_page[0])
     
@@ -71,9 +71,9 @@ class TestSignUp(TestCase):
         response = client_login(self.client, credentials=TEST_USER_LOGIN_CREDENTIALS)
         self.assertTrue(response_user_logged_in(response))
 
-        response = self.client.get(SignUp.url, follow=True)
+        response = self.client.get(SignUp.get_url(), follow=True)
         
-        self.assertRedirects(response, HomePage.url, status_code=302, target_status_code=200, fetch_redirect_response=True)
+        self.assertRedirects(response, HomePage.get_url(), status_code=302, target_status_code=200, fetch_redirect_response=True)
         self.assertTrue(is_redirection_target(HomePage, response))
         
     def test_signup(self):
@@ -83,7 +83,7 @@ class TestSignUp(TestCase):
         last_member = Member.objects.last()
         
         self.assertEqual(200, response.status_code)
-        self.assertRedirects(response, LogIn.url, status_code=302, target_status_code=200, fetch_redirect_response=True)
+        self.assertRedirects(response, LogIn.get_url(), status_code=302, target_status_code=200, fetch_redirect_response=True)
         self.assertTrue(is_redirection_target(LogIn, response))
         
         self.assertEqual(members_before_signup + 1, Member.objects.count())
@@ -95,12 +95,12 @@ class TestSignUp(TestCase):
 
     def test_login_after_signup(self):
         """Test that a new user can sign up, is logged in after sign up, and can log in after signing up"""
-        response = self.client.get(SignUp.url)
+        response = self.client.get(SignUp.get_url())
         self.assertFalse(response_user_logged_in(response))
         
         member_signup(self.client, user_data=NEW_USER_SIGNUP_DATA, follow=True)
         response = client_login(self.client, NEW_USER_LOGIN_CREDENTIALS)
         
-        self.assertRedirects(response, HomePage.url, status_code=302, target_status_code=200, fetch_redirect_response=True)
+        self.assertRedirects(response, HomePage.get_url(), status_code=302, target_status_code=200, fetch_redirect_response=True)
         self.assertTrue(is_redirection_target(HomePage, response))
 

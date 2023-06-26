@@ -1,14 +1,12 @@
+from test.pages.common import HomePage, LogIn, MemberDeactivate
+from test.utils.helpers import (client_login, client_logout, create_member,
+                                page_in_response)
 from typing import *
-from urllib.parse import urljoin
 
-from django.test.client import Client
 from django.test import TestCase
-from django.core.exceptions import PermissionDenied
+from django.test.client import Client
 
-from test.pages.common import HomePage, LogOut, SignUp, LogIn, MemberDeactivate
-from test.utils.helpers import create_member, client_login, client_logout, page_in_response
 from accounts.models import Member
-
 
 FIRST_MEMBER_CREDENTIALS: Final[Dict[str, str]] = dict(
     username="first_test_user",
@@ -23,9 +21,8 @@ SECOND_MEMBER_CREDENTIALS: Final[Dict[str, str]] = dict(
 
 class MemberDeactivateTest(TestCase):
     def get_deactivate_url(self, username: str = "") -> str:
-        if not username:
-            username = FIRST_MEMBER_CREDENTIALS['username']    
-        return f"{urljoin(MemberDeactivate.raw_url, username)}/"
+        username = username if username else FIRST_MEMBER_CREDENTIALS["username"]
+        return MemberDeactivate.get_url(username=username)
     
     def setUp(self):
         self.first_member = create_member(**FIRST_MEMBER_CREDENTIALS)
@@ -81,7 +78,7 @@ class MemberDeactivateTest(TestCase):
         )
         
         self.assertEqual(200, response.status_code)
-        self.assertRedirects(response, HomePage.url)
+        self.assertRedirects(response, HomePage.get_url())
         member = Member.objects.get(username=FIRST_MEMBER_CREDENTIALS["username"])
         self.assertFalse(member.is_active)
     

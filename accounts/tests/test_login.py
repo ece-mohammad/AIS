@@ -2,16 +2,15 @@
 Test user login view
 
 """
+from test.pages.common import HomePage, LogIn, MemberProfile
+from test.utils.helpers import (client_login, is_redirection_target,
+                                page_in_response, response_user_logged_in)
 from typing import *
-from urllib.parse import urljoin, urlunparse, urlparse
 
 from django.test import TestCase
 from django.test.client import Client
 
 from accounts.models import Member
-from test.pages.common import HomePage, LogIn, PasswordChange
-from test.utils.helpers import (client_login, is_redirection_target,
-                                    page_in_response, response_user_logged_in)
 
 # Create your tests here.
 
@@ -55,7 +54,7 @@ class TestLogin(TestCase):
     
     def test_login_page_rendering(self):
         """Test that login page renders correctly"""
-        response = self.client.get(LogIn.url)
+        response = self.client.get(LogIn.get_url())
         
         self.assertTemplateUsed(response, LogIn.template_name)
         self.assertEqual(response.resolver_match.view_name, LogIn.view_name)
@@ -89,7 +88,7 @@ class TestLogin(TestCase):
     
     def test_login_anonymous_user(self):
         response = self.client.get(
-            LogIn.url,
+            LogIn.get_url(),
         )
         
         is_login_page = page_in_response(page=LogIn, response=response)
@@ -101,17 +100,17 @@ class TestLogin(TestCase):
         client_login(self.client, TEST_USER_CREDENTIALS)
         
         response = self.client.get(
-            LogIn.url,
+            LogIn.get_url(),
             follow=True
         )
         
-        self.assertRedirects(response, HomePage.url, status_code=302, target_status_code=200, fetch_redirect_response=True)
+        self.assertRedirects(response, HomePage.get_url(), status_code=302, target_status_code=200, fetch_redirect_response=True)
         self.assertTrue(is_redirection_target(HomePage, response))
 
     def test_login_redirects_to_next_page(self):
-        next_page = "/accounts/profile/testuser/"
+        next_page = MemberProfile.get_url(username=TEST_USER_CREDENTIALS["username"])
         response = self.client.post(
-            f"{LogIn.url}?next={next_page}",
+            f"{LogIn.get_url()}?next={next_page}",
             TEST_USER_CREDENTIALS,
             follow=True,
         )

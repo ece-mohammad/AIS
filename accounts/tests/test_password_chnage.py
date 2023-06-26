@@ -31,13 +31,13 @@ class TestPasswordChange(TestCase):
         return super().tearDown()
     
     def test_password_change_rendering(self):
-        response = self.client.get(PasswordChange.url)
+        response = self.client.get(PasswordChange.get_url())
         self.assertTemplateUsed(response, PasswordChange.template_name)
         self.assertTrue(page_title_in_response(PasswordChange, response))
     
     def test_password_change_form_old_password_required(self):
         response = self.client.post(
-            PasswordChange.url,
+            PasswordChange.get_url(),
             dict(
                 new_password1= NEW_PASSWORD,
                 new_password2= NEW_PASSWORD,
@@ -50,7 +50,7 @@ class TestPasswordChange(TestCase):
         
     def test_password_change_form_wrong_old_password(self):
         response = self.client.post(
-            PasswordChange.url,
+            PasswordChange.get_url(),
             dict(
                 old_password="wrong_password",
                 new_password1= NEW_PASSWORD,
@@ -64,7 +64,7 @@ class TestPasswordChange(TestCase):
         
     def test_password_change_form_new_password_mismatch(self):
         response = self.client.post(
-            PasswordChange.url,
+            PasswordChange.get_url(),
             dict(
                 old_password=OLD_PASSWORD,
                 new_password1= "wrong_password",
@@ -80,17 +80,17 @@ class TestPasswordChange(TestCase):
     
     def test_password_change_redirects_anonymous_user(self):
         client = Client()
-        response = client.get(PasswordChange.url, follow=False)
+        response = client.get(PasswordChange.get_url(), follow=False)
         self.assertEqual(response.status_code, 302)
     
     def test_password_change_sequence(self):
-        response = self.client.post(PasswordChange.url, {
+        response = self.client.post(PasswordChange.get_url(), {
                 "old_password": OLD_PASSWORD,
                 "new_password1": NEW_PASSWORD,
                 "new_password2": NEW_PASSWORD,
             }
         )
-        self.assertRedirects(response, PasswordChangeDone.url)
+        self.assertRedirects(response, PasswordChangeDone.get_url())
 
         response = client_logout(self.client)
         self.assertIsNone(self.client.session.session_key)
@@ -101,7 +101,7 @@ class TestPasswordChange(TestCase):
                 follow=False,
             )
         )
-        self.assertRedirects(response, HomePage.url)
+        self.assertRedirects(response, HomePage.get_url())
         self.assertTrue(response.context["user"].is_authenticated)
         self.assertIsNotNone(self.client.session.session_key)
 

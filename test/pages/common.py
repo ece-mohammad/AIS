@@ -16,7 +16,7 @@ Pages:
 
 from typing import *
 from dataclasses import dataclass
-
+from string import Template
 from django.urls import reverse_lazy
 
 
@@ -33,89 +33,112 @@ class Page:
     :type template_name: str
     :attr view_name: Page's view name
     :type view_name: str
-    :attr url: Page's url
-    :type url: str
+    :attr _url: Page's url (using django's reverse_lazy), default is ""
+    :type _url: str
+    :attr _kw_url: Page's url with keyword arguments (using python's string.Template), default is ""
+    :type _kw_url: str
     """
     title: str
     template_name: str
     view_name: str
-    url: str = ""
-    raw_url: str = ""
+    _url: str = ""
+    _kw_url: str = ""
+    kwargs: Tuple[str] = None
+
+    def get_url(self, **kwargs) -> str:
+        if self._kw_url == "":
+            return self._url
+        
+        url_template = Template(self._kw_url)
+        if not url_template.get_identifiers():
+            return self._url 
+        
+        url_vars = {k:kwargs[k] for k in kwargs} if kwargs else {}
+        return url_template.substitute(url_vars)
 
 
 HomePage: Final[Page] = Page(
     title="Dashboard",
     template_name="dashboard/dashboard.html",
     view_name="homepage",
-    url=reverse_lazy("homepage"),
+    _url=reverse_lazy("homepage"),
 )
 
 SignUp: Final[Page] = Page(
     title="Sign Up",
     template_name="accounts/registration/signup.html",
     view_name="accounts:signup",
-    url=reverse_lazy("accounts:signup"),
+    _url=reverse_lazy("accounts:signup"),
 )
 
 LogIn: Final[Page] = Page(
     title="Login",
     template_name="accounts/registration/login.html",
     view_name="accounts:login",
-    url=reverse_lazy("accounts:login"),
+    _url=reverse_lazy("accounts:login"),
 )
 
 LogOut: Final[Page] = Page(
     title="Logout",
     template_name=None,
     view_name="accounts:logout",
-    url=reverse_lazy("accounts:logout"),
+    _url=reverse_lazy("accounts:logout"),
+)
+
+MemberProfile: Final[Page] = Page(
+    title="Profile",
+    template_name="accounts/profile.html",
+    view_name="accounts:profile",
+    _kw_url="/accounts/${username}/profile/",
+    kwargs=("username",),
 )
 
 PasswordReset = Page(
     title="Password Reset",
     template_name="accounts/registration/password_reset_form.html",
     view_name="accounts:password_reset",
-    url=reverse_lazy("accounts:password_reset"),
+    _url=reverse_lazy("accounts:password_reset"),
 )
 
 PasswordResetDone = Page(
     title="Password Reset Done",
     template_name="accounts/registration/password_reset_done.html",
     view_name="accounts:password_reset_done",
-    url=reverse_lazy("accounts:password_reset_done"),
+    _url=reverse_lazy("accounts:password_reset_done"),
 )
 
 PasswordResetConfirm = Page(
     title="Password Reset Confirm",
     template_name="accounts/registration/password_reset_confirm.html",
     view_name="accounts:password_reset_confirm",
-    url=reverse_lazy("accounts:password_reset_confirm"),
+    _url=reverse_lazy("accounts:password_reset_confirm"),
 )
 
 PasswordResetComplete = Page(
     title="Password Reset Complete",
     template_name="accounts/registration/password_reset_complete.html",
     view_name="accounts:password_reset_complete",
-    url=reverse_lazy("accounts:password_reset_complete"),
+    _url=reverse_lazy("accounts:password_reset_complete"),
 )
 
 PasswordChange = Page(
     title="Password Change",
     template_name="accounts/registration/password_change_form.html",
     view_name="accounts:password_change",
-    url=reverse_lazy("accounts:password_change"),
+    _url=reverse_lazy("accounts:password_change"),
 )
 
 PasswordChangeDone = Page(
     title="Password Changed",
     template_name="accounts/registration/password_change_done.html",
     view_name="accounts:password_change_done",
-    url=reverse_lazy("accounts:password_change_done"),
+    _url=reverse_lazy("accounts:password_change_done"),
 )
 
 MemberDeactivate = Page(
     title="Deactivate Account",
     template_name="accounts/registration/member_deactivate_form.html",
     view_name="accounts:account_deactivate",
-    raw_url="/accounts/deactivate/",
+    _kw_url="/accounts/${username}/deactivate/",
+    kwargs=("username",),
 )
