@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.test.client import Client
-from django.http import HttpResponseRedirect
 
 from test.pages.common import HomePage, LogOut
 from test.utils.helpers import client_login, client_logout, response_user_logged_in, create_member
@@ -26,7 +25,7 @@ class TestLogout(TestCase):
         return super().tearDown()
     
     def test_logout_redirects_anonymous_user_to_home_page(self):
-        response = self.client.get(LogOut.get_url())
+        response = self.client.post(LogOut.get_url())
         self.assertRedirects(response, HomePage.get_url(), status_code=302, target_status_code=200, fetch_redirect_response=True)
     
     def test_logout_with_logged_in_user(self):

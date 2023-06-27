@@ -44,9 +44,9 @@ class TestPasswordChange(TestCase):
             )
         )
         
-        form = response.context["form"]
-        self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["old_password"], ["This field is required."])
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response.context.get("form"), "old_password", ["This field is required."])
+        self.assertContains(response, "This field is required.")
         
     def test_password_change_form_wrong_old_password(self):
         response = self.client.post(
@@ -58,9 +58,9 @@ class TestPasswordChange(TestCase):
             )
         )
         
-        form = response.context["form"]
-        self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["old_password"], ["Your old password was entered incorrectly. Please enter it again."])
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response.context.get("form"), "old_password", ["Your old password was entered incorrectly. Please enter it again."])
+        self.assertContains(response, "Your old password was entered incorrectly. Please enter it again.")
         
     def test_password_change_form_new_password_mismatch(self):
         response = self.client.post(
@@ -72,12 +72,10 @@ class TestPasswordChange(TestCase):
             )
         )
         
-        form = response.context["form"]
-        self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["new_password2"], ["The two password fields didn’t match."])
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response.context.get("form"), "new_password2", ["The two password fields didn’t match."])
+        self.assertContains(response, "The two password fields didn’t match.")
         
-        
-    
     def test_password_change_redirects_anonymous_user(self):
         client = Client()
         response = client.get(PasswordChange.get_url(), follow=False)

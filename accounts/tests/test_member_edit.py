@@ -1,4 +1,3 @@
-import email
 from typing import *
 
 from django.test.client import Client
@@ -65,22 +64,6 @@ class TestMemberEdit(TestCase):
         
         self.assertEqual(response.status_code, 403)
     
-    def test_member_edit_empty_required_username(self):
-        response = self.client.post(
-            MemberEdit.get_url(username=self.member.username),
-            data=dict(
-                username="",
-                first_name=MEMBER_NEW_FIRST_NAME,
-                last_name=MEMBER_NEW_LAST_NAME,
-                email=MEMBER_NEW_EMAIL,
-            ),
-            follow=True,
-        )        
-        form = response.context.get("form")
-        
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(form.errors["username"], ["This field is required."])
-        
     def test_member_edit_username_required(self):
         response = self.client.post(
             MemberEdit.get_url(username=self.member.username),
@@ -92,10 +75,10 @@ class TestMemberEdit(TestCase):
             ),
             follow=True,
         )        
-        form = response.context.get("form")
         
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(form.errors["username"], ["This field is required."])
+        self.assertFormError(response.context.get("form"), "username", ["This field is required."])
+        self.assertContains(response, "This field is required.")
         
     def test_member_edit_fields_not_required(self):
         response = self.client.post(
@@ -107,7 +90,7 @@ class TestMemberEdit(TestCase):
                 email="",
             ),
             follow=True,
-        )        
+        )
         
         self.assertEqual(response.status_code, 200)
         self.assertRedirects(response, MemberProfile.get_url(username=MEMBER_NEW_USERNAME))
@@ -117,7 +100,38 @@ class TestMemberEdit(TestCase):
         self.assertEqual(self.member.first_name, "")
         self.assertEqual(self.member.last_name, "")
         self.assertEqual(self.member.email, "")
+    
+    def test_member_edit_accepts_unique_case_insensitive(self):
+        response = self.client.post(
+            MemberEdit.get_url(username=self.member.username),
+            data=dict(
+                username=MEMBER_USERNAME.capitalize(),
+                first_name=MEMBER_NEW_FIRST_NAME,
+                last_name=MEMBER_NEW_LAST_NAME,
+                email=MEMBER_NEW_EMAIL,
+            ),
+            follow=True,
+        )
         
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response.context.get("form"), "username", ["A user with that username already exists."])
+        self.assertContains(response, "A user with that username already exists.")
+        
+    def test_member_edit_accepts_unchanged_username(self):
+        response = self.client.post(
+            MemberEdit.get_url(username=self.member.username),
+            data=dict(
+                username=MEMBER_USERNAME,
+                first_name=MEMBER_NEW_FIRST_NAME,
+                last_name=MEMBER_NEW_LAST_NAME,
+                email=MEMBER_NEW_EMAIL,
+            ),
+            follow=True,
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, MemberProfile.get_url(username=MEMBER_USERNAME), 302, 200, fetch_redirect_response=True)
+    
     def test_member_edit_sequence(self):
         response = self.client.post(
             MemberEdit.get_url(username=self.member.username),
@@ -138,5 +152,3 @@ class TestMemberEdit(TestCase):
         self.assertEqual(self.member.email, MEMBER_NEW_EMAIL)
         self.assertEqual(self.member.first_name, MEMBER_NEW_FIRST_NAME)
         self.assertEqual(self.member.last_name, MEMBER_NEW_LAST_NAME)
-
-

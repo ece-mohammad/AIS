@@ -72,24 +72,29 @@ class TestPasswordResetForms(TestCase):
         self.client = Client()
         return super().setUp()
 
-    def test_password_reset_form_email_field(self):
+    def test_password_reset_form_email_field_required(self):
         response = self.client.post(PasswordReset.get_url(), data=dict(email=""))
-        self.assertFormError(response, "form", "email", "This field is required.")
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response.context["form"], "email", ["This field is required."])
+        self.assertContains(response, "This field is required.")
     
     def test_password_reset_form_invalid_email(self):
-        response = self.client.post(PasswordReset.get_url(), data=dict(email="invalidemail"))
-        self.assertFormError(response, "form", "email", "Enter a valid email address.")
+        response = self.client.post(PasswordReset.get_url(), data=dict(email="invalid_email"))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response.context["form"], "email", ["Enter a valid email address."])
+        self.assertContains(response, "Enter a valid email address.")
         
     def test_password_reset_form_valid_email(self):
         response = self.client.post(PasswordReset.get_url(), data=dict(email="email@mail.com"))
         self.assertRedirects(response, PasswordResetDone.get_url())
 
-
 class TestPasswordResetView(TestCase):
     def setUp(self) -> None:
         create_member(**TEST_USER_CREDENTIALS)
         self.client = Client()
-        return super().setUp()        
+        return super().setUp()
         
     def test_password_reset_redirects_logged_in_user(self):
         client_login(self.client, TEST_USER_CREDENTIALS)
@@ -98,7 +103,7 @@ class TestPasswordResetView(TestCase):
 
 
 class TestPasswordResetSequence(StaticLiveServerTestCase):
-    
+    """Test password reset using selenium & firefox"""
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
@@ -113,8 +118,10 @@ class TestPasswordResetSequence(StaticLiveServerTestCase):
     
     @classmethod
     def get_firefox_webdriver(cls) -> firefox.webdriver.WebDriver:
+        options = firefox.options.Options()
+        # options.add_argument("--headless")
         service = firefox.service.Service(executable_path=GECKO_DRIVER_PATH)
-        return firefox.webdriver.WebDriver(service=service)
+        return firefox.webdriver.WebDriver(service=service, options=options)
     
     def get_password_reset_address(self, sender: str, to: str) -> str|None:
         """Get password reset token from email."""
@@ -124,49 +131,59 @@ class TestPasswordResetSequence(StaticLiveServerTestCase):
                 return password_reset_url.group(0) if password_reset_url else None
     
     def test_password_reset_sequence(self):
+        # open password reset page
         self.selenium.get(f"{self.live_server_url}/{PasswordReset.get_url()}")
         self.assertEqual(self.selenium.title, PasswordReset.title)
         
+        # enter email address
         self.selenium.find_element(*PASSWORD_RESET_EMAIL_LOCATOR).send_keys(MEMBER_EMAIL)
         self.selenium.find_element(*PASSWORD_RESET_SUBMIT_LOCATOR).click()
         self.assertEqual(self.selenium.title, PasswordResetDone.title)
         
+        # get password reset email
         password_reset_url = self.get_password_reset_address(sender="webmaster@localhost", to=MEMBER_EMAIL)
         self.assertIsNotNone(password_reset_url)
+        
+        # open password reset url
         self.selenium.get(f"{password_reset_url}")
         self.assertEqual(self.selenium.title, PasswordResetConfirm.title)
         
+        # enter new password
         self.selenium.find_element(*PASSWORD_RESET_CONFIRM_NEW_PASSWORD_LOCATOR).send_keys(NEW_PASSWORD)
         self.selenium.find_element(*PASSWORD_RESET_CONFIRM_NEW_PASSWORD_CONFIRM_LOCATOR).send_keys(NEW_PASSWORD)
         self.selenium.find_element(*PASSWORD_RESET_CONFIRM_SUBMIT_LOCATOR).click()
         self.assertEqual(self.selenium.title, PasswordResetComplete.title)
-        time.sleep(5)
         
+        # login using new password
         self.selenium.get(f"{self.live_server_url}/{LogIn.get_url()}")
         self.selenium.find_element(*LOGIN_USERNAME_LOCATOR).send_keys(TEST_USER_CREDENTIALS["username"])
         self.selenium.find_element(*LOGIN_PASSWORD_LOCATOR).send_keys(NEW_PASSWORD)
         self.selenium.find_element(*LOGIN_SUBMIT_LOCATOR).click()
         self.assertEqual(self.selenium.title, HomePage.title)
-        time.sleep(1)
         
-        # self.client.get(PasswordReset.url)
-        # self.client.post(PasswordReset.url, data=dict(email=MEMBER_EMAIL))
+    def test_password_reset_unique_password(self):
+        # open password reset page
+        self.selenium.get(f"{self.live_server_url}/{PasswordReset.get_url()}")
+        self.assertEqual(self.selenium.title, PasswordReset.title)
         
-        # self.assertEqual(1, len(mail.outbox))
-        # self.assertEqual(mail.outbox[0].subject, "Password reset on testserver")
+        # enter email address
+        self.selenium.find_element(*PASSWORD_RESET_EMAIL_LOCATOR).send_keys(MEMBER_EMAIL)
+        self.selenium.find_element(*PASSWORD_RESET_SUBMIT_LOCATOR).click()
+        self.assertEqual(self.selenium.title, PasswordResetDone.title)
         
-        # password_reset_address = self.get_password_reset_address(sender="webmaster@localhost", to=MEMBER_EMAIL)
-        # response = self.client.get(password_reset_address, follow=False)
+        # get password reset email
+        password_reset_url = self.get_password_reset_address(sender="webmaster@localhost", to=MEMBER_EMAIL)
+        self.assertIsNotNone(password_reset_url)
         
-        # new_password_url = response.url
+        # open password reset url
+        self.selenium.get(f"{password_reset_url}")
+        self.assertEqual(self.selenium.title, PasswordResetConfirm.title)
         
-        # response = self.client.get(new_password_url)
-        # response = self.client.post(
-        #     new_password_url,
-        #     data = dict(
-        #         new_password1=NEW_PASSWORD,
-        #         new_password2=NEW_PASSWORD,
-        #     )
-        # )
-        # print(*[t.name for t in response.templates], sep="\n")
+        # enter old password
+        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_NEW_PASSWORD_LOCATOR).send_keys(OLD_PASSWORD)
+        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_NEW_PASSWORD_CONFIRM_LOCATOR).send_keys(OLD_PASSWORD)
+        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_SUBMIT_LOCATOR).click()
+        self.assertEqual(self.selenium.title, PasswordResetConfirm.title)
+        self.assertInHTML("New password must be different from old password", self.selenium.page_source)
+
 

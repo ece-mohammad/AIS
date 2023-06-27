@@ -12,17 +12,9 @@
 
     {% csrf_token %}
 
-    {% for field in form  %}
-        <div class="FieldWrapper">
-            {{ field.error }}
-            {{ field.label_tag }}
-            {{ field }}
-            {% if field.help_text %}
-                <p class="help">{{ field.help_text|safe }}</p>
-            {% endif %}
-        </div>
-        <br>
-    {% endfor %}
+    <table>
+        {{ form.as_table }}
+    </table>
 
     <hr>
     

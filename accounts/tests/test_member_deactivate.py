@@ -50,11 +50,9 @@ class MemberDeactivateTest(TestCase):
             {"password": f"invalid_{FIRST_MEMBER_CREDENTIALS['password']}"}
         )
         
-        form = response.context["form"]
-        
         self.assertEqual(200, response.status_code)
-        self.assertFalse(form.is_valid())
-        self.assertIn("password", form.errors)
+        self.assertFormError(response.context["form"], "password", ["The password is incorrect"])
+        self.assertContains(response, "The password is incorrect")
         
     def test_member_deactivate_redirects_anonymous_user(self):
         client = Client()
@@ -76,11 +74,13 @@ class MemberDeactivateTest(TestCase):
             {"password": FIRST_MEMBER_CREDENTIALS["password"]},
             follow=True
         )
+        member = response.context.get("user")
         
         self.assertEqual(200, response.status_code)
         self.assertRedirects(response, HomePage.get_url())
-        member = Member.objects.get(username=FIRST_MEMBER_CREDENTIALS["username"])
         self.assertFalse(member.is_active)
+        self.assertFalse(member.is_authenticated)
+        self.assertTrue(member.is_anonymous)
     
     def test_member_deactivate_keeps_old_password(self):
         response = self.client.post(
@@ -88,8 +88,8 @@ class MemberDeactivateTest(TestCase):
             {"password": FIRST_MEMBER_CREDENTIALS["password"]},
             follow=True
         )
-        
         member = Member.objects.get(username=FIRST_MEMBER_CREDENTIALS["username"])
+        
         self.assertFalse(member.is_active)
         self.assertTrue(member.check_password(FIRST_MEMBER_CREDENTIALS["password"]))
 

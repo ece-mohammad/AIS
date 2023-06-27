@@ -1,5 +1,6 @@
 from typing import *
 
+from django.contrib.auth import logout
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import (LoginView, LogoutView,
                                         PasswordChangeDoneView,
@@ -15,7 +16,8 @@ from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from .forms import (MemberConfirmActionForm, MemberEditForm,
-                    MemberPasswordChangeForm, MemberSignUpForm)
+                    MemberPasswordChangeForm, MemberPasswordResetConfirmForm,
+                    MemberSignUpForm)
 from .models import Member
 
 # Create your views here.
@@ -67,7 +69,7 @@ class MemberDeactivateView(LoginRequiredMixin, OwnerMixin, UpdateView):
     model = Member
     form_class = MemberConfirmActionForm
     template_name = "accounts/registration/member_deactivate_confirm.html"
-    success_url = reverse_lazy("accounts:logout")
+    success_url = reverse_lazy("homepage")
     login_url = reverse_lazy("accounts:login")
     slug_field = "username"
     slug_url_kwarg = "user_name"
@@ -75,9 +77,18 @@ class MemberDeactivateView(LoginRequiredMixin, OwnerMixin, UpdateView):
     def form_valid(self, form: Any) -> HttpResponse:
         """Override form_valid to deactivate user account, 
         as MemberConfirmAction uses NoSaveMixin to not save the form
+        
+        Note: manually logout current user, instead of redirecting to logout page 
+        because django will deprecate using GET method for logout, and it
+        looks better that way
         """
+        # deactivate current user
         self.request.user.is_active = False
         self.request.user.save()
+        
+        # logout current user
+        logout(self.request)
+        
         return super().form_valid(form)
 
 
@@ -175,6 +186,7 @@ class MemberPasswordResetDoneView(AnonymousUserMixin, PasswordResetDoneView):
 
 class MemberPasswordResetConfirmView(AnonymousUserMixin, PasswordResetConfirmView):
     """User password reset confirm view"""
+    form_class = MemberPasswordResetConfirmForm
     template_name = "accounts/registration/password_reset_confirm.html"
     success_url = reverse_lazy("accounts:password_reset_complete")
 

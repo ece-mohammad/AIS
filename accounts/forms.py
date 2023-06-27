@@ -1,8 +1,9 @@
 from typing import *
 
-from django.contrib.auth.forms import (BaseUserCreationForm,
+from django.contrib.auth.forms import (UserCreationForm,
                                         PasswordChangeForm, PasswordResetForm,
-                                        UserChangeForm)
+                                        UserChangeForm,
+                                        SetPasswordForm)
 from django.core.exceptions import ValidationError
 from django.forms import CharField, ModelForm, PasswordInput
 from django.utils.translation import gettext_lazy as _
@@ -19,19 +20,53 @@ class NoSaveMixin:
         commit = False
         return super().save(commit)
 
+
+class UniquePasswordMixin:
+    unique_password_error_messages = {
+        "unique_password": _("New password must be different from old password")
+    }
+    
+    def clean_new_password2(self) -> str:
+        new_password2 = self.cleaned_data.get("new_password2")
+        if self.user.check_password(new_password2):
+            raise ValidationError(
+                self.unique_password_error_messages["unique_password"],
+                code="unique_password",
+            )
+        return super().clean_new_password2()
+
+
+class UniqueUsernameMixin:
+    unique_username_error_messages = {
+        "unique_username": _("A user with that username already exists."),
+    }
+    
+    def clean_username(self):
+        """Make sure the username is unique (case insensitive), only if the username field was changed"""
+        username = self.cleaned_data.get("username")
+        if self.changed_data and "username" in self.changed_data and self._meta.model.objects.filter(username__iexact=username).exists():
+            raise ValidationError(self.unique_username_error_messages["unique_username"], code="unique_username")
+        return username
+
 # -----------------------------------------------------------------------------
 # Member Sign up form
 # -----------------------------------------------------------------------------
-class MemberSignUpForm(BaseUserCreationForm):
+class MemberSignUpForm(UserCreationForm):
     """User signup form"""
-    class Meta(BaseUserCreationForm.Meta):
+
+    error_messages = {
+        "unique_username": _("A user with that username already exists."),
+    }
+    
+    class Meta(UserCreationForm.Meta):
         model = Member 
-        fields = ("first_name", "last_name", "email") + BaseUserCreationForm.Meta.fields 
+        fields = ("first_name", "last_name", "email") + UserCreationForm.Meta.fields 
 
 
-class MemberEditForm(UserChangeForm):
+class MemberEditForm(UniqueUsernameMixin, UserChangeForm):
     """Member edit form"""
-    password = None #?  hide password field
+    password = None     # hide password field
+    
     class Meta(UserChangeForm.Meta):
         model = Member 
         fields = ("username", "first_name", "last_name", "email")
@@ -73,30 +108,12 @@ class MemberPasswordResetForm(PasswordResetForm):
     pass
 
 
-class MemberPasswordResetConfirmForm(PasswordResetForm):
+class MemberPasswordResetConfirmForm(UniquePasswordMixin, SetPasswordForm):
     """Member password reset confirm form"""
     pass
 
 
-class MemberPasswordChangeForm(PasswordChangeForm):
+class MemberPasswordChangeForm(UniquePasswordMixin, PasswordChangeForm):
     """Member password change form"""
-    
-    error_messages = {
-        **PasswordChangeForm.error_messages,
-        "invalid_new_password": _("New password must be different from old password"),
-    }
-    
-    # check new password is different from old password
-    def clean_new_password2(self) -> str:
-        new_password1 = self.cleaned_data.get("new_password1")
-        old_password = self.cleaned_data.get("old_password")
-        
-        # add error to new_password1 field
-        if self.user.check_password(new_password1) or new_password1 == old_password:
-            raise ValidationError(
-                self.error_messages["invalid_new_password"],
-                code="invalid_new_password",
-            )
-        
-        return super().clean_new_password2()
+    pass
 

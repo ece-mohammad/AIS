@@ -40,11 +40,9 @@ class TestAccountDelete(TestCase):
         )
         
         self.assertEqual(response.status_code, 200)
+        self.assertFormError(response.context.get("form"), "password", ["This field is required."])
+        self.assertContains(response, "This field is required.")
         
-        form = response.context.get("form")
-        self.assertEqual(form.errors["password"], ["This field is required."])
-        
-
     def test_member_delete_form_password_invalid(self):
         response = self.client.post(
             MemberDelete.get_url(username=self.member.username),
@@ -53,9 +51,8 @@ class TestAccountDelete(TestCase):
         )
         
         self.assertEqual(response.status_code, 200)
-        
-        form = response.context.get("form")
-        self.assertEqual(form.errors["password"], ["The password is incorrect"])
+        self.assertFormError(response.context.get("form"), "password", ["The password is incorrect"])
+        self.assertContains(response, "The password is incorrect")
         
     
     def test_member_delete_redirects_anonymous_user(self):
