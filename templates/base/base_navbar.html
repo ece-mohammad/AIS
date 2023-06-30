@@ -2,16 +2,46 @@
 
 {% block navbar %}
 
-{% block homepage %} {{ homepage }} {% endblock homepage %}
+{% block homepage %} 
+<div class="navbar_link">
+  <a href="{% url 'homepage' %}">Home</a> 
+</div>
+{% endblock homepage %}
 
-{% block login %} {{ login }} {% endblock login %}
+{% if user.is_authenticated %}
 
-{% block logout %} {{ logout }} {% endblock logout %}
+  {% block profile %}
+  <div class="navbar_link">
+    <a href="{% url 'accounts:my_profile' %}">{{ user.username }}</a>
+  </div>
+  {% endblock profile %}
+  
+  {% block logout %}
+  <div class="navbar_link">
+    <a href="{% url 'accounts:logout' %}">Log Out</a>
+  </div>
+  {% endblock logout %}
 
-{% block signup %} {{ signup }} {% endblock signup %}
+{% else %}
 
-{% block profile %} {{ profile }} {% endblock profile %}
+  {% block login %}  
+  <div class="navbar_link">
+    <a href="{% url 'accounts:login' %}">Log In</a>
+  </div>
+  {% endblock login %}
 
-{% block settings %} {{ settings }} {% endblock settings %}
+  {% block signup %}
+  <div class="navbar_link">
+    <a href="{% url 'accounts:signup' %}">Sign Up</a>
+  </div>
+  {% endblock signup %}
+
+{% endif %}
+
+{% block settings %} 
+<div class="navbar_link">
+  {{ settings }} 
+</div>
+{% endblock settings %}
 
 {% endblock navbar %}

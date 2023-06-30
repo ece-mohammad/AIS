@@ -2,17 +2,16 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title %}</title>
     {% block styling %}{% endblock styling %}
-</head>
+  </head>
 
-<body>
+  <body>
     <nav>
-        {% block navrbar %} {{ navrbar }} {% endblock navrbar %}
+        {% include 'base/base_navbar.html' %}
     </nav>
 
     <main>
@@ -22,6 +21,6 @@
     <footer>
         {% block footer %} {{ footer }} {% endblock footer %}
     </footer>
-</body>
+  </body>
 
 </html>
