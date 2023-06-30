@@ -119,7 +119,7 @@ class TestPasswordResetSequence(StaticLiveServerTestCase):
     @classmethod
     def get_firefox_webdriver(cls) -> firefox.webdriver.WebDriver:
         options = firefox.options.Options()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         service = firefox.service.Service(executable_path=GECKO_DRIVER_PATH)
         return firefox.webdriver.WebDriver(service=service, options=options)
     

@@ -20,7 +20,7 @@ password_change_urlpatterns = [
 
 account_urlpatterns = [
     path("profile/", views.MemberProfileView.as_view(), name="profile"),
-    path("edit/", views.MemberEditView.as_view(), name="account_edit"),
+    path("edit/", views.MemberEditView.as_view(), name="profile_edit"),
     path("deactivate/", views.MemberDeactivateView.as_view(), name="account_deactivate"),
     path("delete/", views.MemberDeleteView.as_view(), name="account_delete"),
 ]

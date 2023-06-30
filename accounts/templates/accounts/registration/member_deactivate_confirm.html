@@ -3,38 +3,40 @@
 {% block title %}Deactivate Account{% endblock title %}
 
 {% block body %}
-
 <h1>Deactivate Account</h1>
 
 <section>
-    <h2>
-        <p>Are you sure you want to deactivate your account?</p>
-    </h2>
-    <p>Deactivating your has the following consequences:</p>
-    <ul>
-        <li>All your devices will be deactivated as well.</li>
-        <li>Deactivating your account wil log you off automatically, you won't be able to log again before activating your account first. You can reactivate your account by contacting the adminstration through <a href="mailto:{{ admin_email }}">{{ admin_email }}</a>.</li>
-    </ul>
+  <h2>
+    <p>Are you sure you want to deactivate your account?</p>
+  </h2>
+  <p>Deactivating your has the following consequences:</p>
+  <ul>
+    <li>All your devices will be deactivated as well.</li>
+    <li>Deactivating your account wil log you off automatically, you won't be able to log again before activating your account first. You can reactivate your account by contacting the adminstration through <a href="mailto:{{ admin_email }}">{{ admin_email }}</a>.</li>
+  </ul>
 </section>
 
 <div>
 
-    <h3>    
-        <p>Enter you password to deactivate your account:</p>
-    </h3>
+  <h3>    
+      <p>Enter you password to deactivate your account:</p>
+  </h3>
     
+  <div class="form_container">
 
     <form action="{% url 'accounts:account_deactivate' user.username %}" method="POST">
-
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <input type="submit" value="Deactivate">
+  
+      {% csrf_token %}
+  
+      {{ form.as_p }}
+        
+      <input type="submit" value="Deactivate">
+      
+      <a href="{% url 'accounts:profile' user.username %}">Cancel</a>
 
     </form>
 
+  </div>
 
 </div>
-
 {% endblock body %}

@@ -168,4 +168,74 @@ A proxy model for `django.contrib.auth.User`, provides the following methods:
 
 ## Accounts.URLs
 
+### accounts/signup/
+
+- view: [MemberSignUpView](#membersignupviewanonymoususermixin-createview)
+- name: `accounts:signup`
+
+### accounts/login/
+
+- name: `accounts:login`
+- view: [MemberLoginView](#memberloginviewloginview)
+
+### accounts/logout/
+
+- name: `accounts:logout`
+- view: [MemberLogoutView](#memberlogoutviewlogoutview)
+
+### accounts/my_profile/
+
+- name: `accounts:my_profile`
+- view: [MemberOwnProfileView](#memberownprofileviewloginrequiredmixin-view)
+
+### accounts/password_reset/
+
+- name: `accounts:password_reset`
+- view: [PasswordResetView](#memberpasswordresetviewanonymoususermixin-passwordresetview)
+
+### accounts/password_reset/done/
+
+- name: `accounts:password_reset_done`
+- view: [PasswordResetDoneView](#memberpasswordresetdoneviewanonymoususermixin-passwordresetdoneview)
+
+### accounts/password_reset/confirm/\<slug:uidb64>/\<slug:token>/
+
+- name: `accounts:password_reset_confirm`
+- view: [PasswordResetConfirmView](#memberpasswordresetconfirmviewanonymoususermixin-passwordresetconfirmview)
+
+### accounts/password_reset/complete/
+
+- name: `accounts:password_reset_complete`
+- view: [PasswordResetCompleteView](#memberpasswordresetcompleteviewanonymoususermixin-passwordresetcompleteview)
+
+### accounts/password_change/
+
+- name: `accounts:password_change`
+- view: [PasswordChangeView](#memberpasswordchangeviewpasswordchangeview)
+
+### accounts/password_change/done/
+
+- name: `accounts:password_change_done`
+- view: [PasswordChangeDoneView](#memberpasswordchangedoneviewpasswordchangedoneview)
+
+### accounts/\<slug:user_name>/profile/
+
+- name: `accounts:profile`
+- view: [MemberProfileView](#memberprofileviewloginrequiredmixin-detailview)
+
+### accounts/\<slug:user_name>/edit/
+
+- name: `accounts:profile_edit`
+- view: [MemberEditView](#membereditviewloginrequiredmixin-ownermixin-updateview)
+
+### accounts/\<slug:user_name>/deactivate/
+
+- name: `accounts:account_deactivate`
+- view: [MemberDeactivateView](#memberdeactivateviewloginrequiredmixin-ownermixin-updateview)
+
+### accounts/\<slug:user_name>/delete/
+
+- name: `accounts:account_delete`
+- view: [MemberDeleteView](#memberdeleteviewloginrequiredmixin-ownermixin-deleteview)
+
 [^?]: Not really an extension and more like a wrapper. No new fields are added to the user model. Apart from light functions, every things else is pretty much the same as the `User` model.

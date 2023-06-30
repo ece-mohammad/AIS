@@ -59,7 +59,7 @@ class MemberSignUpForm(UserCreationForm):
     }
     
     class Meta(UserCreationForm.Meta):
-        model = Member 
+        model = Member
         fields = ("first_name", "last_name", "email") + UserCreationForm.Meta.fields 
 
 

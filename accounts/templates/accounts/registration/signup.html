@@ -10,15 +10,15 @@
 
 <form action="{% url 'accounts:signup' %}" method="POST">
 
-    {% csrf_token %}
+  {% csrf_token %}
 
-    <table>
-        {{ form.as_table }}
-    </table>
+  <table>
+      {{ form.as_table }}
+  </table>
 
-    <hr>
-    
-    <button type="submit">Sign Up</button>
+  <hr>
+  
+  <button type="submit">Sign Up</button>
 
 </form>
 

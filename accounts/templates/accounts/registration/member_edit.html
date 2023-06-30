@@ -3,13 +3,31 @@
 {% block title %}Edit Profile{% endblock title %}
 
 {% block body %}
-    <h1>Edit Profile</h1>
+<section>
+    
+  <h1>Edit Profile</h1>
+  
+  <div class="form_container">
+  
     <form method="post">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <br>
-        <button type="submit">Save Changes</button>
+    
+      {% csrf_token %}
+
+      <table>
+          {{ form.as_table }}
+      </table>
+      
+      <br>
+      
+      <button type="submit">Save Changes</button>
     </form>
+  </div>
+
+  <div>
+    <p>
+      Change Password: <a href="{% url 'accounts:password_change' %}">Click Here</a>
+    </p>
+  </div>
+
+</section>
 {% endblock body %}

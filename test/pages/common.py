@@ -8,6 +8,17 @@ Pages:
     - HomePage
     - SignUp
     - Login
+    - LogOut
+    - MemberProfile
+    - PasswordReset
+    - PasswordResetDone
+    - PasswordResetConfirm
+    - PasswordResetComplete
+    - PasswordChange
+    - PasswordChangeDone
+    - MemberDeactivate
+    - MemberDelete
+    - MemberEdit`
 
 """
 # -------------------------------------------------------------------------
@@ -72,7 +83,7 @@ SignUp: Final[Page] = Page(
 )
 
 LogIn: Final[Page] = Page(
-    title="Login",
+    title="Log In",
     template_name="accounts/registration/login.html",
     view_name="accounts:login",
     _url=reverse_lazy("accounts:login"),
@@ -93,49 +104,49 @@ MemberProfile: Final[Page] = Page(
     kwargs=("username",),
 )
 
-PasswordReset = Page(
+PasswordReset: Final[Page] = Page(
     title="Password Reset",
     template_name="accounts/registration/password_reset_form.html",
     view_name="accounts:password_reset",
     _url=reverse_lazy("accounts:password_reset"),
 )
 
-PasswordResetDone = Page(
+PasswordResetDone: Final[Page] = Page(
     title="Password Reset Done",
     template_name="accounts/registration/password_reset_done.html",
     view_name="accounts:password_reset_done",
     _url=reverse_lazy("accounts:password_reset_done"),
 )
 
-PasswordResetConfirm = Page(
+PasswordResetConfirm: Final[Page] = Page(
     title="Password Reset Confirm",
     template_name="accounts/registration/password_reset_confirm.html",
     view_name="accounts:password_reset_confirm",
     _url=reverse_lazy("accounts:password_reset_confirm"),
 )
 
-PasswordResetComplete = Page(
+PasswordResetComplete: Final[Page] = Page(
     title="Password Reset Complete",
     template_name="accounts/registration/password_reset_complete.html",
     view_name="accounts:password_reset_complete",
     _url=reverse_lazy("accounts:password_reset_complete"),
 )
 
-PasswordChange = Page(
+PasswordChange: Final[Page] = Page(
     title="Password Change",
     template_name="accounts/registration/password_change_form.html",
     view_name="accounts:password_change",
     _url=reverse_lazy("accounts:password_change"),
 )
 
-PasswordChangeDone = Page(
+PasswordChangeDone: Final[Page] = Page(
     title="Password Changed",
     template_name="accounts/registration/password_change_done.html",
     view_name="accounts:password_change_done",
     _url=reverse_lazy("accounts:password_change_done"),
 )
 
-MemberDeactivate = Page(
+MemberDeactivate: Final[Page] = Page(
     title="Deactivate Account",
     template_name="accounts/registration/member_deactivate_confirm.html",
     view_name="accounts:account_deactivate",
@@ -143,7 +154,7 @@ MemberDeactivate = Page(
     kwargs=("username",),
 )
 
-MemberDelete = Page(
+MemberDelete: Final[Page] = Page(
     title="Delete Account",
     template_name="accounts/registration/member_delete_confirm.html",
     view_name="accounts:account_delete",
@@ -151,10 +162,10 @@ MemberDelete = Page(
     kwargs=("username",),
 )
 
-MemberEdit = Page(
+MemberEdit: Final[Page] = Page(
     title="Edit Profile",
     template_name="accounts/registration/member_edit.html",
-    view_name="accounts:account_edit",
+    view_name="accounts:profile_edit",
     _kw_url="/accounts/${username}/edit/",
     kwargs=("username",),
 )

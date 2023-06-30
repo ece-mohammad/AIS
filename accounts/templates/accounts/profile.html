@@ -4,52 +4,71 @@
 
 {% block body %}
 
-<h1>Account Details</h1>
+<section>
 
-<div>
+  <h1>Account Details</h1>
 
+  <div>
     <table>
-        
-        <tr>
-            <td>
-                <strong>Username:</strong>
-            </td>
-            <td>
-                {{ user.username }}
-            </td>
-        </tr>
+      <tr>
+        <td>
+          <strong>Username:</strong>
+        </td>
+        <td>
+          {{ user.username }}
+        </td>
+      </tr>
 
-        <tr>
-            <td>
-                <strong>First Name:</strong>
-            </td>
-            <td>
-                {{ user.first_name }}
-            </td>
-        </tr>
+      <tr>
+        <td>
+          <strong>First Name:</strong>
+        </td>
+        <td>
+          {{ user.first_name }}
+        </td>
+      </tr>
 
-        <tr>
-            <td>
-                <strong>Last Name:</strong>
-            </td>
-            <td>
-                {{ user.last_name }}
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <strong>Email:</strong>
-            </td>
-            <td>
-                {{ user.email }}
-            </td>
-        </tr>
+      <tr>
+        <td>
+          <strong>Last Name:</strong>
+        </td>
+        <td>
+          {{ user.last_name }}
+        </td>
+      </tr>
+  
+      <tr>
+        <td>
+          <strong>Email:</strong>
+        </td>
+        <td>
+          {{ user.email }}
+        </td>
+    </tr>
 
     </table>
+  </div>
+</section>
 
-    
+<section>
+  <div>
+    <p>
+      <a href="{% url 'accounts:profile_edit' user.username %}">Edit Profile</a>
+    </p>
+  </div>
 
-</div>
+  <div>
+    <p>
+      <a href="{% url 'accounts:account_deactivate' user.username %}">Deactivate Account</a>
+    </p>
+  </div>
+
+  <div>
+    <p>
+      <a href="{% url 'accounts:account_delete' user.username %}">Delete Account</a>
+    </p>
+  </div>
+
+</section>
 
 {% endblock body %}

@@ -2,23 +2,38 @@
 
 {% comment %} accounts/login.html {% endcomment %}
 
-{% block title %}Login{% endblock title %}
+{% block title %}Log In{% endblock title %}
 
 {% block body %}
+<section>
 
-<h1>Login</h1>
+  <h1>Log In</h1>
 
-<form action="{% url 'accounts:login' %}" method="post">
+  <div class="form_container">
 
-    {% csrf_token %}
+    <form action="{% url 'accounts:login' %}" method="post">
 
-    <table>
-        {{ form.as_table }}    
-    </table>
-    <br>
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    <button type="submit" value="Login">Login</button>
+      {% csrf_token %}
 
-</form>
+      <table>
+          {{ form.as_table }}    
+      </table>
 
+      <br>
+
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      <button type="submit" value="Login">Login</button>
+    </form>
+  </div>
+</section>
+
+<br>
+
+<div>
+  <a href="{% url 'accounts:password_reset' %}">Forgot password?</a>
+</div>
+
+<div>
+  <p>Don't have an account? <a href="{% url 'accounts:signup' %}">Sign up</a></p>
+</div>
 {% endblock body %}
