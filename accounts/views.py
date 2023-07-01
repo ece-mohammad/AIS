@@ -1,7 +1,6 @@
 from typing import *
 
 from django.contrib.auth import logout
-from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import (LoginView, LogoutView,
                                         PasswordChangeDoneView,
                                         PasswordChangeView,
@@ -15,37 +14,16 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
+from common.views.mixins import (AnonymousUserRequiredMixin,
+                                MemberLoginRequiredMixin,
+                                OwnerMemberRequiredMixin)
+
 from .forms import (MemberConfirmActionForm, MemberEditForm,
                     MemberPasswordChangeForm, MemberPasswordResetConfirmForm,
                     MemberSignUpForm)
 from .models import Member
 
 # Create your views here.
-
-# -----------------------------------------------------------------------------
-# Helper classes
-# -----------------------------------------------------------------------------
-class AnonymousUserMixin(AccessMixin):
-    """Verify that the current user is an anonymous user (not logged in)"""
-    
-    redirect_url: str|None = None
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_anonymous:
-            return HttpResponseRedirect(self.redirect_url)
-        return super().dispatch(request, *args, **kwargs)
-
-
-class OwnerMixin(AccessMixin):
-    """Verify that the current user is the owner of the object"""
-    
-    def dispatch(self, request, *args, **kwargs):
-        user_name = kwargs.get("user_name")
-        user = request.user
-        if user.username != user_name:
-            self.permission_denied_message = "You do not have permission to access this page."
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
 
 # -----------------------------------------------------------------------------
@@ -55,7 +33,7 @@ class OwnerMixin(AccessMixin):
 # -----------------------------------------------------------------------------
 # User Sign up view
 # -----------------------------------------------------------------------------
-class MemberSignUpView(AnonymousUserMixin, CreateView):
+class MemberSignUpView(AnonymousUserRequiredMixin, CreateView):
     """User signup view"""
     model = Member
     form_class = MemberSignUpForm
@@ -64,13 +42,12 @@ class MemberSignUpView(AnonymousUserMixin, CreateView):
     success_url = reverse_lazy("accounts:login")
 
 
-class MemberDeactivateView(LoginRequiredMixin, OwnerMixin, UpdateView):
+class MemberDeactivateView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, UpdateView):
     """Deactivate member account"""
     model = Member
     form_class = MemberConfirmActionForm
     template_name = "accounts/registration/member_deactivate_confirm.html"
     success_url = reverse_lazy("homepage")
-    login_url = reverse_lazy("accounts:login")
     slug_field = "username"
     slug_url_kwarg = "user_name"
     
@@ -92,13 +69,12 @@ class MemberDeactivateView(LoginRequiredMixin, OwnerMixin, UpdateView):
         return super().form_valid(form)
 
 
-class MemberDeleteView(LoginRequiredMixin, OwnerMixin, DeleteView):
+class MemberDeleteView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, DeleteView):
     """Deactivate member account"""
     model = Member
     form_class = MemberConfirmActionForm
     template_name = "accounts/registration/member_delete_confirm.html"
     success_url = reverse_lazy("homepage")
-    login_url = reverse_lazy("accounts:login")
     slug_field = "username"
     slug_url_kwarg = "user_name"
     
@@ -112,11 +88,10 @@ class MemberDeleteView(LoginRequiredMixin, OwnerMixin, DeleteView):
         return kwargs
 
 
-class MemberEditView(LoginRequiredMixin, OwnerMixin, UpdateView):
+class MemberEditView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, UpdateView):
     model = Member
     form_class = MemberEditForm
     template_name = "accounts/registration/member_edit.html"
-    login_url = reverse_lazy("accounts:login")
     success_url = reverse_lazy("accounts:my_profile")
     slug_field = "username"
     slug_url_kwarg = "user_name"
@@ -146,17 +121,16 @@ class MemberLogoutView(LogoutView):
 # -----------------------------------------------------------------------------
 # User profile view
 # -----------------------------------------------------------------------------
-class MemberProfileView(LoginRequiredMixin, DetailView):
+class MemberProfileView(MemberLoginRequiredMixin, DetailView):
     """User profile view"""
     model = Member
     template_name = "accounts/profile.html"
-    login_url = reverse_lazy("accounts:login")
     slug_field = "username"
     slug_url_kwarg = "user_name"
     context_object_name = "user"
 
 
-class MemberOwnProfileView(LoginRequiredMixin, View):
+class MemberOwnProfileView(MemberLoginRequiredMixin, View):
     """User's own profile"""
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         return HttpResponseRedirect(reverse_lazy("accounts:profile", kwargs={"user_name": request.user.username}))
@@ -170,7 +144,7 @@ class MemberOwnProfileView(LoginRequiredMixin, View):
 # -----------------------------------------------------------------------------
 # User password reset views
 # -----------------------------------------------------------------------------
-class MemberPasswordResetView(AnonymousUserMixin, PasswordResetView):
+class MemberPasswordResetView(AnonymousUserRequiredMixin, PasswordResetView):
     """User password reset view"""
     template_name = "accounts/registration/password_reset_form.html"
     success_url = reverse_lazy("accounts:password_reset_done")
@@ -179,19 +153,19 @@ class MemberPasswordResetView(AnonymousUserMixin, PasswordResetView):
     subject_template_name = "accounts/registration/password_reset_subject.txt"
 
 
-class MemberPasswordResetDoneView(AnonymousUserMixin, PasswordResetDoneView):
+class MemberPasswordResetDoneView(AnonymousUserRequiredMixin, PasswordResetDoneView):
     """User password reset done view"""
     template_name = "accounts/registration/password_reset_done.html"
 
 
-class MemberPasswordResetConfirmView(AnonymousUserMixin, PasswordResetConfirmView):
+class MemberPasswordResetConfirmView(AnonymousUserRequiredMixin, PasswordResetConfirmView):
     """User password reset confirm view"""
     form_class = MemberPasswordResetConfirmForm
     template_name = "accounts/registration/password_reset_confirm.html"
     success_url = reverse_lazy("accounts:password_reset_complete")
 
 
-class MemberPasswordResetCompleteView(AnonymousUserMixin, PasswordResetCompleteView):
+class MemberPasswordResetCompleteView(AnonymousUserRequiredMixin, PasswordResetCompleteView):
     """User password reset complete view"""
     template_name = "accounts/registration/password_reset_complete.html"
     redirect_url = reverse_lazy("homepage")

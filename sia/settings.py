@@ -82,7 +82,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "APP_DIRS": True,
         "DIRS": [
-            BASE_DIR / "templates",
+            BASE_DIR / "common/templates",
         ],
         "OPTIONS": {
             "context_processors": [
@@ -148,6 +148,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "common/static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
