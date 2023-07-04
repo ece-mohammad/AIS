@@ -90,6 +90,7 @@ class TestPasswordResetForms(TestCase):
         response = self.client.post(PasswordReset.get_url(), data=dict(email="email@mail.com"))
         self.assertRedirects(response, PasswordResetDone.get_url())
 
+
 class TestPasswordResetView(TestCase):
     def setUp(self) -> None:
         create_member(**TEST_USER_CREDENTIALS)
