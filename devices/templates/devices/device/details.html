@@ -1,0 +1,72 @@
+{% extends 'base/base_page.html' %}
+
+{% comment %}devices/device_details.html{% endcomment %}
+
+{% block title %}Device {{ device.name }} {% endblock title %}
+
+{% block body %}
+<h1>Device {{ device.name }} </h1>
+
+<section>
+  <hr>
+  <div class="details-container">
+
+    <table>
+
+    <tr>
+      <td>
+        <strong>UUID:</strong>
+      </td>
+      <td>
+        <span>{{ device.uid }}</span>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <strong>Date Added:</strong>
+      </td>
+      <td>
+        <span>{{ device.date_added }}</span>
+      </td>
+    </tr>
+
+      <tr>
+        <td>
+          <strong>Group:</strong>
+        </td>
+        <td>
+          <span>{{ device_group.name }}</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <strong>Device Is Active:</strong>
+        </td>
+        <td>
+          <span>{{ device.is_active }}</span>
+        </td>
+      </tr>
+
+    </table>
+    
+  </div>
+  <hr>
+
+  <br>
+  <div>
+    <a href="{% url 'devices:device_edit' device.uid %}">Edit Device</a>
+  </div>
+
+  <br>
+  <div>
+    <a href="{% url 'devices:device_list' %}">Device List</a>
+  </div>
+  
+  <br>
+  </div>
+    <a href="{% url 'devices:device_delete' device.uid %}" class="btn btn-danger">Delete Device</a>
+  </div>
+</section>
+{% endblock body %}

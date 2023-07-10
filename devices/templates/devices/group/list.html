@@ -1,0 +1,46 @@
+{% extends 'base/base_page.html' %}
+
+{% comment %} devices/group/list.html {% endcomment %}
+
+{% block title %}Device Groups{% endblock title %}
+
+{% block body %}
+
+<h1>Device Groups:</h1>
+
+{% if device_groups %}
+
+
+<div class="list_container">
+
+  <ul>
+
+    {% for group in device_groups %}
+    <li>
+      <a href="{% url 'devices:group_details' group.name %}">
+        <span>
+          {{ group.name }}
+        </span>
+        <span>
+          ({{ group.device_count }} device{{ group.device_count|pluralize }})
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+
+  </ul>
+
+</div>
+
+{% else %}
+  <p>
+    You don't have any device groups yet.
+  </p>
+{% endif %}
+
+<br>
+<div>
+  <a href="{% url 'devices:group_create' %}">Add device group</a>
+</div>
+
+{% endblock body %}

@@ -29,7 +29,8 @@ required_plugins = "pytest-django pytest-xdist pytest-cov"
 DJANGO_SETTINGS_MODULE = "sia.settings"
 python_files = [
     "accounts/tests/test_*.py",
-    "devices/tests/test_*.py",
+    "devices/tests/group/test_*.py",
+    "devices/tests/device/test_*.py",
     "dashboard/tests/test_*.py",
     "mqtt/tests/test_*.py",
     "tests/utils/tests/test_*.py",

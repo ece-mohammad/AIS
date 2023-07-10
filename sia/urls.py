@@ -30,7 +30,7 @@ urlpatterns = [
 
     # TODO enable devices
     # devices
-    # path("device/", include("devices.urls")),
+    path("device/", include("devices.urls")),
     
     # dashboard
     path("dashboard", include("dashboard.urls")),

@@ -1,0 +1,51 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}Delete Device{% endblock title %}
+
+{% block body %}
+
+<h1>Delete Device</h1>
+
+<section>
+  <p>
+    <strong>
+      Are you sure you want to delete the device: {{ device.name }}? 
+    </strong>
+  </p>
+
+  <p>
+    This operation can't be undone. When the device is deleted, all its saved data are removed as well.
+  </p>
+
+  <p>
+    If you don't want to delete the device, but still want it to be hidden from the list, you can deactivate it instead from <a href="{% url 'devices:device_edit' device.uid %}">here</a>
+  </p>
+  
+</section>
+
+<section>
+  <div class="form-container">
+    <form action="{% url 'devices:device_delete' device.uid %}" method="post">
+      
+      {% csrf_token %}
+
+      <table>
+        {{ form.as_table }}
+      </table>
+
+      <br>
+      <button type="submit">Delete</button>
+      
+      <br>
+      <div>
+        <a href="{% url 'devices:device_details' device.uid %}">Cancel</a>
+      </div>
+      
+    </form>
+  </div>
+
+
+
+</section>
+
+{% endblock body %}

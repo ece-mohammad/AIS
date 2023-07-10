@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     
     # devices 
-    # "devices.apps.DevicesConfig",
+    "devices.apps.DevicesConfig",
     
     # dashboard
     "dashboard.apps.DashboardConfig",

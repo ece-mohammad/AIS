@@ -75,6 +75,9 @@ HomePage: Final[Page] = Page(
     _url=reverse_lazy("homepage"),
 )
 
+# -----------------------------------------------------------------------------
+# Registration pages
+# -----------------------------------------------------------------------------
 SignUp: Final[Page] = Page(
     title="Sign Up",
     template_name="accounts/registration/signup.html",
@@ -169,3 +172,87 @@ MemberEdit: Final[Page] = Page(
     _kw_url="/accounts/${username}/edit/",
     kwargs=("username",),
 )
+
+# -----------------------------------------------------------------------------
+# Device Group pages
+# -----------------------------------------------------------------------------
+DeviceGroupCreate: Final[Page] = Page(
+    title="Create Device Group",
+    template_name="devices/group/create.html",
+    view_name="devices:group_create",
+    _url=reverse_lazy("devices:group_create"),
+)
+
+DeviceGroupDetails: Final[Page] = Page(
+    title="Device Group Details",
+    template_name="devices/group/details.html",
+    view_name="devices:group_details",
+    _kw_url="/device/group/${group_name}/details/",
+    kwargs=("group_name",),
+)
+
+DeviceGroupEdit: Final[Page] = Page(
+    title="Edit Device Group",
+    template_name="devices/group/edit.html",
+    view_name="devices:group_edit",
+    _kw_url="/device/group/${group_name}/edit/",
+    kwargs=("group_name",),
+)
+
+DeviceGroupDelete: Final[Page] = Page(
+    title="Delete Device Group",
+    template_name="devices/group/delete.html",
+    view_name="devices:group_delete",
+    _kw_url="/device/group/${group_name}/delete/",
+    kwargs=("group_name",),
+)
+
+DeviceGroupList: Final[Page] = Page(
+    title="Device Groups",
+    template_name="devices/group/list.html",
+    view_name="devices:group_list",
+    _url=reverse_lazy("devices:group_list"),
+)
+
+# -----------------------------------------------------------------------------
+# Device pages
+# -----------------------------------------------------------------------------
+
+DeviceCreate: Final[Page] = Page(
+    title="Create Device",
+    template_name="devices/device/create.html",
+    view_name="devices:device_create",
+    _url=reverse_lazy("devices:device_create"),
+)
+
+DeviceList: Final[Page] = Page(
+    title="Devices",
+    template_name="devices/device/list.html",
+    view_name="devices:device_list",
+    _url=reverse_lazy("devices:device_list"),
+)
+
+DeviceDetails: Final[Page] = Page(
+    title="Device Details",
+    template_name="devices/device/details.html",
+    view_name="devices:device_details",
+    _kw_url="/device/${device_uid}/details/",
+    kwargs=("device_uid",),
+)
+
+DeviceEdit: Final[Page] = Page(
+    title="Edit Device",
+    template_name="devices/device/edit.html",
+    view_name="devices:device_edit",
+    _kw_url="/device/${device_uid}/edit/",
+    kwargs=("device_name",),
+)
+
+DeviceDelete: Final[Page] = Page(
+    title="Delete Device",
+    template_name="devices/device/delete.html",
+    view_name="devices:device_delete",
+    _kw_url="/device/${device_uid}/delete/",
+    kwargs=("device_name",),
+)
+

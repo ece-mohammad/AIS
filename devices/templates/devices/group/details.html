@@ -1,0 +1,63 @@
+{% extends 'base/base_page.html' %}
+
+{% comment %} devices/groups/device_group_details.html {% endcomment %}
+
+{% block title %}Device Group {{ device_group.name }}{% endblock title %}
+
+{% block body %}
+
+<h1>Device Group: <span>{{ device_group.name }}</span></h1>
+
+
+<div class="container">
+  <div class="row">
+    <div class="column">
+      <strong>Description:</strong> 
+    </div>
+    <div class="column">
+      {{ device_group.description }}
+    </div>
+  </div>
+  
+  <br>
+  
+  <div class="row">
+    <div class="column">
+      <strong>Owner:</strong> 
+    </div>
+    <div class="column">
+      {{ device_group.owner }}
+    </div>
+  </div>
+  
+  <br>
+
+  <div class="row">
+    <div class="column">
+      <strong>Creation Date:</strong>
+    </div>
+    <div class="column">
+      {{ device_group.creation_date }}
+    </div>
+  </div>
+
+  <br>
+    
+</div>
+
+<br>
+<div>
+  <a href="{% url 'devices:group_edit' device_group.name %}">Edit Device Group</a>
+</div>
+
+<br>
+<div>
+  <a href="{% url 'devices:group_delete' device_group.name %}">Delete Device Group</a>
+</div>
+
+<br>
+<div>
+  <a href="{% url 'devices:group_list' %}">All Device Groups</a>
+</div>
+
+{% endblock body %}

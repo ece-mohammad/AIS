@@ -1,0 +1,53 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}Delete Device Group{% endblock title %}
+
+{% block body %}
+
+<section>
+  <h1>Delete Device Group</h1>
+  
+  <p>
+    <strong>
+      Are you sure you want to delete the device group "{{ device_group.name }}"?
+    </strong>
+  </p>
+
+  <p>
+    This operation can't bre reversed, all devices in this group will be deleted.
+  </p>
+  
+</section>
+
+<section>
+
+  <div>
+    <p>
+      <strong>
+        To confirm deleting the device group, enter your password:
+      </strong>
+    </p>
+  </div>
+
+  <div class="form_container">
+    
+    <form method="POST">
+
+      {% csrf_token %}
+
+    <table>
+      {{ form.as_table }}
+    </table>
+
+    <br>
+    
+    <button type="submit">Delete</button>
+    
+    <a href="{% url 'devices:group_list' %}">Cancel</a>
+
+  </form>
+  
+</div>
+</section>
+
+{% endblock body %}

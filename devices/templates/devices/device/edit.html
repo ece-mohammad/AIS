@@ -1,0 +1,41 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}Edit Device{% endblock title %}
+
+{% block body %}
+
+<h1>Edit Device</h1>
+
+<section>
+
+  <div class="form-container">
+    <form method="post">
+      {% csrf_token %}
+
+      <table>
+        {{ form.as_table }}
+      </table>
+
+      <br>
+      <div>
+        <button type="submit">Save</button>
+      </div>
+
+      <br>
+      <div>
+        <button type="reset">Reset</button>
+      </div>
+
+      <br>
+      <div>
+        <a href="{% url 'devices:device_details' device.uid %}">Cacnel</a>
+      </div>
+
+
+    </form>
+  </div>
+
+
+</section>
+
+{% endblock body %}

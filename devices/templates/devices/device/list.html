@@ -1,0 +1,45 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}Device List{% endblock title %}
+
+{% block body %}
+
+<h1>My Devices</h1>
+
+<section>
+
+  <div class="details-container">
+
+    {% if device_list %}
+
+      <ul>
+
+        {% for device in device_list  %}
+        
+        <li>
+          <a href="{% url 'devices:device_details' device.uid %}">{{ device.name }}</a>
+        </li>
+        
+        
+        {% endfor %}
+      </ul>
+
+    
+    {% else %}
+
+    <p>
+      You don't have any devices yet.
+    </p>
+    
+    {% endif %}
+
+  </div>
+
+  <br>
+  <div>
+    <a href="{% url 'devices:device_create' %}">Add Device</a>
+  </div>
+
+</section>
+
+{% endblock %}
