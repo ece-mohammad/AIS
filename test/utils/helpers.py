@@ -44,7 +44,7 @@ def get_page_template(page: Page) -> Template:
         return get_template(page.template_name).template
 
 
-def page_title_in_response(page: Page, response: HttpResponse) -> bool:
+def page_title_in_response(page: Page, response: HttpResponse, title_kwargs: Dict[str, str] = None) -> bool:
     """
     Check if given response instance's title is same as page's title
     
@@ -52,6 +52,8 @@ def page_title_in_response(page: Page, response: HttpResponse) -> bool:
     :param type: Page
     :param response: HttpResponse instance to check for title
     :param type: HttpResponse
+    :param title_kwargs: Optional keyword arguments to pass to page's title
+    :param type: Dict[str, str]
     :return: True if page's title is in response, False otherwise
     :rtype: bool
     :raises: ValueError if response's charset is not recognized
@@ -63,7 +65,8 @@ def page_title_in_response(page: Page, response: HttpResponse) -> bool:
         )
     )
     
-    return page.title == title_parser.get_title().strip()
+    expected_title = Template(page.title).substitute(title_kwargs) if title_kwargs else page.title
+    return title_parser.get_title() == expected_title
 
 
 def is_same_url(page: Page, response: HttpResponse) -> bool:
@@ -97,7 +100,7 @@ def is_redirection_target(page: Page, response: HttpResponse) -> bool:
     return response.redirect_chain[-1] == (page._url, 302)
 
 
-def page_in_response(page: Page, response: HttpResponse) -> Tuple[bool, Dict[str, bool]]:
+def page_in_response(page: Page, response: HttpResponse, title_kwargs: Dict[str, str] = None) -> Tuple[bool, Dict[str, bool]]:
     """
     Check if page is in response by checking for page's title, template and
     view name in response
@@ -106,6 +109,8 @@ def page_in_response(page: Page, response: HttpResponse) -> Tuple[bool, Dict[str
     :param type: Page
     :param response: HttpResponse instance to check for page
     :param type: HttpResponse
+    :param title_kwargs: Optional keyword arguments to pass to page's title
+    :param type: Dict[str, str]
     :return: A tuple of bool and dict of bools. Tuple's first element is True
     if response's title, template and view name are same as the page's, false
     otherwise. Tuple's second element is a dict of bools with keys as test
@@ -115,7 +120,7 @@ def page_in_response(page: Page, response: HttpResponse) -> Tuple[bool, Dict[str
     :raises: TemplateDoesNotExist if template name is not recognized by
     """
     tests = dict(
-        has_title = page_title_in_response(page, response),
+        has_title = page_title_in_response(page, response, title_kwargs=title_kwargs),
         using_template = get_page_template(page) in response.templates,
         current_view = page.view_name == response.resolver_match.view_name,
     )
@@ -139,8 +144,8 @@ def client_login(client: Client, credentials: Dict[str, str]) -> HttpResponse:
             data=credentials,
             follow=True
         )
-    
-    
+
+
 def client_logout(client: Client, follow=False) -> HttpResponse:
     """ 
     Logs out the client, and returns the response from the logout view

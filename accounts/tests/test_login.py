@@ -8,7 +8,6 @@ from test.utils.helpers import (client_login, is_redirection_target,
 from typing import *
 
 from django.test import TestCase
-from django.test.client import Client
 
 from accounts.models import Member
 
@@ -23,11 +22,11 @@ TEST_USER_CREDENTIALS: Final[Dict[str, str]] = dict(
 
 TEST_USER_INVALID_PASSWORD: Final[Dict[str, str]] = dict(
     username="testuser",
-    password= "wrongpassword",
+    password= "wrong_password",
 )
 
 TEST_USER_INVALID_USERNAME: Final[Dict[str, str]] = dict(
-    username="wrongusername",
+    username="wrong_username",
     password= "testpassword",
 )
 
@@ -44,8 +43,6 @@ class TestLogin(TestCase):
         member.set_password(TEST_USER_CREDENTIALS["password"])
         member.save()
         
-        # set up client
-        self.client = Client()
         return super().setUp()
     
     def tearDown(self) -> None:

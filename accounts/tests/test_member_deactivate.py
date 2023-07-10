@@ -29,7 +29,6 @@ class MemberDeactivateTest(TestCase):
         self.second_member = create_member(**SECOND_MEMBER_CREDENTIALS)
         self.deactivate_url = self.get_deactivate_url(FIRST_MEMBER_CREDENTIALS["username"])
         
-        self.client = Client()
         client_login(self.client, FIRST_MEMBER_CREDENTIALS)
         
         return super().setUp()

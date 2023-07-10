@@ -39,10 +39,10 @@ LOGIN_USERNAME_LOCATOR: Final[Tuple[str, str]] = (By.CSS_SELECTOR, "#id_username
 LOGIN_PASSWORD_LOCATOR: Final[Tuple[str, str]] = (By.CSS_SELECTOR, "#id_password")
 LOGIN_SUBMIT_LOCATOR: Final[Tuple[str, str]] = (By.CSS_SELECTOR, "[type='submit']")
 
+
 class TestPasswordResetTemplates(TestCase):
     def setUp(self) -> None:
         create_member(**TEST_USER_CREDENTIALS)
-        self.client = Client()
         return super().setUp()
     
     def test_password_reset_template_rendering(self):
@@ -68,9 +68,6 @@ class TestPasswordResetTemplates(TestCase):
 
 
 class TestPasswordResetForms(TestCase):
-    def setUp(self) -> None:
-        self.client = Client()
-        return super().setUp()
 
     def test_password_reset_form_email_field_required(self):
         response = self.client.post(PasswordReset.get_url(), data=dict(email=""))
@@ -94,7 +91,6 @@ class TestPasswordResetForms(TestCase):
 class TestPasswordResetView(TestCase):
     def setUp(self) -> None:
         create_member(**TEST_USER_CREDENTIALS)
-        self.client = Client()
         return super().setUp()
         
     def test_password_reset_redirects_logged_in_user(self):

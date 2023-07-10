@@ -92,7 +92,6 @@ class MemberEditView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, UpdateV
     model = Member
     form_class = MemberEditForm
     template_name = "accounts/registration/member_edit.html"
-    success_url = reverse_lazy("accounts:my_profile")
     slug_field = "username"
     slug_url_kwarg = "user_name"
 

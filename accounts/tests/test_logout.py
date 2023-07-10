@@ -17,8 +17,6 @@ class TestLogout(TestCase):
     def setUp(self) -> None:
         # set up member
         create_member(**TEST_USER_LOGIN_CREDENTIALS)
-        
-        self.client = Client()
         return super().setUp()
     
     def tearDown(self) -> None:

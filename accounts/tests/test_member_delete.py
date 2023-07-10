@@ -17,7 +17,6 @@ TEST_MEMBER_CREDENTIALS: Final[Dict[str, str]] = dict(
 class TestAccountDelete(TestCase):
     def setUp(self):
         self.member = create_member(**TEST_MEMBER_CREDENTIALS)
-        self.client = Client()
         client_login(self.client, TEST_MEMBER_CREDENTIALS)
         super().setUp()
     

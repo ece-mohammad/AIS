@@ -38,16 +38,9 @@ TEST_USER_LOGIN_CREDENTIALS: Final[Dict[str, str]] = dict(
 
 class TestSignUp(TestCase):
     
-    def __init__(self, methodName: str = "runTest") -> None:
-        super().__init__(methodName)
-        self.client = Client()
-    
     def setUp(self) -> None:
         # set up member
         create_member(**TEST_USER_LOGIN_CREDENTIALS)
-        
-        # set up client
-        self.client = Client()
         return super().setUp()
     
     def tearDown(self) -> None:

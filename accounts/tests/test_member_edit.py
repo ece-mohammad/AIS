@@ -28,7 +28,6 @@ MEMBER_DATA: Final[Dict[str, str]] = dict(
 class TestMemberEdit(TestCase):
     def setUp(self) -> None:
         self.member = create_member(**MEMBER_DATA)
-        self.client = Client()
         client_login(self.client, MEMBER_DATA)
         return super().setUp()
     
@@ -152,3 +151,18 @@ class TestMemberEdit(TestCase):
         self.assertEqual(self.member.email, MEMBER_NEW_EMAIL)
         self.assertEqual(self.member.first_name, MEMBER_NEW_FIRST_NAME)
         self.assertEqual(self.member.last_name, MEMBER_NEW_LAST_NAME)
+
+    def test_member_edit_redirects_to_member_profile(self):
+        """Test member edit view redirects to member profile page"""
+        response = self.client.post(
+            MemberEdit.get_url(username=self.member.username),
+            data=dict(
+                username=self.member.username,
+                first_name=self.member.first_name,
+                last_name=self.member.last_name,
+                email=self.member.email,
+            ),
+            follow=True,
+        )
+        
+        self.assertRedirects(response, MemberProfile.get_url(username=self.member.username), 302, 200, fetch_redirect_response=True)
