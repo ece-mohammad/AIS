@@ -1,6 +1,7 @@
 import re
-import time
 from typing import *
+
+from pytest import mark
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core import mail
@@ -127,6 +128,7 @@ class TestPasswordResetSequence(StaticLiveServerTestCase):
                 password_reset_url = re.search(r"http://.+/accounts/password_reset/confirm/.+/", email_message.body)
                 return password_reset_url.group(0) if password_reset_url else None
     
+    @mark.slow
     def test_password_reset_sequence(self):
         # open password reset page
         self.selenium.get(f"{self.live_server_url}/{PasswordReset.get_url()}")
@@ -158,6 +160,7 @@ class TestPasswordResetSequence(StaticLiveServerTestCase):
         self.selenium.find_element(*LOGIN_SUBMIT_LOCATOR).click()
         self.assertEqual(self.selenium.title, HomePage.title)
         
+    @mark.slow
     def test_password_reset_unique_password(self):
         # open password reset page
         self.selenium.get(f"{self.live_server_url}/{PasswordReset.get_url()}")

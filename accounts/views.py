@@ -51,6 +51,15 @@ class MemberDeactivateView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, U
     slug_field = "username"
     slug_url_kwarg = "user_name"
     
+    def get_form_kwargs(self):
+        """Override get_form_kwargs to pass instance to form,
+        as DeleteView uses FormMixin to manage form creation,
+        unlike ModelFromMixin which passes object instance to the form
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs["member"] = self.get_object()
+        return kwargs
+    
     def form_valid(self, form: Any) -> HttpResponse:
         """Override form_valid to deactivate user account, 
         as MemberConfirmAction uses NoSaveMixin to not save the form
@@ -67,6 +76,9 @@ class MemberDeactivateView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, U
         logout(self.request)
         
         return super().form_valid(form)
+    
+    def get_success_url(self) -> str:
+        return self.success_url
 
 
 class MemberDeleteView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, DeleteView):
@@ -84,7 +96,7 @@ class MemberDeleteView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, Delet
         unlike ModelFromMixin which passes object instance to the form
         """
         kwargs = super().get_form_kwargs()
-        kwargs["instance"] = self.get_object()
+        kwargs["member"] = self.get_object()
         return kwargs
 
 

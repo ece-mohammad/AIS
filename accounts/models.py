@@ -1,22 +1,25 @@
+from django.contrib.auth.models import UserManager
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 
 # Create your models here.
 
+class MemberManager(UserManager):
+    def active(self):
+        """Return active members"""
+        return self.filter(is_active=True)
+    
+    def inactive(self):
+        """Return inactive members"""
+        return self.filter(is_active=False)
+
 
 class Member(User):
     """Site member model"""
+    objects = MemberManager()
     
     class Meta(User.Meta):
         proxy = True
     
     def get_absolute_url(self):
         return reverse_lazy("accounts:profile", kwargs={"user_name": self.username})
-    
-    def active_members(self):
-        """Return active members"""
-        return self.objects.filter(is_active=True)
-
-    def inactive_members(self):
-        """Return inactive members"""
-        return self.objects.filter(is_active=False)

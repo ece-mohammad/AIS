@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.test.client import Client
 
 from test.pages.common import HomePage, LogOut
 from test.utils.helpers import client_login, client_logout, response_user_logged_in, create_member
@@ -15,12 +14,8 @@ TEST_USER_LOGIN_CREDENTIALS: Final[Dict[str, str]] = dict(
 
 class TestLogout(TestCase):
     def setUp(self) -> None:
-        # set up member
         create_member(**TEST_USER_LOGIN_CREDENTIALS)
         return super().setUp()
-    
-    def tearDown(self) -> None:
-        return super().tearDown()
     
     def test_logout_redirects_anonymous_user_to_home_page(self):
         response = self.client.post(LogOut.get_url())

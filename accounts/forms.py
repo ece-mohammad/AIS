@@ -1,15 +1,15 @@
 from typing import *
 
-from django.contrib.auth.forms import (UserCreationForm,
-                                        PasswordChangeForm, PasswordResetForm,
-                                        UserChangeForm,
-                                        SetPasswordForm)
+from django.contrib.auth.forms import (PasswordChangeForm, PasswordResetForm,
+                                        SetPasswordForm, UserChangeForm,
+                                        UserCreationForm)
 from django.core.exceptions import ValidationError
-from django.forms import CharField, ModelForm, PasswordInput
+from django.forms import CharField, Form, PasswordInput
 from django.utils.translation import gettext_lazy as _
 
+from common.forms.mixins import UniquePasswordMixin, UniqueUsernameMixin
+
 from .models import Member
-from common.forms.mixins import NoSaveMixin, UniquePasswordMixin, UniqueUsernameMixin
 
 # Create your views here.
 
@@ -39,8 +39,11 @@ class MemberEditForm(UniqueUsernameMixin, UserChangeForm):
         fields = ("username", "first_name", "last_name", "email")
 
 
-class MemberConfirmActionForm(NoSaveMixin, ModelForm):
-    """Member password form to confirm an action"""
+class MemberConfirmActionForm(Form):
+    """
+    A form to confirm an member's password. Used to prompt user to enter their password to confirm an action.
+    Requires Member instance as `member` kwarg to be passed to the form's constructor.
+    """
     password = CharField(
         max_length=128,
         label=_("Password"),
@@ -55,16 +58,30 @@ class MemberConfirmActionForm(NoSaveMixin, ModelForm):
         }
     }
     
-    class Meta:
-        model = Member
-        fields = ("password",)
+    def __init__(self, *args, **kwargs):
+        self.instance = kwargs.pop("instance", None)
+        self.member = kwargs.pop("member")
+        super().__init__(*args, **kwargs)
     
     def clean_password(self) -> str:
         """Check password is correct"""
+        """
         password = self.cleaned_data.get("password")
-        if not self.instance.check_password(password):
+        if not "password" in self.changed_data and not self.member.check_password(password):
             raise ValidationError(message=self.error_messages["password"]["wrong_password"], code="wrong_password")
         return password
+        """
+        password = self.cleaned_data.get("password")
+        if not self.member.check_password(password):
+            raise ValidationError(message=self.error_messages["password"]["wrong_password"], code="wrong_password")
+        return password
+    
+    def save(self, commit: bool = True) -> Any:
+        """Do nothing, as this form is only used to confirm password"""
+        if self.instance:
+            self.instance
+        else:
+            return self.member
 
 
 # -----------------------------------------------------------------------------

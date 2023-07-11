@@ -18,9 +18,9 @@ Functions:
 """
 
 from typing import *
+from string import Template
 
 from django.http import HttpResponse
-from django.template import Template
 from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.test.client import Client
@@ -65,7 +65,12 @@ def page_title_in_response(page: Page, response: HttpResponse, title_kwargs: Dic
         )
     )
     
-    expected_title = Template(page.title).substitute(title_kwargs) if title_kwargs else page.title
+    title_template = Template(page.title)
+    if title_template.get_identifiers():
+        expected_title = title_template.safe_substitute(title_kwargs)
+    else:
+        expected_title = page.title
+    
     return title_parser.get_title() == expected_title
 
 
