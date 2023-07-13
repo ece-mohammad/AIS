@@ -40,10 +40,14 @@
     </table>
 
     <br>
+    <div>
+      <button type="submit">Delete</button>
+    </div>
     
-    <button type="submit">Delete</button>
-    
-    <a href="{% url 'devices:group_list' %}">Cancel</a>
+    <br>
+    <div>
+      <button type="button" onclick="window.location.href='{% url 'devices:group_details' device_group.name %}'">Cancel</button>
+    </div>
 
   </form>
   

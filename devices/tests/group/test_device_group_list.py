@@ -1,5 +1,5 @@
 from test.pages.common import DeviceGroupList, LogIn
-from test.utils.helpers import client_login, client_logout, create_member
+from test.utils.helpers import client_login, client_logout, create_member, page_in_response
 from typing import *
 
 from django.test import TestCase
@@ -25,17 +25,10 @@ FIRST_DEVICE_GROUPS_DATA: Final[List[Dict[str, str]]] = [
     dict(name="test_group_4", description="first member test description 4",),
 ]
 
-class TestDeviceGroupList(TestCase):
+class BaseTestDeviceGroupListTestCase(TestCase):
     def setUp(self) -> None:
-        self.first_member = create_member(
-            **FIRST_MEMBER
-        )
-        
-        self.second_member = create_member(
-            **SECOND_MEMBER
-        )
-        
-        client_login(self.client, FIRST_MEMBER)
+        self.first_member = create_member(**FIRST_MEMBER)
+        self.second_member = create_member(**SECOND_MEMBER)
         
         self.first_device_groups = DeviceGroup.objects.bulk_create(
             [
@@ -47,11 +40,22 @@ class TestDeviceGroupList(TestCase):
             ignore_conflicts=True,
         )
         
+        client_login(self.client, FIRST_MEMBER)
         return super().setUp()
     
-    def tearDown(self) -> None:
-        return super().tearDown()
-    
+
+class TestDeviceGroupListRendering(BaseTestDeviceGroupListTestCase):
+    def test_device_group_list_rendering(self):
+        response = self.client.get(
+            DeviceGroupList.get_url(),
+            follow=True,
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(page_in_response(DeviceGroupList, response)[0])
+
+
+class TestDeviceGroupListView(BaseTestDeviceGroupListTestCase):
     def test_device_group_list_redirects_anon_user(self):
         """Test that an anonymous user is redirected to the login page"""
         client = Client()

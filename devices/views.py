@@ -17,7 +17,7 @@ from .models import Device, DeviceGroup
 # Create your views here.
 
 # -----------------------------------------------------------------------
-# device group views
+# Base device group views
 # -----------------------------------------------------------------------
 class BaseDeviceGroupView(MemberLoginRequiredMixin, DeviceGroupOwnerMixin):
     model = DeviceGroup
@@ -31,6 +31,9 @@ class BaseDeviceGroupEditView(BaseDeviceGroupView):
         return kwargs
 
 
+# -----------------------------------------------------------------------
+# device group views
+# -----------------------------------------------------------------------
 class DeviceGroupCreateView(BaseDeviceGroupEditView, CreateView):
     """Create a new device group"""
     # model = DeviceGroup
@@ -43,9 +46,9 @@ class DeviceGroupCreateView(BaseDeviceGroupEditView, CreateView):
     #     kwargs["owner"] = self.request.user
     #     return kwargs
 
+
 class DeviceGroupDetailView(BaseDeviceGroupView, DetailView):
     """Details view for a device group"""
-    # model = DeviceGroup
     template_name = "devices/group/details.html"
     context_object_name = "device_group"
     slug_field = "name"
@@ -83,12 +86,18 @@ class DeviceGroupEditView(MemberLoginRequiredMixin, DeviceGroupOwnerMixin, Updat
 class DeviceGroupDeleteView(MemberLoginRequiredMixin, DeviceGroupOwnerMixin, DeleteView):
     """Delete device group"""
     model = DeviceGroup
-    # form_class = MemberConfirmActionForm
+    form_class = MemberConfirmActionForm
     template_name = "devices/group/delete.html"
     success_url = reverse_lazy("devices:group_list")
     context_object_name = "device_group"
     slug_field = "name"
     slug_url_kwarg = "group_name"
+    
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        """Add owner to form kwargs"""
+        kwargs = super().get_form_kwargs()
+        kwargs["member"] = self.request.user
+        return kwargs
 
 
 # -----------------------------------------------------------------------

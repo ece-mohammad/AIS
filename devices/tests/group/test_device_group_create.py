@@ -1,4 +1,3 @@
-from urllib import response
 from test.pages.common import DeviceGroupCreate, DeviceGroupDetails, LogIn
 from test.utils.helpers import (client_login, client_logout, create_member,
                                 page_in_response)
@@ -33,7 +32,7 @@ class BaseDeviceGroupTestCase(TestCase):
         self.second_member = create_member(**SECOND_MEMBER)
         client_login(self.client, FIRST_MEMBER)
         
-        return super().setUp()
+        super().setUp()
 
 
 class TestDeviceGroupCreateRendering(BaseDeviceGroupTestCase):

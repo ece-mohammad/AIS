@@ -1,5 +1,5 @@
 from test.pages.common import DeviceGroupDetails, LogIn
-from test.utils.helpers import client_login, create_member
+from test.utils.helpers import client_login, create_member, page_in_response
 from typing import *
 
 from django.test import TestCase
@@ -31,17 +31,10 @@ SECOND_DEVICE_GROUPS_DATA: Final[List[Dict[str, str]]] = [
     dict(name="test_group_6", description="second member test description 6",),
 ]
 
-class TestDeviceGroupDetails(TestCase):
+class BseTestDeviceGroupDetailsTestCase(TestCase):
     def setUp(self) -> None:
-        self.first_member = create_member(
-            **FIRST_MEMBER
-        )
-        
-        self.second_member = create_member(
-            **SECOND_MEMBER
-        )
-        
-        client_login(self.client, FIRST_MEMBER)
+        self.first_member = create_member(**FIRST_MEMBER)
+        self.second_member = create_member(**SECOND_MEMBER)
         
         self.first_device_groups = DeviceGroup.objects.bulk_create(
             [
@@ -54,7 +47,7 @@ class TestDeviceGroupDetails(TestCase):
         )
         
         self.second_device_groups = DeviceGroup.objects.bulk_create(
-        [
+            [
                 DeviceGroup(
                     **group_data, 
                     owner=self.second_member
@@ -63,11 +56,27 @@ class TestDeviceGroupDetails(TestCase):
             ignore_conflicts=True,
         )
         
+        client_login(self.client, FIRST_MEMBER)
+        
         return super().setUp()
-    
-    def tearDown(self) -> None:
-        return super().tearDown()
 
+
+class TestDeviceGroupDetailsRendering(BseTestDeviceGroupDetailsTestCase):
+    
+    def test_device_group_create_rendering(self):
+        """Test that device group details page renders correctly"""
+        response = self.client.get(
+            DeviceGroupDetails.get_url(group_name="test_group_1"),
+            follow=True,
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(page_in_response(DeviceGroupDetails, response)[0])
+        self.assertContains(response, FIRST_DEVICE_GROUPS_DATA[0]["name"])
+        self.assertContains(response, FIRST_DEVICE_GROUPS_DATA[0]["description"])
+
+
+class TestDeviceGroupDetailsView(BseTestDeviceGroupDetailsTestCase):
     def test_device_group_details_redirects_anon_user(self):
         client = Client()
         device_group_url = DeviceGroupDetails.get_url(group_name="test_group_1")
@@ -86,10 +95,19 @@ class TestDeviceGroupDetails(TestCase):
             device_group_url,
             follow=True,
         )
-        
+
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, FIRST_DEVICE_GROUPS_DATA[0]["name"])
         self.assertContains(response, FIRST_DEVICE_GROUPS_DATA[0]["description"])
+
+    def test_device_group_details_invalid_group(self):
+        device_group_url = DeviceGroupDetails.get_url(group_name="invalid_group")
+        response = self.client.get(
+            device_group_url,
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 404)
         
     def test_device_group_details_another_member_is_404(self):
         """Test device group details page returns 404 for another member's device group"""
@@ -98,7 +116,6 @@ class TestDeviceGroupDetails(TestCase):
             device_group_url,
             follow=True,
         )
-        response_html = response.content.decode(response.charset)
         
         self.assertEqual(response.status_code, 404)
 

@@ -2,7 +2,7 @@ from typing import *
 
 from django.forms import ModelForm, ModelChoiceField
 
-from common.forms.mixins import UniqueDeviceGroupPerMemberMixin, UniqueDevicePerMemberMixin, NoSaveMixin
+from common.forms.mixins import UniqueDeviceGroupPerMemberMixin, UniqueDevicePerMemberMixin
 
 from .models import Device, DeviceGroup
 
