@@ -14,32 +14,48 @@ TEST_MEMBER_CREDENTIALS: Final[Dict[str, str]] = dict(
 )
 
 
-class TestAccountDelete(TestCase):
+class BaseMemberDeleteTestCase(TestCase):
     def setUp(self):
         self.member = create_member(**TEST_MEMBER_CREDENTIALS)
         client_login(self.client, TEST_MEMBER_CREDENTIALS)
         super().setUp()
-    
-    def tearDown(self) -> None:
-        return super().tearDown()
-    
+
+
+class TestMemberDeleteRendering(BaseMemberDeleteTestCase):
     def test_member_delete_rendering(self):
         response = self.client.get(MemberDelete.get_url(username=self.member.username))
-        
         is_delete_page = page_in_response(MemberDelete, response)
-        
         self.assertEqual(response.status_code, 200)
         self.assertTrue(is_delete_page[0])
-    
-    def test_member_delete_form_password_required(self):
+
+
+class TestMemberDeleteForm(BaseMemberDeleteTestCase):
+    def test_member_delete_form_fields(self):
+        response = self.client.get(
+            MemberDelete.get_url(username=self.member.username),
+            follow=True
+        )
+        form = response.context.get("form")
+        password_field = form.fields.get("password")
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(form.fields), 1)
+        self.assertEqual(password_field.label, "Password")
+        self.assertEqual(password_field.required, True)
+        self.assertEqual(password_field.initial, None)
+
+
+class TestMemberDeleteView(BaseMemberDeleteTestCase):
+    def test_member_delete_password_empty(self):
         response = self.client.post(
             MemberDelete.get_url(username=self.member.username),
             {"password": ""},
-            follow=False
+            follow=True
         )
+        form = response.context.get("form")
         
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response.context.get("form"), "password", ["This field is required."])
+        self.assertFormError(form, "password", ["This field is required."])
         self.assertContains(response, "This field is required.")
         
     def test_member_delete_form_password_invalid(self):

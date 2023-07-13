@@ -25,15 +25,15 @@ MEMBER_DATA: Final[Dict[str, str]] = dict(
     last_name=MEMBER_LAST_NAME,
 )
 
-class TestMemberEdit(TestCase):
+
+class BaseMemberEditTestCase(TestCase):
     def setUp(self) -> None:
         self.member = create_member(**MEMBER_DATA)
         client_login(self.client, MEMBER_DATA)
         return super().setUp()
     
-    def tearDown(self) -> None:
-        return super().tearDown()
-    
+
+class TestMemberEditRendering(BaseMemberEditTestCase):
     def test_member_edit_rendering(self):
         response = self.client.get(
             MemberEdit.get_url(username=self.member.username)
@@ -42,7 +42,50 @@ class TestMemberEdit(TestCase):
         
         member_edit = page_in_response(MemberEdit, response)
         self.assertTrue(member_edit[0])
+
+
+class TestMemberEditForm(BaseMemberEditTestCase):
+    def setUp(self) -> None:
+        ret = super().setUp()
+        self.response = self.client.get(
+            MemberEdit.get_url(username=self.member.username)
+        )
+        self.form = self.response.context.get("form")
+        self.username_field = self.form.fields.get("username")
+        self.first_name_field = self.form.fields.get("first_name")
+        self.last_name_field = self.form.fields.get("last_name")
+        self.email_field = self.form.fields.get("email")
+        return ret
+
+    def test_member_edit_form_fields(self):
+        self.assertEqual(len(self.form.fields), 4)
+        self.assertIsNotNone(self.username_field)
+        self.assertIsNotNone(self.first_name_field)
+        self.assertIsNotNone(self.last_name_field)
+        self.assertIsNotNone(self.email_field)
     
+    def test_member_edit_form_field_username(self):
+        self.assertEqual(self.username_field.label, "Username")
+        self.assertEqual(self.username_field.required, True)
+        self.assertEqual(self.form.initial["username"], self.member.username)
+        
+    def test_member_edit_form_field_first_name(self):
+        self.assertEqual(self.first_name_field.label, "First name")
+        self.assertEqual(self.first_name_field.required, False)
+        self.assertEqual(self.form.initial["first_name"], self.member.first_name)
+        
+    def test_member_edit_form_field_last_name(self):
+        self.assertEqual(self.last_name_field.label, "Last name")
+        self.assertEqual(self.last_name_field.required, False)
+        self.assertEqual(self.form.initial["last_name"], self.member.last_name)
+        
+    def test_member_edit_form_field_email(self):
+        self.assertEqual(self.email_field.label, "Email address")
+        self.assertEqual(self.email_field.required, False)
+        self.assertEqual(self.form.initial["email"], self.member.email)
+
+
+class TestMemberEditView(BaseMemberEditTestCase):
     def test_member_redirects_anonymous_user(self):
         client = Client()
         response = client.get(
@@ -60,7 +103,6 @@ class TestMemberEdit(TestCase):
             MemberEdit.get_url(username="another_user"),
             follow=True
         )
-        
         self.assertEqual(response.status_code, 403)
     
     def test_member_edit_username_required(self):
@@ -78,7 +120,7 @@ class TestMemberEdit(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response.context.get("form"), "username", ["This field is required."])
         self.assertContains(response, "This field is required.")
-        
+    
     def test_member_edit_fields_not_required(self):
         response = self.client.post(
             MemberEdit.get_url(username=self.member.username),
