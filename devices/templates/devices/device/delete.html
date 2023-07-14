@@ -34,11 +34,13 @@
       </table>
 
       <br>
-      <button type="submit">Delete</button>
+      <div>
+        <button type="submit">Delete</button>
+      </div>
       
       <br>
       <div>
-        <a href="{% url 'devices:device_details' device.uid %}">Cancel</a>
+        <button type="button" onclick="window.location.href='{% url 'devices:device_details' device.uid %}'">Cancel</button>
       </div>
       
     </form>

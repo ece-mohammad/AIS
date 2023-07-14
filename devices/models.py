@@ -18,8 +18,7 @@ def initialize_device_data() -> models.Value:
     :return JSONFiled None value through Value(None, JSONField())
     :rtype: models.Value
     """
-    # return models.Value(None, models.JSONField())
-    return dict()
+    return models.Value(None, models.JSONField())
 
 
 class DeviceGroup(models.Model):

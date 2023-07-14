@@ -1,11 +1,9 @@
-from test.pages.common import DeviceCreate, DeviceDetails, DeviceEdit
-from test.utils.helpers import client_login, create_member
+from test.pages.common import DeviceDetails, DeviceEdit
+from test.utils.helpers import client_login, create_member, page_in_response
 from typing import *
 
 from django.test import TestCase
-from django.test.client import Client
-from django.db.models import Count
-from devices.models import DeviceGroup, Device
+from devices.models import Device
 
 
 FIRST_MEMBER: Final[Dict[str, str]] = dict(
@@ -29,27 +27,79 @@ SECOND_DEVICE_GROUP: Final[Dict[str, str]] = dict(
 )
 
 
-class TestDeviceEdit(TestCase):
+class BaseDeviceEditTestCase(TestCase):
     def setUp(self) -> None:
         self.first_member = create_member(**FIRST_MEMBER)
-        self.second_member = create_member(**SECOND_MEMBER)
-        
         self.first_group = self.first_member.devicegroup_set.create(**FIRST_DEVICE_GROUP)
-        self.second_group = self.first_member.devicegroup_set.create(**SECOND_DEVICE_GROUP)
-        
         self.first_device = self.first_group.device_set.create(
             name="first device",
             uid=Device.generate_device_uid(f"{self.first_member.username}-{self.first_group.name}-first device"),
             group=self.first_group,
         )
         
+        self.second_member = create_member(**SECOND_MEMBER)
+        self.second_group = self.first_member.devicegroup_set.create(**SECOND_DEVICE_GROUP)
+        self.second_device = self.second_group.device_set.create(
+            name="second device",
+            uid=Device.generate_device_uid(f"{self.second_member.username}-{self.second_group.name}-second device"),
+            group=self.second_group,
+        )
+        
         client_login(self.client, FIRST_MEMBER)
         
         return super().setUp()
-    
-    def tearDown(self) -> None:
-        return super().tearDown()
 
+
+class testDeviceEditRendering(BaseDeviceEditTestCase):
+    def test_device_edit_rendering(self):
+        response = self.client.get(
+            DeviceEdit.get_url(device_uid=self.first_device.uid),
+            follow=True
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(page_in_response(DeviceEdit, response))
+
+
+class TestDeviceEditForm(BaseDeviceEditTestCase):
+    def setUp(self):
+        ret = super().setUp()
+        self.response = self.client.get(
+            DeviceEdit.get_url(device_uid=self.first_device.uid),
+            follow=True
+        )
+        self.form = self.response.context.get("form")
+        self.name_filed = self.form.fields.get("name")
+        self.group_field = self.form.fields.get("group")
+        self.is_active_field = self.form.fields.get("is_active")
+        return ret
+
+    def test_device_edit_form_fields(self):
+        self.assertTrue(self.response.status_code, 200)
+        self.assertIsNotNone(self.form)
+        self.assertEqual(len(self.form.fields), 3)
+        self.assertIn("name", self.form.fields)
+        self.assertIsNotNone(self.name_filed)
+        self.assertIsNotNone(self.group_field)
+        self.assertIsNotNone(self.is_active_field)
+
+    def test_device_edit_form_fields_name(self):
+        self.assertEqual(self.name_filed.label, "Device name")
+        self.assertEqual(self.name_filed.required, True)
+        self.assertEqual(self.name_filed.initial, None)
+    
+    def test_device_edit_form_fields_group(self):
+        self.assertEqual(self.group_field.required, True)
+        self.assertEqual(self.group_field.initial, None)
+        self.assertQuerySetEqual(self.group_field.queryset, self.first_member.devicegroup_set.all(), ordered=False)
+
+    def test_device_edit_form_fields_is_active(self):
+        self.assertEqual(self.is_active_field.label, "Is device enabled")
+        self.assertEqual(self.is_active_field.required, False)
+        self.assertEqual(self.is_active_field.initial, True)
+
+
+class TestDeviceEditView(BaseDeviceEditTestCase):
     def test_device_edit_name_required(self):
         """Test that the device name is required"""
         response = self.client.post(

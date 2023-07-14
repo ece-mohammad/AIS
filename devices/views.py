@@ -174,9 +174,13 @@ class DeviceEditView(MemberLoginRequiredMixin, DeviceOwnerMixin, UpdateView):
 
 class DeviceDeleteView(MemberLoginRequiredMixin, DeviceOwnerMixin, DeleteView):
     model = Device
-    # form_class = MemberConfirmActionForm
+    form_class = MemberConfirmActionForm
     template_name = "devices/device/delete.html"
     success_url = reverse_lazy("devices:device_list")
     slug_field = "uid"
     slug_url_kwarg = "device_uid"
 
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["member"] = self.request.user
+        return kwargs

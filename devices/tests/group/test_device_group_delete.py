@@ -52,7 +52,7 @@ class BaseDeviceGroupDeleteTestCase(TestCase):
         return super().setUp()
 
 
-class TestDeviceDeleteRendering(BaseDeviceGroupDeleteTestCase):
+class TestDeviceGroupDeleteRendering(BaseDeviceGroupDeleteTestCase):
 
     def test_device_group_delete_rendering(self):
         """Test device group delete page renders correctly"""
@@ -71,7 +71,7 @@ class TestDeviceDeleteRendering(BaseDeviceGroupDeleteTestCase):
         self.assertContains(response, device_group_name)
 
 
-class TestDeviceDeleteForm(BaseDeviceGroupDeleteTestCase):
+class TestDeviceGroupDeleteForm(BaseDeviceGroupDeleteTestCase):
     
     def test_device_group_delete_form(self):
         """Test device group delete form has correct fields"""
