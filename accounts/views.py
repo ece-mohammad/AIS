@@ -29,6 +29,22 @@ from .models import Member
 # -----------------------------------------------------------------------------
 # ---------------------------- Registration Views -----------------------------
 # -----------------------------------------------------------------------------
+class MemberProfileAccessView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin):
+    model = Member
+    slug_field = "username"
+    slug_url_kwarg = "user_name"
+
+
+class MemberProfileEditView(MemberProfileAccessView):
+    def get_form_kwargs(self):
+        """Override get_form_kwargs to pass instance to form,
+        as DeleteView uses FormMixin to manage form creation,
+        unlike ModelFromMixin which passes object instance to the form
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs["member"] = self.get_object()
+        return kwargs
+
 
 # -----------------------------------------------------------------------------
 # User Sign up view
@@ -42,23 +58,11 @@ class MemberSignUpView(AnonymousUserRequiredMixin, CreateView):
     success_url = reverse_lazy("accounts:login")
 
 
-class MemberDeactivateView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, UpdateView):
+class MemberDeactivateView(MemberProfileEditView, UpdateView):
     """Deactivate member account"""
-    model = Member
     form_class = MemberConfirmActionForm
     template_name = "accounts/registration/member_deactivate_confirm.html"
     success_url = reverse_lazy("homepage")
-    slug_field = "username"
-    slug_url_kwarg = "user_name"
-    
-    def get_form_kwargs(self):
-        """Override get_form_kwargs to pass instance to form,
-        as DeleteView uses FormMixin to manage form creation,
-        unlike ModelFromMixin which passes object instance to the form
-        """
-        kwargs = super().get_form_kwargs()
-        kwargs["member"] = self.get_object()
-        return kwargs
     
     def form_valid(self, form: Any) -> HttpResponse:
         """Override form_valid to deactivate user account, 
@@ -81,31 +85,16 @@ class MemberDeactivateView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, U
         return self.success_url
 
 
-class MemberDeleteView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, DeleteView):
+class MemberDeleteView(MemberProfileEditView, DeleteView):
     """Deactivate member account"""
-    model = Member
     form_class = MemberConfirmActionForm
     template_name = "accounts/registration/member_delete_confirm.html"
     success_url = reverse_lazy("homepage")
-    slug_field = "username"
-    slug_url_kwarg = "user_name"
-    
-    def get_form_kwargs(self):
-        """Override get_form_kwargs to pass instance to form,
-        as DeleteView uses FormMixin to manage form creation,
-        unlike ModelFromMixin which passes object instance to the form
-        """
-        kwargs = super().get_form_kwargs()
-        kwargs["member"] = self.get_object()
-        return kwargs
 
 
-class MemberEditView(MemberLoginRequiredMixin, OwnerMemberRequiredMixin, UpdateView):
-    model = Member
+class MemberEditView(MemberProfileAccessView, UpdateView):
     form_class = MemberEditForm
     template_name = "accounts/registration/member_edit.html"
-    slug_field = "username"
-    slug_url_kwarg = "user_name"
 
 
 # -----------------------------------------------------------------------------
