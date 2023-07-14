@@ -226,7 +226,7 @@ DeviceCreate: Final[Page] = Page(
 )
 
 DeviceList: Final[Page] = Page(
-    title="Devices",
+    title="Device List",
     template_name="devices/device/list.html",
     view_name="devices:device_list",
     _url=reverse_lazy("devices:device_list"),
