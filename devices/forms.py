@@ -24,7 +24,7 @@ class DeviceGroupCreateForm(UniqueDeviceGroupPerMemberMixin, ModelForm):
         ]
     
     def __init__(self, *args, **kwargs):
-        self.owner = kwargs.pop("owner")
+        self.owner = kwargs.pop("member")
         super().__init__(*args, **kwargs)
     
     def save(self, commit: bool = True) -> Any:
@@ -42,7 +42,7 @@ class DeviceGroupEditForm(UniqueDeviceGroupPerMemberMixin, ModelForm):
         ]
     
     def __init__(self, *args, **kwargs):
-        self.owner = kwargs.pop("owner")
+        self.owner = kwargs.pop("member")
         super().__init__(*args, **kwargs)
     
     def save(self, commit: bool = True) -> Any:

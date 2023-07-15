@@ -8,7 +8,6 @@ from django.urls import reverse_lazy
 
 class MemberLoginRequiredMixin(LoginRequiredMixin):
     """Custom login required mixin, redirects to 'accounts:login' page if not logged in"""
-    
     login_url = reverse_lazy("accounts:login")
 
 

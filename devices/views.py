@@ -22,42 +22,29 @@ from .models import Device, DeviceGroup
 class BaseDeviceGroupView(MemberLoginRequiredMixin, DeviceGroupOwnerMixin):
     model = DeviceGroup
 
-
-class BaseDeviceGroupEditView(BaseDeviceGroupView):
     def get_form_kwargs(self) -> Dict[str, Any]:
         """Add owner to form kwargs"""
         kwargs = super().get_form_kwargs()
-        kwargs["owner"] = self.request.user
+        kwargs["member"] = self.request.user
         return kwargs
+
+
+class BaseDeviceGroupEditView(BaseDeviceGroupView):
+    slug_field = "name"
+    slug_url_kwarg = "group_name"
 
 
 # -----------------------------------------------------------------------
 # device group views
 # -----------------------------------------------------------------------
-class DeviceGroupCreateView(BaseDeviceGroupEditView, CreateView):
+class DeviceGroupCreateView(BaseDeviceGroupView, CreateView):
     """Create a new device group"""
-    # model = DeviceGroup
     form_class = DeviceGroupCreateForm
     template_name = "devices/group/create.html"
 
-    # def get_form_kwargs(self) -> Dict[str, Any]:
-    #     """Add owner to form kwargs"""
-    #     kwargs = super().get_form_kwargs()
-    #     kwargs["owner"] = self.request.user
-    #     return kwargs
 
-
-class DeviceGroupDetailView(BaseDeviceGroupView, DetailView):
-    """Details view for a device group"""
-    template_name = "devices/group/details.html"
-    context_object_name = "device_group"
-    slug_field = "name"
-    slug_url_kwarg = "group_name"
-
-
-class DeviceGroupListView(MemberLoginRequiredMixin, DeviceGroupOwnerMixin, ListView):
+class DeviceGroupListView(BaseDeviceGroupView, ListView):
     """List all device groups for the current user"""
-    model = DeviceGroup
     context_object_name = "device_groups"
     template_name = "devices/group/list.html"
     allow_empty = True
@@ -67,37 +54,25 @@ class DeviceGroupListView(MemberLoginRequiredMixin, DeviceGroupOwnerMixin, ListV
         return qs.annotate(device_count=Count("device"))
 
 
-class DeviceGroupEditView(MemberLoginRequiredMixin, DeviceGroupOwnerMixin, UpdateView):
+class DeviceGroupDetailView(BaseDeviceGroupEditView, DetailView):
+    """Details view for a device group"""
+    template_name = "devices/group/details.html"
+    context_object_name = "device_group"
+
+
+class DeviceGroupEditView(BaseDeviceGroupEditView, UpdateView):
     """Device group edit view"""
-    model = DeviceGroup
     form_class = DeviceGroupEditForm
     template_name = "devices/group/edit.html"
     context_object_name = "device_group"
-    slug_field = "name"
-    slug_url_kwarg = "group_name"
-    
-    def get_form_kwargs(self) -> Dict[str, Any]:
-        """Add owner to form kwargs"""
-        kwargs = super().get_form_kwargs()
-        kwargs["owner"] = self.request.user
-        return kwargs
 
 
-class DeviceGroupDeleteView(MemberLoginRequiredMixin, DeviceGroupOwnerMixin, DeleteView):
+class DeviceGroupDeleteView(BaseDeviceGroupEditView, DeleteView):
     """Delete device group"""
-    model = DeviceGroup
     form_class = MemberConfirmActionForm
     template_name = "devices/group/delete.html"
     success_url = reverse_lazy("devices:group_list")
     context_object_name = "device_group"
-    slug_field = "name"
-    slug_url_kwarg = "group_name"
-    
-    def get_form_kwargs(self) -> Dict[str, Any]:
-        """Add owner to form kwargs"""
-        kwargs = super().get_form_kwargs()
-        kwargs["member"] = self.request.user
-        return kwargs
 
 
 # -----------------------------------------------------------------------
