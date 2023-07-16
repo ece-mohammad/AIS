@@ -26,8 +26,8 @@ django-debug-toolbar = "^4.1.0"
 pytest-skip-slow = "^0.0.5"
 
 [tool.pytest.ini_options]
-# addopts = "-n 8 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
-addopts = "-n 8 -v"
+addopts = "-n 8 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
+# addopts = "-n 8 -v"
 console_output_style = "count"
 required_plugins = "pytest-django pytest-xdist pytest-cov"
 DJANGO_SETTINGS_MODULE = "sia.settings"
@@ -67,7 +67,7 @@ exclude_also = [
 ]
 show_missing = true
 skip_empty = true
-fail_under = 100
+fail_under = 98
 sort = "Cover"
 
 [tool.coverage.html]

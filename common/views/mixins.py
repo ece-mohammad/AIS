@@ -39,6 +39,11 @@ class DeviceGroupOwnerMixin:
         return super().get_queryset().filter(owner=self.request.user)
 
 
-class DeviceOwnerMixin:
+class DevicesByMemberMixin:
     def get_queryset(self) -> QuerySet[Any]:
         return super().get_queryset().filter(group__owner=self.request.user)
+
+
+class DeviceBySlugMixin(DevicesByMemberMixin):
+    slug_field = "uid"
+    slug_url_kwarg = "device_uid"

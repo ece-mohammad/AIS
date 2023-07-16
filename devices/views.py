@@ -5,10 +5,10 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from common.views.mixins import (DeviceGroupOwnerMixin, DeviceOwnerMixin,
-                                    MemberLoginRequiredMixin)
-
 from accounts.forms import MemberConfirmActionForm
+from common.views.mixins import (DeviceGroupOwnerMixin, DevicesByMemberMixin,
+                                    DeviceBySlugMixin,
+                                    MemberLoginRequiredMixin)
 
 from .forms import (DeviceCreateForm, DeviceEditForm, DeviceGroupCreateForm,
                     DeviceGroupEditForm)
@@ -76,21 +76,35 @@ class DeviceGroupDeleteView(BaseDeviceGroupEditView, DeleteView):
 
 
 # -----------------------------------------------------------------------
-# device views
+# Base Device views
 # -----------------------------------------------------------------------
-class DeviceCreateView(MemberLoginRequiredMixin, CreateView):
-    model = Device
-    form_class = DeviceCreateForm
-    template_name = "devices/device/create.html"
-    
+class BaseDeviceView(MemberLoginRequiredMixin):
+    model = Device 
+
+
+class BaseDeviceWithMemberFormView(BaseDeviceView):
     def get_form_kwargs(self) -> Dict[str, Any]:
         kwargs = super().get_form_kwargs()
-        kwargs["owner"] = self.request.user
+        kwargs["member"] = self.request.user
         return kwargs
 
 
-class DeviceListView(MemberLoginRequiredMixin, DeviceOwnerMixin, ListView):
-    model = Device
+class BaseDeviceBtSlugDetailsView(BaseDeviceView, DeviceBySlugMixin):
+    ...
+
+
+class BaseDeviceBySlugEditView(BaseDeviceWithMemberFormView, DeviceBySlugMixin):
+    ...
+
+# -----------------------------------------------------------------------
+# Device views
+# -----------------------------------------------------------------------
+class DeviceCreateView(BaseDeviceWithMemberFormView, CreateView):
+    form_class = DeviceCreateForm
+    template_name = "devices/device/create.html"
+
+
+class DeviceListView(BaseDeviceView, DevicesByMemberMixin, ListView):
     fields = [
         'name', 
         "uid",
@@ -112,8 +126,7 @@ class DeviceListView(MemberLoginRequiredMixin, DeviceOwnerMixin, ListView):
         return qs
 
 
-class DeviceDetailView(MemberLoginRequiredMixin, DeviceOwnerMixin, DetailView):
-    model = Device
+class DeviceDetailView(BaseDeviceBtSlugDetailsView, DetailView):
     fields = [
         "name",
         "uid",
@@ -124,8 +137,6 @@ class DeviceDetailView(MemberLoginRequiredMixin, DeviceOwnerMixin, DetailView):
 
     template_name = "devices/device/details.html"
     context_object_name = "device"
-    slug_field = "uid"
-    slug_url_kwarg = "device_uid"
     
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context_data =  super().get_context_data(**kwargs)
@@ -134,28 +145,12 @@ class DeviceDetailView(MemberLoginRequiredMixin, DeviceOwnerMixin, DetailView):
         return context_data
 
 
-class DeviceEditView(MemberLoginRequiredMixin, DeviceOwnerMixin, UpdateView):
-    model = Device
+class DeviceEditView(BaseDeviceBySlugEditView, UpdateView):
     form_class = DeviceEditForm
     template_name = "devices/device/edit.html"
-    slug_field = "uid"
-    slug_url_kwarg = "device_uid"
-
-    def get_form_kwargs(self) -> Dict[str, Any]:
-        kwargs = super().get_form_kwargs()
-        kwargs["owner"] = self.request.user
-        return kwargs
 
 
-class DeviceDeleteView(MemberLoginRequiredMixin, DeviceOwnerMixin, DeleteView):
-    model = Device
+class DeviceDeleteView(BaseDeviceBySlugEditView, DeleteView):
     form_class = MemberConfirmActionForm
     template_name = "devices/device/delete.html"
     success_url = reverse_lazy("devices:device_list")
-    slug_field = "uid"
-    slug_url_kwarg = "device_uid"
-
-    def get_form_kwargs(self) -> Dict[str, Any]:
-        kwargs = super().get_form_kwargs()
-        kwargs["member"] = self.request.user
-        return kwargs
