@@ -18,7 +18,6 @@
       {{ device_group.description }}
     </div>
   </div>
-  
   <br>
   
   <div class="row">
@@ -29,9 +28,8 @@
       {{ device_group.owner }}
     </div>
   </div>
-  
   <br>
-
+  
   <div class="row">
     <div class="column">
       <strong>Creation Date:</strong>
@@ -40,22 +38,41 @@
       {{ device_group.creation_date }}
     </div>
   </div>
+  <br>
+
+  <div class="row">
+    <div class="column">
+      <strong>Devices:</strong>
+    </div>
+    <div class="column">
+      {% if device_count %}
+      <ul>
+        {% for device in device_list %}
+        <li>
+          <a href="{% url 'devices:device_details' device.uid %}">{{ device.name }}</a>
+        </li>
+        {% endfor %}
+        {% else %}
+          <p>No devices yet in this group.</p>
+          <a href="{% url 'devices:device_create' %}">Add a device</a>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  <br>
     
 </div>
 
-<br>
+<hr>
+
 <div>
   <a href="{% url 'devices:group_edit' device_group.name %}">Edit Device Group</a>
 </div>
-
 <br>
+
 <div>
   <a href="{% url 'devices:group_delete' device_group.name %}">Delete Device Group</a>
 </div>
-
 <br>
-<div>
-  <a href="{% url 'devices:group_list' %}">All Device Groups</a>
-</div>
 
 {% endblock body %}

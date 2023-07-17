@@ -2,27 +2,50 @@
 
 {% block navbar %}
 
-{% block homepage %} 
-<div class="navbar_link">
-  <a href="{% url 'homepage' %}">Home</a> 
-</div>
-{% endblock homepage %}
+<div class="nav-site-links">
 
-{% if user.is_authenticated %}
+  {% block homepage %} 
+  <div class="navbar_link">
+    <a href="{% url 'homepage' %}">Home</a> 
+  </div>
+  {% endblock homepage %}
+
+  {% block dashboard %}
+  <div class="navbar_link">
+    <a href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+  </div>
+  {% endblock %}
+
+  {% block group_list %}
+  <div class="navbar_link">
+    <a href="{% url 'devices:group_list' %}">My Groups</a>
+  </div>
+  {% endblock %}
+
+  {% block device_list %}
+  <div class="navbar_link">
+    <a href="{% url 'devices:device_list' %}">My Devices</a>
+  </div>
+  {% endblock %}
+
+</div>
+
+<div class="nav-member-links">
+  {% if user.is_authenticated %}
 
   {% block profile %}
   <div class="navbar_link">
     <a href="{% url 'accounts:my_profile' %}">{{ user.username }}</a>
   </div>
   {% endblock profile %}
-  
+
   {% block logout %}
   <div class="navbar_link">
     <a href="{% url 'accounts:logout' %}">Log Out</a>
   </div>
   {% endblock logout %}
 
-{% else %}
+  {% else %}
 
   {% block login %}  
   <div class="navbar_link">
@@ -36,12 +59,16 @@
   </div>
   {% endblock signup %}
 
-{% endif %}
-
-{% block settings %} 
-<div class="navbar_link">
-  {{ settings }} 
+  {% endif %}
+  
 </div>
-{% endblock settings %}
+
+<div class="nav-settings">
+  {% block settings %} 
+  <div class="navbar_link">
+    {{ settings }} 
+  </div>
+  {% endblock settings %}
+</div>
 
 {% endblock navbar %}

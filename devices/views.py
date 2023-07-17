@@ -1,4 +1,5 @@
 from typing import *
+from typing import Any, Dict
 
 from django.db.models import Count, F, QuerySet
 from django.urls import reverse_lazy
@@ -58,6 +59,12 @@ class DeviceGroupDetailView(BaseDeviceGroupEditView, DetailView):
     """Details view for a device group"""
     template_name = "devices/group/details.html"
     context_object_name = "device_group"
+    
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["device_count"] = self.object.device_set.count()
+        context["device_list"] = self.object.device_set.all()
+        return context
 
 
 class DeviceGroupEditView(BaseDeviceGroupEditView, UpdateView):

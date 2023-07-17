@@ -1,0 +1,43 @@
+<div class="details-container">
+
+  <table>
+
+  <tr>
+    <td>
+      <strong>UUID:</strong>
+    </td>
+    <td>
+      <span>{{ device.uid }}</span>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <strong>Date Added:</strong>
+    </td>
+    <td>
+      <span>{{ device.date_added }}</span>
+    </td>
+  </tr>
+
+    <tr>
+      <td>
+        <strong>Group:</strong>
+      </td>
+      <td>
+        <a href="{% url 'devices:group_details' device_group.name %}">{{ device_group.name }}</a>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <strong>Device Is Active:</strong>
+      </td>
+      <td>
+        <span>{{ device.is_active }}</span>
+      </td>
+    </tr>
+
+  </table>
+  
+</div>

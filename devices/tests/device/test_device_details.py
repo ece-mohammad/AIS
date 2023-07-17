@@ -17,12 +17,12 @@ SECOND_MEMBER: Final[Dict[str, str]] = dict(
 )
 
 FIRST_DEVICE_GROUP: Final[Dict[str, str]] = dict(
-    name="default device group",
+    name="first_device_group",
     description="default device group for first member",
 )
 
 SECOND_DEVICE_GROUP: Final[Dict[str, str]] = dict(
-    name="default device group",
+    name="second_device_group",
     description="default device group for second member",
 )
 

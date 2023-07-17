@@ -28,7 +28,7 @@ class DeviceGroup(models.Model):
     +--------------------------------+
     |          Device Group          |
     +--------------------------------+
-    | + name: CharField[32]          |
+    | + name: SlugField[32]          |
     +--------------------------------+
     | + creation_date: DateTimeField |
     +--------------------------------+
@@ -49,7 +49,7 @@ class DeviceGroup(models.Model):
 
     """
     
-    name = models.CharField(
+    name = models.SlugField(
         max_length=32,
         unique=False,
         null=False,

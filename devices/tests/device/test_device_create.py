@@ -18,30 +18,25 @@ SECOND_MEMBER: Final[Dict[str, str]] = dict(
 )
 
 FIRST_DEVICE_GROUP: Final[Dict[str, str]] = dict(
-    name="default device group",
+    name="first_device_group",
     description="default device group for first member",
 )
 
 SECOND_DEVICE_GROUP: Final[Dict[str, str]] = dict(
-    name="default device group",
+    name="second_device_group",
     description="default device group for second member",
 )
 
 
 class BaseDeviceTestCase(TestCase):
     def setUp(self) -> None:
-        self.first_member = create_member(
-            **FIRST_MEMBER
-        )
+        self.first_member = create_member(**FIRST_MEMBER)
+        self.first_device_group = self.first_member.devicegroup_set.create(**FIRST_DEVICE_GROUP)
 
-        self.second_member = create_member(
-            **SECOND_MEMBER
-        )
+        self.second_member = create_member(**SECOND_MEMBER)
+        self.second_device_group = self.second_member.devicegroup_set.create(**SECOND_DEVICE_GROUP)
         
         client_login(self.client, FIRST_MEMBER)
-        
-        self.first_member.devicegroup_set.create(**FIRST_DEVICE_GROUP)
-        self.second_member.devicegroup_set.create(**SECOND_DEVICE_GROUP)
         
         return super().setUp()
 
@@ -180,7 +175,7 @@ class TestDeviceCreateView(BaseDeviceTestCase):
             follow=True,
         )
         
-        new_device = self.first_member.devicegroup_set.first().device_set.first()
+        new_device = self.first_member.devicegroup_set.first().device_set.get(name=device.name)
         self.assertRedirects(response, DeviceDetails.get_url(device_uid=new_device.uid), 302, 200, fetch_redirect_response=True)
         self.assertEqual(self.first_member.devicegroup_set.first().device_set.count(), 1)
         self.assertEqual(self.second_member.devicegroup_set.first().device_set.count(), 1)
