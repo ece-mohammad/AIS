@@ -4,6 +4,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from accounts.models import Member
 
@@ -54,27 +55,30 @@ class DeviceGroup(models.Model):
         unique=False,
         null=False,
         blank=False,
-        verbose_name="device group name"
+        verbose_name=_("device group name"),
+        error_messages={
+            "invalid": _("Enter a valid device group name consisting of letters, numbers, underscores or hyphens.")
+        }
     )
 
     description = models.TextField(
         max_length=256,
-        verbose_name="device group description",
+        verbose_name=_("device group description"),
         blank=True,
         null=False,
         default=""
     )
     
     creation_date = models.DateTimeField(
-        verbose_name="creation date",
-        help_text="when was the group first created",
+        verbose_name=_("creation date"),
+        help_text=_("when was the group first created"),
         default=timezone.now
     )
     
     owner = models.ForeignKey(
         Member,
         on_delete=models.CASCADE,
-        verbose_name="device group owner",
+        verbose_name=_("device group owner"),
     )
 
     def get_absolute_url(self):
@@ -91,7 +95,7 @@ class Device(models.Model):
     +---------------------------------+
     |             Device              |
     +---------------------------------+
-    | + name: CharField[32]           |
+    | + name: SlugField[32]           |
     +---------------------------------+
     | + uid: UUIDField                |
     +---------------------------------+
@@ -123,29 +127,32 @@ class Device(models.Model):
         help_text="a globally unique ID for the device",
     )
 
-    name = models.CharField(
+    name = models.SlugField(
         max_length=32,
-        verbose_name="device name",
-        help_text="human friendly device name"
+        verbose_name=_("device name"),
+        help_text=_("human friendly device name"),
+        error_messages={
+            "invalid": _("Enter a valid device name consisting of letters, numbers, underscores or hyphens.")
+        }
     )
 
     is_active  = models.BooleanField(
         default=True,
-        verbose_name="is device enabled",
-        help_text="is the device enabled",
+        verbose_name=_("is device enabled"),
+        help_text=_("is the device enabled"),
     )
 
     date_added  = models.DateTimeField(
-        verbose_name="date added",
+        verbose_name=_("date added"),
         default=timezone.now,
-        help_text="when was the device added to the system",
+        help_text=_("when was the device added to the system"),
     )
 
     # relations
     group = models.ForeignKey(
         DeviceGroup,
         on_delete=models.CASCADE,
-        verbose_name="device group"
+        verbose_name=_("device group")
     )
 
     def __str__(self):
@@ -199,16 +206,16 @@ class DeviceData(models.Model):
 
     message = models.JSONField(
         encoder=DjangoJSONEncoder,
-        verbose_name="device data",
+        verbose_name=_("data message"),
         default=initialize_device_data,
         null=False,
         blank=True,
     )
 
     date = models.DateTimeField(
-        verbose_name="last update",
+        verbose_name=_("last update"),
         default=DEFAULT_UPDATE_DATETIME,
-        help_text="when was the data received",
+        help_text=_("when was the data received"),
     )
 
     device = models.ForeignKey(

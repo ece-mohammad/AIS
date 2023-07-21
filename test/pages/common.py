@@ -217,7 +217,6 @@ DeviceGroupList: Final[Page] = Page(
 # -----------------------------------------------------------------------------
 # Device pages
 # -----------------------------------------------------------------------------
-
 DeviceCreate: Final[Page] = Page(
     title="Create Device",
     template_name="devices/device/create.html",
@@ -256,3 +255,28 @@ DeviceDelete: Final[Page] = Page(
     kwargs=("device_name",),
 )
 
+# -----------------------------------------------------------------------------
+# Device Data pages
+# -----------------------------------------------------------------------------
+DeviceDataDetails: Final[Page] = Page(
+    title="Device Data",
+    template_name="devices/data/details.html",
+    view_name="devices:data_details",
+    _kw_url="/device/data/${data_id}/",
+    kwargs=("data_id",),
+)
+
+DeviceDataList: Final[Page] = Page(
+    title="Data List",
+    template_name="devices/data/list.html",
+    view_name="devices:data_list",
+    _url=reverse_lazy("devices:data_list"),
+)
+
+DeviceDataHistory: Final[Page] = Page(
+    title="Device Data",
+    template_name="devices/device/data_history.html",
+    view_name="devices:device_data_list",
+    _kw_url="/device/${device_uid}/data/",
+    kwargs=("device_uid"),
+)

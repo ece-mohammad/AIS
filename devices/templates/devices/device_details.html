@@ -16,7 +16,7 @@
       <strong>Date Added:</strong>
     </td>
     <td>
-      <span>{{ device.date_added }}</span>
+      <span>{{ device.date_added|date:"Y/m/d, H:i:s" }}</span>
     </td>
   </tr>
 
@@ -37,6 +37,40 @@
         <span>{{ device.is_active }}</span>
       </td>
     </tr>
+
+    <tr>
+      <td>
+        <strong>Last Update:</strong>
+      </td>
+      <td>
+        <span>
+        {% if last_update %}
+          {{ last_update|date:"Y/m/d, H:i:s" }}
+          {% else %}
+          ----
+          {% endif %}
+        </span>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <strong>Most Recent Data:</strong>
+      </td>
+      <td>
+        {% if device_data_list %}
+            {% for device_data in device_data_list %}
+            <div class="device_message">
+                <a href="{% url 'devices:data_details' device_data.id %}">{{ device_data.message|truncatechars:80 }}</a>
+            </div>
+            {% endfor %}
+        {% else %}
+          <span>No data available</span>
+        {% endif %}
+      </td>
+    </tr>
+
+
 
   </table>
   

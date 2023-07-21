@@ -10,6 +10,7 @@ python = "^3.11"
 django = "^4.2.2"
 django-rest-framework = "^0.1.0"
 paho-mqtt = "^1.6.1"
+django-tastypie = "^0.14.5"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.14.0"
@@ -26,7 +27,7 @@ django-debug-toolbar = "^4.1.0"
 pytest-skip-slow = "^0.0.5"
 
 [tool.pytest.ini_options]
-addopts = "-n 8 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
+addopts = "-x -n 8 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
 # addopts = "-n 8 -v"
 console_output_style = "count"
 required_plugins = "pytest-django pytest-xdist pytest-cov"

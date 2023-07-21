@@ -1,0 +1,27 @@
+<div class="row">
+  
+  <div class="col">
+    <strong>Message:</strong>
+  </div>
+
+  <div class="col">
+    <div class="json-root">
+      <code>
+        {{ device_data.message }}
+      </code>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+
+  <div class="col">
+    {{ device_data.date|date:"Y/m/d, H:i:s" }}
+  </div>
+  
+  <div class="col">
+    <a href="{% url 'devices:device_details' device_data.device.uid %}">{{ device_data.device.name }}</a>
+  </div>
+  
+</div>

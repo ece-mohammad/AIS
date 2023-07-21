@@ -29,10 +29,16 @@
       {% csrf_token %}
   
       {{ form.as_p }}
-        
-      <input type="submit" value="Deactivate">
       
-      <a href="{% url 'accounts:profile' user.username %}">Cancel</a>
+      <div>
+        <button type="submit">Deactivate</button>
+      </div>
+      <br>
+      
+      <div>
+        <button type="button" onclick="window.location.href='{% url 'accounts:profile' user.username %}'">Cancel</button>
+      </div>
+      <br>
 
     </form>
 

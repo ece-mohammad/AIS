@@ -1,0 +1,19 @@
+{% if page_obj.has_previous %}
+<button onclick="window.location.href = '?page=1'">First</button>
+<button onclick="window.location.href = '?page={{ page_obj.previous_page_number }}'">Back</button>
+{% else %}
+<button onclick="window.location.href = '?page=1'" disabled>First</button>
+<button onclick="#" disabled>Back</button>
+{% endif %}
+
+<span class="current">
+  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+</span>
+
+{% if page_obj.has_next %}
+<button onclick="window.location.href = '?page={{ page_obj.next_page_number }}'">Next</button>
+<button onclick="window.location.href = '?page={{ page_obj.paginator.num_pages }}'">Last</button>
+{% else %}
+<button onclick="#" disabled>Next</button>
+<button onclick="window.location.href = '?page={{ page_obj.paginator.num_pages }}'" disabled>Last</button>
+{% endif %}

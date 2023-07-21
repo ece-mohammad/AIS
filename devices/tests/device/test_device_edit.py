@@ -3,7 +3,7 @@ from test.utils.helpers import client_login, create_member, page_in_response
 from typing import *
 
 from django.test import TestCase
-from devices.models import Device
+from devices.models import Device, DeviceGroup
 
 
 FIRST_MEMBER: Final[Dict[str, str]] = dict(
@@ -27,27 +27,33 @@ SECOND_DEVICE_GROUP: Final[Dict[str, str]] = dict(
 )
 
 
+FIRST_DEVICE_NAME: Final[str] = "first_device"
+
+SECOND_DEVICE_NAME: Final[str] = "second_device"
+
+
+TEST_DEVICE_NAME: Final[str] = "test_device"
+
+
 class BaseDeviceEditTestCase(TestCase):
     def setUp(self) -> None:
         self.first_member = create_member(**FIRST_MEMBER)
         self.first_group = self.first_member.devicegroup_set.create(**FIRST_DEVICE_GROUP)
-        self.first_device = self.first_group.device_set.create(
-            name="first device",
-            uid=Device.generate_device_uid(f"{self.first_member.username}-{self.first_group.name}-first device"),
-            group=self.first_group,
-        )
+        self.first_device = self.create_device(FIRST_DEVICE_NAME, self.first_group)
         
         self.second_member = create_member(**SECOND_MEMBER)
         self.second_group = self.first_member.devicegroup_set.create(**SECOND_DEVICE_GROUP)
-        self.second_device = self.second_group.device_set.create(
-            name="second device",
-            uid=Device.generate_device_uid(f"{self.second_member.username}-{self.second_group.name}-second device"),
-            group=self.second_group,
-        )
+        self.second_device = self.create_device(SECOND_DEVICE_NAME, self.second_group)
         
         client_login(self.client, FIRST_MEMBER)
         
         return super().setUp()
+
+    def create_device(self, device_name: str, device_group: DeviceGroup) -> Device:
+        return device_group.device_set.create(
+            name=device_name,
+            uid=Device.generate_device_uid(f"{device_group.owner.username}-{device_group.name}-{device_name}"),
+        )
 
 
 class testDeviceEditRendering(BaseDeviceEditTestCase):

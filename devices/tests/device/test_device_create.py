@@ -2,9 +2,10 @@ from test.pages.common import DeviceCreate, DeviceDetails
 from test.utils.helpers import client_login, create_member, page_in_response
 from typing import *
 
-from django.test import TestCase
 from django.db.models import Count
-from devices.models import DeviceGroup, Device
+from django.test import TestCase
+
+from devices.models import Device, DeviceGroup
 
 
 FIRST_MEMBER: Final[Dict[str, str]] = dict(
@@ -27,6 +28,8 @@ SECOND_DEVICE_GROUP: Final[Dict[str, str]] = dict(
     description="default device group for second member",
 )
 
+TEST_DEVICE_NAME: Final[str] = "test_device"
+
 
 class BaseDeviceTestCase(TestCase):
     def setUp(self) -> None:
@@ -39,6 +42,12 @@ class BaseDeviceTestCase(TestCase):
         client_login(self.client, FIRST_MEMBER)
         
         return super().setUp()
+
+    def create_device(self, device_name: str, device_group: DeviceGroup) -> Device:
+        return device_group.device_set.create(
+            name=device_name,
+            uid=Device.generate_device_uid(f"{device_group.owner.username}-{device_group.name}-{device_name}"),
+        )
 
 
 class TestDeviceCreateTemplate(BaseDeviceTestCase):
@@ -82,7 +91,7 @@ class TestDeviceCreateView(BaseDeviceTestCase):
         response = self.client.post(
             DeviceCreate.get_url(),
             data=dict(
-                name="test device",
+                name=TEST_DEVICE_NAME,
                 group=DeviceGroup.objects.get(name=FIRST_DEVICE_GROUP["name"], owner=self.first_member).pk,
             ),
             follow=True,
@@ -90,12 +99,12 @@ class TestDeviceCreateView(BaseDeviceTestCase):
         device_group = self.first_member.devicegroup_set.all().annotate(
             device_count=Count("device"),
         ).first()
-        
         device = device_group.device_set.first()
+        
         self.assertRedirects(response, DeviceDetails.get_url(device_uid=device.uid), 302, 200, fetch_redirect_response=True)
         self.assertEqual(device_group.name, FIRST_DEVICE_GROUP["name"])
         self.assertEqual(device_group.device_set.count(), 1)
-        self.assertEqual(device.name, "test device")
+        self.assertEqual(device.name, TEST_DEVICE_NAME)
 
     def test_create_device_unique_name(self):
         """
@@ -103,23 +112,18 @@ class TestDeviceCreateView(BaseDeviceTestCase):
         for the same member, is not allowed
         """
         device_group = self.first_member.devicegroup_set.first()
-        device_data = dict(
-            name="test device",
-            uid=Device.generate_device_uid(f"{self.first_member.username}-{device_group.name}-test device"),
-            group=device_group,
-        )
-        device_group.device_set.create(**device_data)
+        device = self.create_device(TEST_DEVICE_NAME, device_group)
 
         response = self.client.post(
             DeviceCreate.get_url(),
             data=dict(
-                name=device_data["name"],
+                name=device.name,
                 group=device_group.pk,
             ),
             follow=True,
         )
-        
         form = response.context.get("form")
+        
         self.assertFormError(form, "name", ["A device with this name already exists."])
         self.assertInHTML("A device with this name already exists.", response.content.decode(response.charset))
 
@@ -129,12 +133,7 @@ class TestDeviceCreateView(BaseDeviceTestCase):
         in the same device group (owned by the same member), is not allowed
         """
         device_group = self.first_member.devicegroup_set.first()
-        device_data = dict(
-            name="test device",
-            uid=Device.generate_device_uid(f"{self.first_member.username}-{device_group.name}-test device"),
-            group=device_group,
-        )
-        device = device_group.device_set.create(**device_data)
+        device = self.create_device(TEST_DEVICE_NAME, device_group)
         new_device_group = self.first_member.devicegroup_set.create(
             name="new device group",
             description="new device group for first member",
@@ -159,12 +158,7 @@ class TestDeviceCreateView(BaseDeviceTestCase):
         The created devices are added to members' device groups
         """
         device_group = self.second_member.devicegroup_set.first()
-        device_data = dict(
-            name="test device",
-            uid=Device.generate_device_uid(f"{self.second_member.username}-{device_group.name}-test device"),
-            group=device_group,
-        )
-        device = device_group.device_set.create(**device_data)
+        device = self.create_device(TEST_DEVICE_NAME, device_group)
 
         response = self.client.post(
             DeviceCreate.get_url(),

@@ -20,3 +20,4 @@ out.html
 poetry.lock
 *.log
 coverage/
+migrations/

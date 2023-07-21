@@ -28,7 +28,6 @@ urlpatterns = [
     # accounts
     path("accounts/", include("accounts.urls")),
 
-    # TODO enable devices
     # devices
     path("device/", include("devices.urls")),
     

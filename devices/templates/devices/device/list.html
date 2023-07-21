@@ -35,11 +35,18 @@
 
   </div>
 
+</section>
+
+<section>
+  {% include 'base/base_pagination.html' %}
+</section>
+
+<section>
+  <br>
   <div>
     <a href="{% url 'devices:device_create' %}">Add Device</a>
   </div>
-  <br>
-
 </section>
+
 
 {% endblock %}

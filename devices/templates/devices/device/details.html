@@ -14,6 +14,11 @@
   <hr>
 
   <div>
+    <a href="{% url 'devices:device_data_list' device.uid %}">Device Data</a>
+  </div>
+  <br>
+
+  <div>
     <a href="{% url 'devices:device_edit' device.uid %}">Edit Device</a>
   </div>
   <br>

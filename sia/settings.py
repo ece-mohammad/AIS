@@ -58,6 +58,12 @@ INSTALLED_APPS = [
     # dashboard
     "dashboard.apps.DashboardConfig",
     
+    # django rest framework
+    "rest_framework",
+    
+    # tasty-pie
+    "tastypie",
+    
     # examples
     # "examples.apps.ExamplesConfig",
 ]
@@ -91,6 +97,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            "debug": True,
         },
     },
 ]
@@ -163,3 +170,6 @@ PASSWORD_RESET_TIMEOUT_HOURS = 1
 
 # login redirect url
 LOGIN_REDIRECT_URL = "/"
+
+PAGINATION_SIZE = 10
+MOST_RECENT_SIZE = 5

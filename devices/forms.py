@@ -1,6 +1,7 @@
 from typing import *
 
 from django.forms import ModelChoiceField, ModelForm
+from django.utils.translation import gettext_lazy as _
 
 from common.forms.mixins import (UniqueDeviceGroupPerMemberMixin,
                                     UniqueDevicePerMemberMixin)

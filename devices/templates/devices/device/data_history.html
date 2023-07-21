@@ -1,0 +1,44 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}Device Data{% endblock title %}
+
+{% block body %}
+<h1>Data History</h1>
+
+<section>
+
+  {% if device_data_list %}
+  
+  <ul>
+  {% for device_data in device_data_list %}
+    <li>
+      {% include 'devices/device_data.html' %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  {% else %}
+  
+  <p>
+    The device has not sent any data yet.
+  </p>
+
+  {% endif %}
+
+</section>
+
+<section>
+  <div>
+    <a href="{% url 'devices:device_details' device.uid %}">Device Details</a>
+  </div>
+  <br>
+</section>
+
+<hr>
+
+<section class="pagination">
+  {% include 'base/base_pagination.html' %}
+</section>
+
+
+{% endblock body %}

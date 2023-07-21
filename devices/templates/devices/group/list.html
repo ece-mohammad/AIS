@@ -38,9 +38,15 @@
   </p>
 {% endif %}
 
-<br>
-<div>
-  <a href="{% url 'devices:group_create' %}">Add device group</a>
-</div>
+<section>
+  {% include 'base/base_pagination.html' %}
+</section>
+
+<section>
+  <br>
+  <div>
+    <a href="{% url 'devices:group_create' %}">Add device group</a>
+  </div>
+</section>
 
 {% endblock body %}
