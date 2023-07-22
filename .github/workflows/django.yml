@@ -27,5 +27,6 @@ jobs:
     - name: Run Tests
       run: |
         pytest 
-        pytest -m slow --slow
+    - name: Run Selenium Tests
+        pytest -m slow --slow --cov-fail-under=75
 
