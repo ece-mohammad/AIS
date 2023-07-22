@@ -1,0 +1,22 @@
+{% extends 'base/base_page.html' %}
+
+{% comment %} dashboard/dashboard.html {% endcomment %}
+
+{% block title %}Dashboard{% endblock title %}
+
+
+{% block body %}
+
+<h1>Dashboard</h1>
+
+<br>
+<div>
+    <a href="{% url 'devices:group_list' %}">My Device Groups</a>
+</div>
+
+<br>
+<div>
+    <a href="{% url 'devices:device_list' %}">My Devices</a>
+</div>
+
+{% endblock body %}

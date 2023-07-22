@@ -27,15 +27,14 @@ django-debug-toolbar = "^4.1.0"
 pytest-skip-slow = "^0.0.5"
 
 [tool.pytest.ini_options]
-addopts = "-x -n 8 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
-# addopts = "-n 8 -v"
+addopts = "-x -n 4 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
+# addopts = "-x -n 4 -v"
 console_output_style = "count"
 required_plugins = "pytest-django pytest-xdist pytest-cov"
 DJANGO_SETTINGS_MODULE = "sia.settings"
 python_files = [
     "accounts/tests/test_*.py",
-    "devices/tests/group/test_*.py",
-    "devices/tests/device/test_*.py",
+    "devices/tests/*/test_*.py",
     "dashboard/tests/test_*.py",
     "mqtt/tests/test_*.py",
     "tests/utils/tests/test_*.py",
