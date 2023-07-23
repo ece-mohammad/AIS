@@ -1,0 +1,12 @@
+<div class="form-container">
+  <form action="{% url 'devices:search' %}" method="POST">
+    {% csrf_token %}
+    
+    {{ form.as_div }}
+    
+    <div>
+      <button type="submit">Search</button>
+    </div>
+    
+  </form>
+</div>

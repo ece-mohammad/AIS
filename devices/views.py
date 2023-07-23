@@ -2,12 +2,12 @@ from typing import *
 
 from django.conf import settings
 from django.db.models import Count, F, Q, QuerySet
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
 
 from accounts.forms import MemberConfirmActionForm
 from common.views.mixins import (DeviceBySlugMixin, DeviceGroupOwnerMixin,
@@ -15,7 +15,7 @@ from common.views.mixins import (DeviceBySlugMixin, DeviceGroupOwnerMixin,
                                     MemberLoginRequiredMixin)
 
 from .forms import (DeviceCreateForm, DeviceEditForm, DeviceGroupCreateForm,
-                    DeviceGroupEditForm)
+                    DeviceGroupEditForm, DeviceSearchForm)
 from .models import Device, DeviceData, DeviceGroup
 
 # Create your views here.
@@ -188,6 +188,24 @@ class DeviceDataHistoryView(BaseDeviceBySlugDetailsView, ListView):
     
     def get_queryset(self) -> QuerySet[Any]:
         return self.device.devicedata_set.all().order_by("-date")
+
+
+# -----------------------------------------------------------------------
+# DeviceGroup/Device Search View
+# -----------------------------------------------------------------------
+class DeviceSearchView(MemberLoginRequiredMixin, FormView):
+    form_class = DeviceSearchForm
+    template_name = "devices/search.html"
+    
+    def form_valid(self, form: Any) -> HttpResponse:
+        search_for = form.cleaned_data["search_for"]
+        name = form.cleaned_data["name"]
+        
+        if search_for == DeviceSearchForm.SearchFor.DEVICE:
+            search_results = Device.objects.filter(group__owner=self.request.user, name__icontains=name)
+        else:
+            search_results = DeviceGroup.objects.filter(owner=self.request.user, name__icontains=name)
+        return self.render_to_response(self.get_context_data(form=form, search_results=search_results))
 
 
 # -----------------------------------------------------------------------

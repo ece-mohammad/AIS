@@ -280,3 +280,11 @@ DeviceDataHistory: Final[Page] = Page(
     _kw_url="/device/${device_uid}/data/",
     kwargs=("device_uid"),
 )
+
+DeviceSearch: Final[Page] = Page(
+    title="Search",
+    template_name="devices/search.html",
+    view_name="devices:search",
+    _url=reverse_lazy("devices:search"),
+)
+

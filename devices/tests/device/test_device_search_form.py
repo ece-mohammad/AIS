@@ -1,0 +1,216 @@
+from typing import *
+
+from django.test import TestCase
+from devices.models import Device
+from test.pages.common import DeviceSearch, LogIn
+
+from test.utils.helpers import client_login, client_logout, create_member, page_in_response
+
+
+FIRST_MEMBER: Final[Dict[str, str]] = dict(
+    username="first_member",
+    password="test_password",
+)
+
+FIRST_DEVICE_GROUP: Final[Dict[str, str]] = dict(
+    name="first_device_group",
+    description="first device group description",
+)
+
+FIRST_DEVICE_NAME: Final[str] = "first_device"
+SECOND_DEVICE_NAME: Final[str] = "second_device"
+
+SECOND_MEMBER: Final[Dict[str, str]] = dict(
+    username="second_member",
+    password="test_password",
+)
+
+SECOND_DEVICE_GROUP: Final[Dict[str, str]] = dict(
+    name="second_device_group",
+    description="first device group description",
+)
+
+THIRD_DEVICE_NAME: Final[str] = "third_device"
+
+
+class BaseDeviceSearchTestCase(TestCase):
+    def setUp(self) -> None:
+        self.first_member = create_member(**FIRST_MEMBER)
+        self.first_device_group = self.first_member.devicegroup_set.create(**FIRST_DEVICE_GROUP)
+        self.first_device = self.first_device_group.device_set.create(
+            name=FIRST_DEVICE_NAME,
+            uid=Device.generate_device_uid(f"{self.first_member.username}-{self.first_device_group.name}-{FIRST_DEVICE_NAME}"),
+            group=self.first_device_group,
+        )
+        
+        self.second_device = self.first_device_group.device_set.create(
+            name=SECOND_DEVICE_NAME,
+            uid=Device.generate_device_uid(f"{self.first_member.username}-{self.first_device_group.name}-{SECOND_DEVICE_NAME}"),
+            group=self.first_device_group,
+        )
+        
+        self.second_member = create_member(**SECOND_MEMBER)
+        self.second_device_group = self.second_member.devicegroup_set.create(**SECOND_DEVICE_GROUP)
+        self.third_device = self.second_device_group.device_set.create(
+            name=THIRD_DEVICE_NAME,
+            uid=Device.generate_device_uid(f"{self.second_member.username}-{self.second_device_group.name}-{SECOND_DEVICE_NAME}"),
+            group=self.second_device_group,
+        )
+        
+        client_login(self.client, FIRST_MEMBER)
+        return super().setUp()
+
+
+class TestDeviceSearchRendering(BaseDeviceSearchTestCase):
+    def setUp(self, **kwargs: Any) -> Any:
+        ret = super().setUp()
+        self.response = self.client.get(DeviceSearch.get_url())
+        return ret
+    
+    def test_device_search_rendering(self) -> None:
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTrue(page_in_response(DeviceSearch, self.response)[0])
+
+
+class TestDeviceSearchForm(BaseDeviceSearchTestCase):
+    def setUp(self) -> None:
+        ret = super().setUp()
+        self.response = self.client.get(DeviceSearch.get_url())
+        self.form = self.response.context.get("form")
+        return ret
+
+    def test_device_search_form_fields(self):
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIsNotNone(self.form)
+        self.assertEqual(len(self.form.fields), 2)
+        self.assertIn("name", self.form.fields)
+        self.assertIn("search_for", self.form.fields)
+
+    def test_device_search_form_fields_name(self):
+        self.name_field = self.form.fields.get("name")
+        self.assertEqual(self.name_field.label, "Name")
+        self.assertEqual(self.name_field.required, True)
+        self.assertEqual(self.name_field.initial, None)
+    
+    def test_device_search_form_fields_search_for(self):
+        self.search_field = self.form.fields.get("search_for")
+        self.assertEqual(self.search_field.label, "Search For")
+        self.assertEqual(self.search_field.required, True)
+        self.assertEqual(self.search_field.initial, "device")
+
+
+class TestDeviceSearchView(BaseDeviceSearchTestCase):
+    def test_device_search_redirects_anonymous_user(self):
+        client_logout(self.client)
+        response = self.client.get(DeviceSearch.get_url())
+        next_url = f"{LogIn.get_url()}?next={DeviceSearch.get_url()}"
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, next_url)
+    
+    def test_device_search_redirects_to_results_page(self):
+        response = self.client.post(
+            DeviceSearch.get_url(),
+            data=dict(
+                name=self.first_device.name,
+                search_for="device",
+            ),
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(page_in_response(DeviceSearch, response)[0])
+
+    def test_device_search_device_search_results(self):
+        response = self.client.post(
+            DeviceSearch.get_url(),
+            data=dict(
+                name=self.first_device.name,
+                search_for="device",
+            ),
+            follow=True,
+        )
+        context = response.context
+        result_link = f"<a href=\"{self.first_device.get_absolute_url()}\">{self.first_device.name}</a>"
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("search_results", context.keys())
+        self.assertContains(response, self.first_device.name)
+        self.assertInHTML(result_link, response.content.decode())
+
+    def test_device_search_case_insensitive(self):
+        response = self.client.post(
+            DeviceSearch.get_url(),
+            data=dict(
+                name=self.first_device.name.upper(),
+                search_for="device",
+            ),
+            follow=True,
+        )
+        context = response.context
+        result_link = f"<a href=\"{self.first_device.get_absolute_url()}\">{self.first_device.name}</a>"
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("search_results", context.keys())
+        self.assertContains(response, self.first_device.name)
+        self.assertInHTML(result_link, response.content.decode())
+    
+    def test_device_search_partial_name(self):
+        response = self.client.post(
+            DeviceSearch.get_url(),
+            data=dict(
+                name=self.first_device.name.split("_")[-1],
+                search_for="device",
+            ),
+            follow=True,
+        )
+        context = response.context
+        result_link = f"<a href=\"{self.first_device.get_absolute_url()}\">{self.first_device.name}</a>"
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("search_results", context.keys())
+        self.assertContains(response, self.first_device.name)
+        self.assertInHTML(result_link, response.content.decode())
+    
+    def test_device_search_own_devices(self):
+        response = self.client.post(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="device",
+                search_for="device",
+            ),
+            follow=True,
+        )
+        context = response.context
+        third_device_link = f"<a href=\"{self.third_device.get_absolute_url()}\">{self.third_device.name}</a>"
+        
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("search_results", context.keys())
+        self.assertNotContains(response, self.third_device.name)
+        self.assertFalse(third_device_link in response.content.decode(response.charset))
+    
+    def test_device_search_own_groups(self):
+        response = self.client.post(
+            DeviceSearch.get_url(),
+            data=dict(
+                name=self.first_device_group.name,
+                search_for="group",
+            ),
+            follow=True,
+        )
+        group_link = f"<a href=\"{self.first_device_group.get_absolute_url()}\">{self.first_device_group.name}</a>"
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.first_device_group.name)
+        self.assertInHTML(group_link, response.content.decode())
+    
+    def test_device_search_empty_results(self):
+        response = self.client.post(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="non_existent_device",
+                search_for="device",
+            ),
+            follow=True,
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No results found")

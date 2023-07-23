@@ -1,0 +1,47 @@
+{% extends 'base/base_page.html' %}
+
+{% block title %}Search{% endblock title %}
+
+{% block body %}
+
+<section>
+  <div>
+    <h1>
+      Search
+    </h1>
+  </div>
+
+  <div>
+  {% include 'base/base_search_bar.html' %}
+  <hr>
+  </div>
+</section>
+
+{% if search_results != None %}
+<section>
+  
+  {% if search_results %}
+  <div>
+    <ul>
+    {% for result in search_results  %}
+    <li>
+      {% if form.search_for.value == 'device' %}
+        <a href="{% url 'devices:device_details' result.uid %}">{{ result.name }}</a>
+      {% else %}
+        <a href="{% url 'devices:group_details' result.name %}">{{ result.name }}</a>
+      {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+
+  {% else %}
+  <div>
+    <p>No results found</p>
+  </div>
+  {% endif %}
+  
+</section>
+{% endif %}
+
+{% endblock body %}

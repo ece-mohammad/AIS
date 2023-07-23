@@ -1,6 +1,7 @@
 from typing import *
 
-from django.forms import ModelChoiceField, ModelForm
+from django.db.models import TextChoices
+from django.forms import ModelChoiceField, ModelForm, Form, CharField, ChoiceField
 from django.utils.translation import gettext_lazy as _
 
 from common.forms.mixins import (UniqueDeviceGroupPerMemberMixin,
@@ -44,7 +45,7 @@ class DeviceGroupEditForm(BaseDeviceGroupForm):
 
 
 # -----------------------------------------------------------------------
-# device views
+# device forms
 # -----------------------------------------------------------------------
 class BaseDeviceForm(UniqueDevicePerMemberMixin, ModelForm):
     group = ModelChoiceField(
@@ -81,3 +82,33 @@ class DeviceEditForm(BaseDeviceForm):
             "group",
             "is_active",
         ]
+
+
+# -----------------------------------------------------------------------
+# Search form
+# -----------------------------------------------------------------------
+class DeviceSearchForm(Form):
+    class SearchFor(TextChoices):
+        DEVICE = "device", _("Device")
+        GROUP = "group", _("Group")
+        
+    """Form to search for devices, or device groups"""
+    name = CharField(
+        max_length=100, 
+        label=_("Name"),
+        required=True, 
+    )
+    
+    search_for = ChoiceField(
+        choices=SearchFor.choices, 
+        label=_("Search For"), 
+        required=True, 
+        initial=SearchFor.DEVICE,
+    )
+    
+    def clean_name(self) -> str:
+        """Validate name"""
+        name = self.cleaned_data["name"]
+        if name:
+            return name.strip()
+        return name.lower()

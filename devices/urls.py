@@ -74,4 +74,5 @@ urlpatterns = [
     path("", include(device_urls)),
     path("group/", include(group_urls)),
     path("data/", include(device_data)),
+    path("search/", views.DeviceSearchView.as_view(), name="search"),
 ]
