@@ -253,7 +253,7 @@ class DeviceDataListView(DeviceDataByMember, ListView):
 # -----------------------------------------------------------------------
 # DeviceGroup/Device Search View
 # -----------------------------------------------------------------------
-class DeviceSearchView(MemberLoginRequiredMixin, FormView):
+class DeviceSearchResultsView(MemberLoginRequiredMixin, FormView):
     form_class = DeviceSearchForm
     paginate_by = settings.PAGINATION_SIZE
     allow_empty = True
