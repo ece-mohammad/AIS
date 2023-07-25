@@ -1,11 +1,15 @@
 from typing import *
 
+
 from django.test import TestCase
 from devices.models import Device
 from test.pages.common import DeviceSearch, LogIn
+from django.conf import settings
 
 from test.utils.helpers import client_login, client_logout, create_member, page_in_response
 
+
+SEARCH_RESULTS_PER_PAGE: Final[int] = settings.PAGINATION_SIZE
 
 FIRST_MEMBER: Final[Dict[str, str]] = dict(
     username="first_member",
@@ -40,13 +44,11 @@ class BaseDeviceSearchTestCase(TestCase):
         self.first_device = self.first_device_group.device_set.create(
             name=FIRST_DEVICE_NAME,
             uid=Device.generate_device_uid(f"{self.first_member.username}-{self.first_device_group.name}-{FIRST_DEVICE_NAME}"),
-            group=self.first_device_group,
         )
         
         self.second_device = self.first_device_group.device_set.create(
             name=SECOND_DEVICE_NAME,
             uid=Device.generate_device_uid(f"{self.first_member.username}-{self.first_device_group.name}-{SECOND_DEVICE_NAME}"),
-            group=self.first_device_group,
         )
         
         self.second_member = create_member(**SECOND_MEMBER)
@@ -54,7 +56,6 @@ class BaseDeviceSearchTestCase(TestCase):
         self.third_device = self.second_device_group.device_set.create(
             name=THIRD_DEVICE_NAME,
             uid=Device.generate_device_uid(f"{self.second_member.username}-{self.second_device_group.name}-{SECOND_DEVICE_NAME}"),
-            group=self.second_device_group,
         )
         
         client_login(self.client, FIRST_MEMBER)
@@ -89,13 +90,13 @@ class TestDeviceSearchForm(BaseDeviceSearchTestCase):
     def test_device_search_form_fields_name(self):
         self.name_field = self.form.fields.get("name")
         self.assertEqual(self.name_field.label, "Name")
-        self.assertEqual(self.name_field.required, True)
+        self.assertEqual(self.name_field.required, False)
         self.assertEqual(self.name_field.initial, None)
     
     def test_device_search_form_fields_search_for(self):
         self.search_field = self.form.fields.get("search_for")
         self.assertEqual(self.search_field.label, "Search For")
-        self.assertEqual(self.search_field.required, True)
+        self.assertEqual(self.search_field.required, False)
         self.assertEqual(self.search_field.initial, "device")
 
 
@@ -108,7 +109,7 @@ class TestDeviceSearchView(BaseDeviceSearchTestCase):
         self.assertEqual(response.url, next_url)
     
     def test_device_search_redirects_to_results_page(self):
-        response = self.client.post(
+        response = self.client.get(
             DeviceSearch.get_url(),
             data=dict(
                 name=self.first_device.name,
@@ -116,11 +117,12 @@ class TestDeviceSearchView(BaseDeviceSearchTestCase):
             ),
             follow=True,
         )
+        
         self.assertEqual(response.status_code, 200)
         self.assertTrue(page_in_response(DeviceSearch, response)[0])
 
     def test_device_search_device_search_results(self):
-        response = self.client.post(
+        response = self.client.get(
             DeviceSearch.get_url(),
             data=dict(
                 name=self.first_device.name,
@@ -137,7 +139,7 @@ class TestDeviceSearchView(BaseDeviceSearchTestCase):
         self.assertInHTML(result_link, response.content.decode())
 
     def test_device_search_case_insensitive(self):
-        response = self.client.post(
+        response = self.client.get(
             DeviceSearch.get_url(),
             data=dict(
                 name=self.first_device.name.upper(),
@@ -154,7 +156,7 @@ class TestDeviceSearchView(BaseDeviceSearchTestCase):
         self.assertInHTML(result_link, response.content.decode())
     
     def test_device_search_partial_name(self):
-        response = self.client.post(
+        response = self.client.get(
             DeviceSearch.get_url(),
             data=dict(
                 name=self.first_device.name.split("_")[-1],
@@ -171,7 +173,7 @@ class TestDeviceSearchView(BaseDeviceSearchTestCase):
         self.assertInHTML(result_link, response.content.decode())
     
     def test_device_search_own_devices(self):
-        response = self.client.post(
+        response = self.client.get(
             DeviceSearch.get_url(),
             data=dict(
                 name="device",
@@ -189,7 +191,7 @@ class TestDeviceSearchView(BaseDeviceSearchTestCase):
         self.assertFalse(third_device_link in response.content.decode(response.charset))
     
     def test_device_search_own_groups(self):
-        response = self.client.post(
+        response = self.client.get(
             DeviceSearch.get_url(),
             data=dict(
                 name=self.first_device_group.name,
@@ -203,7 +205,7 @@ class TestDeviceSearchView(BaseDeviceSearchTestCase):
         self.assertInHTML(group_link, response.content.decode())
     
     def test_device_search_empty_results(self):
-        response = self.client.post(
+        response = self.client.get(
             DeviceSearch.get_url(),
             data=dict(
                 name="non_existent_device",
@@ -214,3 +216,134 @@ class TestDeviceSearchView(BaseDeviceSearchTestCase):
         
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No results found")
+
+
+class TestDeviceSearchPagination(BaseDeviceSearchTestCase):
+    def setUp(self) -> None:
+        ret = super().setUp()
+        
+        self.first_device_group.device_set.all().delete()
+        for index in range(settings.PAGINATION_SIZE*2):
+            self.first_device_group.device_set.create(
+                name=f"device_{index:02d}",
+                uid=Device.generate_device_uid(f"{self.first_member.username}-{self.first_device_group.name}-device_{index}"),
+            )
+            
+        return ret
+
+    def test_device_search_pagination(self):
+        first_page = self.client.get(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="device",
+                search_for="device",
+                page=1,
+            ),
+            follow=True,
+        )
+        
+        second_page = self.client.get(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="device",
+                search_for="device",
+                page=2,
+            ),
+            follow=True,
+        )
+        
+        first_context = first_page.context
+        second_context = second_page.context
+        
+        self.assertEqual(first_page.status_code, 200)
+        self.assertEqual(first_context.get("page_obj").number, 1)
+        self.assertEqual(first_context.get("page_obj").paginator.num_pages, 2)
+        self.assertEqual(first_context.get("page_obj").paginator.count, settings.PAGINATION_SIZE*2)
+        self.assertEqual(len(first_context.get("page_obj").object_list), settings.PAGINATION_SIZE)
+        
+        self.assertEqual(second_page.status_code, 200)
+        self.assertEqual(second_context.get("page_obj").number, 2)
+        self.assertEqual(second_context.get("page_obj").paginator.num_pages, 2)
+        self.assertEqual(second_context.get("page_obj").paginator.count, settings.PAGINATION_SIZE*2)
+        self.assertEqual(len(second_context.get("page_obj").object_list), settings.PAGINATION_SIZE)
+        
+        for device_index in range(SEARCH_RESULTS_PER_PAGE):
+            device_name = f"device_{device_index:02d}"
+            device_link = f"<a href=\"{self.first_device_group.device_set.get(name=device_name).get_absolute_url()}\">{device_name}</a>"
+            self.assertContains(first_page, device_name)
+            self.assertInHTML(device_link, first_page.content.decode())
+        
+        for device_index in range(SEARCH_RESULTS_PER_PAGE, SEARCH_RESULTS_PER_PAGE*2):
+            device_name = f"device_{device_index:02d}"
+            device_link = f"<a href=\"{self.first_device_group.device_set.get(name=device_name).get_absolute_url()}\">{device_name}</a>"
+            self.assertContains(second_page, device_name)
+            self.assertInHTML(device_link, second_page.content.decode())
+
+    def test_device_search_pagination_first_page(self):
+        response = self.client.get(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="device",
+                search_for="device",
+                page="first",
+            ),
+            follow=True,
+        )
+        context = response.context
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(context.get("page_obj").number, 1)
+
+    def test_device_search_pagination_last_page(self):
+        response = self.client.get(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="device",
+                search_for="device",
+                page="last",
+            ),
+            follow=True,
+        )
+        
+        context = response.context
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(context.get("page_obj").number, 2)
+
+    def test_device_search_pagination_invalid_page_number_is_404(self):
+        response = self.client.get(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="device",
+                search_for="device",
+                page=3,
+            ),
+            follow=True,
+        )
+        
+        self.assertEqual(response.status_code, 404)
+        
+    def test_device_search_pagination_invalid_page_name_is_404(self):
+        response = self.client.get(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="device",
+                search_for="device",
+                page="invalid",
+            ),
+            follow=True,
+        )
+        
+        self.assertEqual(response.status_code, 404)
+
+    def test_device_search_post_method_is_not_allowed(self):
+        response = self.client.post(
+            DeviceSearch.get_url(),
+            data=dict(
+                name="device",
+                search_for="device,"
+            ),
+            follow=True,
+        )
+        
+        self.assertEqual(response.status_code, 405)

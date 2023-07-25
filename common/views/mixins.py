@@ -1,7 +1,6 @@
 from typing import *
 
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
-from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
@@ -32,18 +31,3 @@ class OwnerMemberRequiredMixin(AccessMixin):
             self.permission_denied_message = "You do not have permission to access this page."
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
-
-
-class DeviceGroupOwnerMixin:
-    def get_queryset(self) -> QuerySet[Any]:
-        return super().get_queryset().filter(owner=self.request.user)
-
-
-class DevicesByMemberMixin:
-    def get_queryset(self) -> QuerySet[Any]:
-        return super().get_queryset().filter(group__owner=self.request.user)
-
-
-class DeviceBySlugMixin(DevicesByMemberMixin):
-    slug_field = "uid"
-    slug_url_kwarg = "device_uid"

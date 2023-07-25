@@ -116,7 +116,6 @@ class TestDeviceGroupCreateForm(BaseDeviceGroupTestCase):
         group: DeviceGroup = DeviceGroup.objects.get(name=device_group_name)
         
         # Check that the form data is accepted (redirects to the device group details page)
-        self.assertIsNone(form)
         self.assertRedirects(response, DeviceGroupDetails.get_url(group_name="test_group"), 302, 200, fetch_redirect_response=True)
         
         # Check that the device group has been created

@@ -1,4 +1,3 @@
-from devices.tests import device
 from test.pages.common import DeviceGroupDetails, DeviceGroupEdit
 from test.utils.helpers import client_login, create_member, page_in_response
 from typing import *
@@ -26,10 +25,10 @@ FIRST_DEVICE_GROUPS_DATA: Final[List[Dict[str, str]]] = [
 ]
 
 SECOND_DEVICE_GROUPS_DATA: Final[List[Dict[str, str]]] = [
-    dict(name="test_group_1", description="second member test description 1",),
-    dict(name="test_group_2", description="second member test description 2",),
     dict(name="test_group_5", description="second member test description 5",),
     dict(name="test_group_6", description="second member test description 6",),
+    dict(name="test_group_7", description="second member test description 7",),
+    dict(name="test_group_8", description="second member test description 8",),
 ]
 
 
@@ -195,4 +194,22 @@ class TestDeviceGroupEditView(BaseTestDeviceGroupEditTestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_device_group_another_member_404(self):
-        ...
+        response = self.client.get(
+            path=DeviceGroupEdit.get_url(group_name=self.second_device_groups[0].name),
+            follow=True
+        )
+        
+        self.assertEqual(response.status_code, 404)
+
+    def test_device_group_edit_no_changed_data(self):
+        response = self.client.post(
+            path=DeviceGroupEdit.get_url(group_name=self.first_device_groups[0].name),
+            data=dict(
+                name=self.first_device_groups[0].name,
+                description=self.first_device_groups[0].description,
+            ),
+            follow=True,
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, DeviceGroupDetails.get_url(group_name=self.first_device_groups[0].name), 302, 200, fetch_redirect_response=True)

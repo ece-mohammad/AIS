@@ -64,7 +64,7 @@ group_urls = [
 # -----------------------------------------------------------------------------
 device_data = [
     path("<int:pk>/", views.DeviceDataDetailsView.as_view(), name="data_details"),
-    path("all/", views.DeviceDataListView.as_view(), name="data_list"),
+    path("list/", views.DeviceDataListView.as_view(), name="data_list"),
 ]
 
 # -----------------------------------------------------------------------------

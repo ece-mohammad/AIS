@@ -1,8 +1,11 @@
+{% if search_form is not None %}
+<hr>
+<div>
+  <h2>Search</h2>
+</div>
 <div class="form-container">
-  <form action="{% url 'devices:search' %}" method="POST">
-    {% csrf_token %}
-    
-    {{ form.as_div }}
+  <form action="{% url 'devices:search' %}" method="GET">
+    {{ search_form.as_div }}
     
     <div>
       <button type="submit">Search</button>
@@ -10,3 +13,5 @@
     
   </form>
 </div>
+<hr>
+{% endif %}

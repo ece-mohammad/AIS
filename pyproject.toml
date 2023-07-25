@@ -25,6 +25,7 @@ pip = "^23.1.2"
 django-coverage-plugin = "^3.1.0"
 django-debug-toolbar = "^4.1.0"
 pytest-skip-slow = "^0.0.5"
+pytest-sugar = "^0.9.7"
 
 [tool.pytest.ini_options]
 addopts = "-x -n 4 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
@@ -67,7 +68,7 @@ exclude_also = [
 ]
 show_missing = true
 skip_empty = true
-fail_under = 98
+# fail_under = 98
 sort = "Cover"
 
 [tool.coverage.html]

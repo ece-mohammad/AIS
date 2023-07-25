@@ -1,3 +1,4 @@
+from distutils.command import clean
 from typing import *
 
 from django.db.models import TextChoices
@@ -96,13 +97,13 @@ class DeviceSearchForm(Form):
     name = CharField(
         max_length=100, 
         label=_("Name"),
-        required=True, 
+        required=False,
     )
     
     search_for = ChoiceField(
         choices=SearchFor.choices, 
         label=_("Search For"), 
-        required=True, 
+        required=False, 
         initial=SearchFor.DEVICE,
     )
     

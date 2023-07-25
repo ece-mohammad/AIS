@@ -1,8 +1,29 @@
+<script>
+  function addPagination(page) {
+    var url_query = window.location.search;
+    // remove trailing "/"
+    if(url_query.endsWith("/")){
+      url_query = url_query.slice(0, -1);
+    }
+
+    if (url_query == ""){
+      // url has no query string --> add "?page="
+      return "?page=" + page;
+    } else if(url_query.includes("page=")) {
+      // url has a "page" key in query string --> replace "page=" value
+      return url_query.replace(/page=\d+/, "page=" + page);
+    } else {
+      // url has a query string but no "page" key --> add "&page="
+      return url_query + "&page=" + page;
+    }
+  }
+</script>
+
 {% if page_obj.has_previous %}
-<button onclick="window.location.href = '?page=1'">First</button>
-<button onclick="window.location.href = '?page={{ page_obj.previous_page_number }}'">Back</button>
+<button onclick="window.location.href = addPagination(1)">First</button>
+<button onclick="window.location.href = addPagination({{ page_obj.previous_page_number }})">Back</button>
 {% else %}
-<button onclick="window.location.href = '?page=1'" disabled>First</button>
+<button onclick="window.location.href = addPagination(1)" disabled>First</button>
 <button onclick="#" disabled>Back</button>
 {% endif %}
 
@@ -11,9 +32,9 @@
 </span>
 
 {% if page_obj.has_next %}
-<button onclick="window.location.href = '?page={{ page_obj.next_page_number }}'">Next</button>
-<button onclick="window.location.href = '?page={{ page_obj.paginator.num_pages }}'">Last</button>
+<button onclick="window.location.href = addPagination({{ page_obj.next_page_number }})">Next</button>
+<button onclick="window.location.href = addPagination({{ page_obj.paginator.num_pages }})">Last</button>
 {% else %}
 <button onclick="#" disabled>Next</button>
-<button onclick="window.location.href = '?page={{ page_obj.paginator.num_pages }}'" disabled>Last</button>
+<button onclick="window.location.href = addPagination({{ page_obj.paginator.num_pages }})" disabled>Last</button>
 {% endif %}
