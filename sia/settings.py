@@ -11,20 +11,29 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+
+env = environ.Env(
+    DEBUG=(bool, False),
+)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-z$#(&th-abnh7abtq1&jd9ywic4-dnjni9@xci=n22n5+ice4i"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = [
     "*"
@@ -32,7 +41,7 @@ ALLOWED_HOSTS = [
 
 INTERNAL_IPS = [
     "127.0.0.1",
-    "localhost"
+    "localhost",
 ]
 
 
@@ -45,6 +54,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    
+    # django extensions
+    "django_extensions",
+    "django_filters",
+    "environ",
 
     # debug toolbar
     "debug_toolbar",
@@ -63,9 +77,6 @@ INSTALLED_APPS = [
     
     # tasty-pie
     "tastypie",
-    
-    # examples
-    # "examples.apps.ExamplesConfig",
 ]
 
 MIDDLEWARE = [
@@ -103,7 +114,7 @@ TEMPLATES = [
 ]
 
 # email settings
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
 WSGI_APPLICATION = "sia.wsgi.application"
