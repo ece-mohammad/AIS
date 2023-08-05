@@ -1,19 +1,13 @@
 import re
-from test.pages.common import (HomePage, LogIn, PasswordReset,
-                                PasswordResetComplete, PasswordResetConfirm,
+from test.pages.common import (HomePage, PasswordReset, PasswordResetComplete,
                                 PasswordResetDone)
 from test.utils.helpers import client_login, create_member, page_in_response
 from typing import *
 
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core import mail
 from django.test import TestCase
-from pytest import mark
-from selenium.webdriver import firefox
-from selenium.webdriver.common.by import By
 
 
-GECKO_DRIVER_PATH: Final[str] = "/snap/bin/geckodriver"
 OLD_PASSWORD: Final[str] = "old_password"
 NEW_PASSWORD: Final[str] = "new_password"
 MEMBER_EMAIL: Final[str] = "foo@bar.com"
@@ -23,20 +17,6 @@ TEST_USER_CREDENTIALS: Final[Dict[str, str]] = dict(
     password=OLD_PASSWORD,
     email=MEMBER_EMAIL,
 )
-
-# password reset form locators
-PASSWORD_RESET_EMAIL_LOCATOR: Final[Tuple[str, str]] = (By.CSS_SELECTOR, "#id_email")
-PASSWORD_RESET_SUBMIT_LOCATOR: Final[Tuple[str, str]] = (By.CSS_SELECTOR, "[type='submit']")
-
-# password reset confirm form locators
-PASSWORD_RESET_CONFIRM_NEW_PASSWORD_LOCATOR = (By.CSS_SELECTOR, "#id_new_password1")
-PASSWORD_RESET_CONFIRM_NEW_PASSWORD_CONFIRM_LOCATOR = (By.CSS_SELECTOR, "#id_new_password2")
-PASSWORD_RESET_CONFIRM_SUBMIT_LOCATOR = (By.CSS_SELECTOR, "[type='submit']")
-
-# login page locators
-LOGIN_USERNAME_LOCATOR: Final[Tuple[str, str]] = (By.CSS_SELECTOR, "#id_username")
-LOGIN_PASSWORD_LOCATOR: Final[Tuple[str, str]] = (By.CSS_SELECTOR, "#id_password")
-LOGIN_SUBMIT_LOCATOR: Final[Tuple[str, str]] = (By.CSS_SELECTOR, "[type='submit']")
 
 
 class BasePasswordResetTestCase(TestCase):
@@ -164,82 +144,3 @@ class TestPasswordResetSequence(BasePasswordResetTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFormError(form, "new_password2", ["New password must be different from old password"])
 
-
-class TestPasswordResetSelenium(StaticLiveServerTestCase):
-    """Test password reset using selenium & firefox"""
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        create_member(**TEST_USER_CREDENTIALS)
-        cls.selenium = cls.get_firefox_webdriver()
-        cls.selenium.implicitly_wait(10)
-        
-    @classmethod
-    def tearDownClass(cls) -> None:
-        cls.selenium.quit()
-        super().tearDownClass()
-    
-    @classmethod
-    def get_firefox_webdriver(cls) -> firefox.webdriver.WebDriver:
-        options = firefox.options.Options()
-        options.add_argument("--headless")
-        service = firefox.service.Service(executable_path=GECKO_DRIVER_PATH)
-        return firefox.webdriver.WebDriver(service=service, options=options)
-    
-    @mark.slow
-    def test_password_reset_selenium_sequence(self):
-        # open password reset page
-        self.selenium.get(f"{self.live_server_url}/{PasswordReset.get_url()}")
-        self.assertEqual(self.selenium.title, PasswordReset.title)
-        
-        # enter email address
-        self.selenium.find_element(*PASSWORD_RESET_EMAIL_LOCATOR).send_keys(MEMBER_EMAIL)
-        self.selenium.find_element(*PASSWORD_RESET_SUBMIT_LOCATOR).click()
-        self.assertEqual(self.selenium.title, PasswordResetDone.title)
-        
-        # get password reset email
-        password_reset_url = BasePasswordResetTestCase.get_password_reset_address(sender="webmaster@localhost", to=MEMBER_EMAIL)
-        self.assertIsNotNone(password_reset_url)
-        
-        # open password reset url
-        self.selenium.get(f"{password_reset_url}")
-        self.assertEqual(self.selenium.title, PasswordResetConfirm.title)
-        
-        # enter new password
-        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_NEW_PASSWORD_LOCATOR).send_keys(NEW_PASSWORD)
-        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_NEW_PASSWORD_CONFIRM_LOCATOR).send_keys(NEW_PASSWORD)
-        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_SUBMIT_LOCATOR).click()
-        self.assertEqual(self.selenium.title, PasswordResetComplete.title)
-        
-        # login using new password
-        self.selenium.get(f"{self.live_server_url}/{LogIn.get_url()}")
-        self.selenium.find_element(*LOGIN_USERNAME_LOCATOR).send_keys(TEST_USER_CREDENTIALS["username"])
-        self.selenium.find_element(*LOGIN_PASSWORD_LOCATOR).send_keys(NEW_PASSWORD)
-        self.selenium.find_element(*LOGIN_SUBMIT_LOCATOR).click()
-        self.assertEqual(self.selenium.title, HomePage.title)
-    
-    @mark.slow
-    def test_password_reset_selenium_unique_password(self):
-        # open password reset page
-        self.selenium.get(f"{self.live_server_url}/{PasswordReset.get_url()}")
-        self.assertEqual(self.selenium.title, PasswordReset.title)
-        
-        # enter email address
-        self.selenium.find_element(*PASSWORD_RESET_EMAIL_LOCATOR).send_keys(MEMBER_EMAIL)
-        self.selenium.find_element(*PASSWORD_RESET_SUBMIT_LOCATOR).click()
-        self.assertEqual(self.selenium.title, PasswordResetDone.title)
-        
-        # get password reset email
-        password_reset_url = BasePasswordResetTestCase.get_password_reset_address(sender="webmaster@localhost", to=MEMBER_EMAIL)
-        self.assertIsNotNone(password_reset_url)
-        
-        # open password reset url
-        self.selenium.get(f"{password_reset_url}")
-        self.assertEqual(self.selenium.title, PasswordResetConfirm.title)
-        
-        # enter old password
-        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_NEW_PASSWORD_LOCATOR).send_keys(OLD_PASSWORD)
-        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_NEW_PASSWORD_CONFIRM_LOCATOR).send_keys(OLD_PASSWORD)
-        self.selenium.find_element(*PASSWORD_RESET_CONFIRM_SUBMIT_LOCATOR).click()
-        self.assertEqual(self.selenium.title, PasswordResetConfirm.title)
-        self.assertInHTML("New password must be different from old password", self.selenium.page_source)
