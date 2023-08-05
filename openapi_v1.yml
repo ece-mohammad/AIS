@@ -1,0 +1,561 @@
+openapi: "3.0.2"
+
+info:
+  title: API Title
+  
+  version: "1.0"
+  
+  description: SIA API Description
+
+  contact:
+    name: Mohammad Mohsen
+    email: kuro.ece@gmail.com
+    url: https://www.linkedin.com/in/mohammadtolba/
+
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://localhost:8000/api/v1/
+    description: Localhost
+
+components:
+  schemas:
+    Member:
+      title: Member
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        is_active:
+          type: boolean
+          default: true
+        is_staff:
+          type: boolean
+          default: false
+        date_joined:
+          type: string
+          format: date-time
+        devicegroup_set:
+          type: array
+          items:
+            type: string
+            format: uri
+      example:
+        url: https://localhost:8000/api/v1/members/username
+        id: 1
+        username: username
+        first_name: first_name
+        last_name: last_name
+        email: member@example.com
+        is_active: true
+        is_staff: false
+        date_joined: 2021-01-01T00:00:00Z
+        devicegroup_set:
+          - https://localhost:8000/api/v1/members/username/groups/group_name_1
+          - https://localhost:8000/api/v1/members/username/groups/group_name_2
+          - https://localhost:8000/api/v1/members/username/groups/group_name_3
+
+    Group:
+      title: Group
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        name:
+          type: string
+        id:
+          type: integer
+          format: int64
+        description:
+          type: string
+        creation_date:
+          type: string
+          format: date-time
+        owner:
+          type: string
+          format: uri
+        device_set:
+          type: array
+          items:
+            type: string
+            format: uri
+      example:
+        url: https://localhost:8000/api/v1/members/username/groups/group_name
+        name: group_name
+        id: 1
+        description: group_description
+        creation_date: 2021-01-01T00:00:00Z
+        owner: https://localhost:8000/api/v1/members/username
+        device_set:
+          - https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1
+          - https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2
+          - https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3
+
+    Device:
+      title: Device
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        name:
+          type: string
+        uid:
+          type: string
+        date_added:
+          type: string
+          format: date-time
+        is_active:
+          type: boolean
+        group:
+          type: string
+          format: uri
+        data_set:
+          type: array
+          items:
+            type: string
+            format: uri
+      example:
+        url: https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid
+        name: device_name
+        uid: device_uid
+        date_added: 2021-01-01T00:00:00Z
+        is_active: true
+        group: https://localhost:8000/api/v1/members/username/groups/group_name
+        data_set:
+          - https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1
+          - https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2
+          - https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3
+
+    Data:
+      title: Data
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        message:
+          type: string
+          format: json
+        date:
+          type: string
+          format: date-time
+        device:
+          type: string
+          format: uri
+      example:
+        url: https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id
+        message: {"temperature": 25, "humidity": 50}
+        date: 2021-01-01T00:00:00Z
+        device: https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid
+        
+  parameters:
+    username:
+      name: username
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The username of the member
+
+    group_name:
+      name: group_name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The name of the device group
+
+    device_uid:
+      name: device_uid
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The unique ID of the device
+
+    data_id:
+      name: data_id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: The ID of the device data message
+
+  securitySchemes:
+    name:
+      description: Basic Authentication
+      type: http
+      scheme: basic
+  
+  responses:
+    notFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            title: ObjectNotFoundErrorResponse
+            type: object
+            properties:
+              detail:
+                type: string
+                example: 
+                  Not found.
+    
+    badRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            title: BadRequestErrorResponse
+            type: object
+            properties:
+              detail:
+                type: string
+                example: 
+                  Bad request.
+    
+    unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            title: UnauthorizedErrorResponse
+            type: object
+            properties:
+              detail:
+                type: string
+                example: 
+                  Unauthorized.
+
+    created:
+      description: Created
+      content:
+        application/json:
+          schema:
+            title: ObjectCreatedResponse
+            type: object
+            properties:
+              detail:
+                type: string
+                example: 
+                  Created.
+    
+    memberDetails:
+      description: Member Details
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Member"
+
+    deviceGroupDetails:
+      description: Device Group Details
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Group"
+
+
+    deviceDetails:
+      description: Device Details
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Device"
+          
+    
+    dataDetails:
+      description: Data Details
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Data"
+          
+
+paths:
+  /members/{username}:
+    summary: |
+      An API endpoint to get a member's information, using the member's username. 
+      It allows retrieving the details of the current user only. 
+      Attempting to retrieve the details of another user will result in a not found error.
+    get:
+      summary: Get a member by its username
+      operationId: getMemberByUsername
+      tags:
+        - Details
+        - Members
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+  /members/{username}/groups:
+    summary: |
+      An API endpoint to get all device groups of the current user, 
+      or create a new device group under the current user.
+    get:
+      summary: Get all device groups for the current user.
+      operationId: listUserDeviceGroups
+      tags:
+        - List
+        - Device Groups
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Group"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+    post:
+      summary: |
+        Create a new device group.
+        A device group name must be unique for each user. For example:
+        user_1 can't have two groups named group_1. But user_2 and user_1 can both have a group named group_1.
+        A device group name can't contain any of the following characters: / ? < > \ : * | " ' or spaces.
+      operationId: createDeviceGroup
+      tags:
+        - Create
+        - Device Groups
+      parameters:
+        - $ref: "#/components/parameters/username"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Group"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "400":
+          $ref: "#/components/responses/badRequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+  /members/{username}/groups/{group_name}:
+    summary: |
+      An API endpoint to get a device group of the current user, by the group's name.
+    get:
+      summary: Get a device group by its name
+      operationId: getDeviceGroupByName
+      tags:
+        - Details
+        - Device Groups
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+  /members/{username}/groups/{group_name}/devices:
+    summary: |
+      An API endpoint to get all devices in a device group,
+      or add a new device to a device group.
+    get:
+      summary: Get all devices in a device group
+      operationId: listDevicesInGroup
+      tags:
+        - List
+        - Devices
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Device"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+    post: 
+      summary: |
+        Add a device to a device group. 
+        The device UID is a unique identifier for each device. And it's created automatically  by the server.
+        A device name must be unique for each user. For example:
+        user_1 can't have two devices named device_1. But user_2 and user_1 can both have a device named device_1.
+        A device name can't contain any of the following characters: / ? < > \ : * | " ' or spaces.
+      operationId: addDeviceToGroup
+      tags:
+        - Create
+        - Devices
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Device"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        "400":
+          $ref: "#/components/responses/badRequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+  /members/{username}/groups/{group_name}/devices/{device_uid}:
+    get:
+      summary: Get a device by its ID
+      operationId: getDeviceById
+      tags:
+        - Details
+        - Devices
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+        - $ref: "#/components/parameters/device_uid"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+  /members/{username}/groups/{group_name}/devices/{device_uid}/data:
+    get:
+      summary: Get all data sent by a device
+      operationId: listDeviceData
+      tags:
+        - List
+        - Data
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+        - $ref: "#/components/parameters/device_uid"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Data"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+    post:
+      summary: Add data to a device
+      operationId: addDataToDevice
+      tags:
+        - Create
+        - Data
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+        - $ref: "#/components/parameters/device_uid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Data"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Data"
+        "400":
+          $ref: "#/components/responses/badRequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+  /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}:
+    get:
+      summary: Get data by its ID
+      operationId: getDataById
+      tags:
+        - Details
+        - Data
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+        - $ref: "#/components/parameters/device_uid"
+        - $ref: "#/components/parameters/data_id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Data"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+security:
+  - basicAuth: []
