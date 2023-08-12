@@ -21,6 +21,15 @@ from django.urls import include, path
 from dashboard import views as dashboard_views
 
 
+api_urlpatterns = [
+    # api
+    path("", include("api.urls")),
+    
+    # api authentication
+    path("auth/", include("rest_framework.urls", namespace="rest_framework")),
+]
+
+
 urlpatterns = [
     # admin
     path("admin/", admin.site.urls),
@@ -34,9 +43,11 @@ urlpatterns = [
     # dashboard
     path("dashboard", include("dashboard.urls")),
 
-    # debug toolbar 
-    path('__debug__/', include('debug_toolbar.urls')),
+    path("api/", include(api_urlpatterns)),
     
     # homepage
     path("", dashboard_views.DashboardView.as_view(), name="homepage"),
+    
+    # debug toolbar 
+    path('__debug__/', include('debug_toolbar.urls')),
 ]

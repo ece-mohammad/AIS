@@ -11,6 +11,7 @@ django = "^4.2.2"
 django-rest-framework = "^0.1.0"
 django-tastypie = "^0.14.5"
 django-environ = "^0.10.0"
+jinja2 = "^3.1.2"
 django-extensions = "^3.2.3"
 
 
@@ -52,6 +53,7 @@ python_files = [
     "dashboard/tests/test_*.py",
     "mqtt/tests/test_*.py",
     "tests/utils/tests/test_*.py",
+    "api/v1/tests/test_*.py",
 ]
 
 [tool.coverage.run]
@@ -64,6 +66,7 @@ branch = true
 source = [
     "accounts",
     "devices",
+    "api",
 ]
 
 omit = [
@@ -72,6 +75,8 @@ omit = [
     "*/admin.py",
     "*/apps.py",
     "*/__init__.py",
+    "api/v2/*",
+    "api/v3/*",
 ]
 
 [tool.coverage.report]
@@ -98,6 +103,8 @@ pretty_print = true
 [tool.coverage.lcov]
 output = "coverage/lcov/coverage.lcov"
 
+[tool.black]
+target_version = ["py310", "py311"]
 
 [build-system]
 requires = ["poetry-core"]

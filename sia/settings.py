@@ -72,6 +72,9 @@ INSTALLED_APPS = [
     # dashboard
     "dashboard.apps.DashboardConfig",
     
+    # api
+    "api.apps.ApiConfig",
+    
     # django rest framework
     "rest_framework",
     
@@ -184,3 +187,8 @@ LOGIN_REDIRECT_URL = "/"
 
 PAGINATION_SIZE = 10
 MOST_RECENT_SIZE = 5
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 1,
+}

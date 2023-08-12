@@ -2,9 +2,9 @@ openapi: "3.0.2"
 
 info:
   title: API Title
-  
+
   version: "1.0"
-  
+
   description: SIA API Description
 
   contact:
@@ -161,10 +161,10 @@ components:
           format: uri
       example:
         url: https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id
-        message: {"temperature": 25, "humidity": 50}
+        message: { "temperature": 25, "humidity": 50 }
         date: 2021-01-01T00:00:00Z
         device: https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid
-        
+
   parameters:
     username:
       name: username
@@ -188,7 +188,7 @@ components:
       required: true
       schema:
         type: string
-      description: The unique ID of the device
+      description: The unique UID of the device
 
     data_id:
       name: data_id
@@ -197,15 +197,27 @@ components:
       schema:
         type: integer
         format: int64
-      description: The ID of the device data message
+      description: The UID of the device data message
 
   securitySchemes:
     name:
       description: Basic Authentication
       type: http
       scheme: basic
-  
+
   responses:
+    noContent:
+      description: No Content
+      content:
+        application/json:
+          schema:
+            title: ObjectDeletedResponse
+            type: object
+            properties:
+              detail:
+                type: string
+                example: No content.
+
     notFound:
       description: Not Found
       content:
@@ -216,9 +228,8 @@ components:
             properties:
               detail:
                 type: string
-                example: 
-                  Not found.
-    
+                example: Not found.
+
     badRequest:
       description: Bad Request
       content:
@@ -229,9 +240,8 @@ components:
             properties:
               detail:
                 type: string
-                example: 
-                  Bad request.
-    
+                example: Bad request.
+
     unauthorized:
       description: Unauthorized
       content:
@@ -242,8 +252,7 @@ components:
             properties:
               detail:
                 type: string
-                example: 
-                  Unauthorized.
+                example: Unauthorized.
 
     created:
       description: Created
@@ -255,9 +264,8 @@ components:
             properties:
               detail:
                 type: string
-                example: 
-                  Created.
-    
+                example: Created.
+
     memberDetails:
       description: Member Details
       content:
@@ -272,22 +280,19 @@ components:
           schema:
             $ref: "#/components/schemas/Group"
 
-
     deviceDetails:
       description: Device Details
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/Device"
-          
-    
+
     dataDetails:
       description: Data Details
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/Data"
-          
 
 paths:
   /members/{username}:
@@ -396,6 +401,65 @@ paths:
         "404":
           $ref: "#/components/responses/notFound"
 
+    put:
+      summary: Update a device group data by its name
+      operationId: updateDeviceGroupByName
+      tags:
+        - Update
+        - Device Groups
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+    patch:
+      summary: Update some of a device group's data by its name
+      operationId: partialUpdateDeviceGroupByName
+      tags:
+        - Partial Update
+        - Device Groups
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+    delete:
+      summary: Delete a device group by its name
+      operationId: deleteDeviceGroupByName
+      tags:
+        - Delete
+        - Device Groups
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+      responses:
+        "204":
+          $ref: "#/components/responses/noContent"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
   /members/{username}/groups/{group_name}/devices:
     summary: |
       An API endpoint to get all devices in a device group,
@@ -423,7 +487,7 @@ paths:
         "404":
           $ref: "#/components/responses/notFound"
 
-    post: 
+    post:
       summary: |
         Add a device to a device group. 
         The device UID is a unique identifier for each device. And it's created automatically  by the server.
@@ -458,8 +522,8 @@ paths:
 
   /members/{username}/groups/{group_name}/devices/{device_uid}:
     get:
-      summary: Get a device by its ID
-      operationId: getDeviceById
+      summary: Get a device by its UID
+      operationId: getDeviceByUID
       tags:
         - Details
         - Devices
@@ -474,6 +538,68 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Device"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+    
+    put:
+      summary: Update device's data by its UID
+      operationId: updateDeviceByUID
+      tags:
+        - Update
+        - Devices
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+        - $ref: "#/components/parameters/device_uid"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+    patch:
+      summary: Update some of a device's data by its UID
+      operationId: partialUpdateDeviceByUID
+      tags:
+        - Partial Update
+        - Devices
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+        - $ref: "#/components/parameters/device_uid"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+    delete:
+      summary: Delete a device by its UID
+      operationId: deleteDeviceByUID
+      tags:
+        - Delete
+        - Devices
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+        - $ref: "#/components/parameters/device_uid"
+      responses:
+        "204":
+          $ref: "#/components/responses/noContent"
         "401":
           $ref: "#/components/responses/unauthorized"
         "404":
@@ -552,6 +678,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Data"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "404":
+          $ref: "#/components/responses/notFound"
+
+    delete:
+      summary: Delete data by its ID
+      operationId: deleteDataById
+      tags:
+        - Delete
+        - Data
+      parameters:
+        - $ref: "#/components/parameters/username"
+        - $ref: "#/components/parameters/group_name"
+        - $ref: "#/components/parameters/device_uid"
+        - $ref: "#/components/parameters/data_id"
+      responses:
+        "204":
+          $ref: "#/components/responses/noContent"
         "401":
           $ref: "#/components/responses/unauthorized"
         "404":
