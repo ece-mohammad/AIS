@@ -323,10 +323,10 @@ class TestDeviceGroupsAPIViewList(BaseDeviceGroupsAPIViewListTestCase):
         response = self.client.get(self.url, data=dict(format="json"), follow=True)
 
         self.assertEqual(response.status_code, 200)
-        for index, dev in enumerate(
+        for index, group in enumerate(
             self.first_member.devicegroup_set.all().order_by("name"), start=0
         ):
-            self.assertEqual(response.data[index]["name"], dev.name)
+            self.assertEqual(response.data[index]["name"], group.name)
 
     def test_api_device_group_list_create_device_group(self):
         new_group_data = dict(

@@ -9,7 +9,6 @@ from rest_framework.test import APIRequestFactory, APITestCase
 from api.serializers import DeviceSerializer
 from devices.models import Device, DeviceGroup
 
-
 FIRST_MEMBER: Final[Dict[str, str]] = dict(
     username="test_user_1",
     password="test password",
@@ -38,6 +37,7 @@ THIRD_GROUP_DEVICES: Final[List[DeviceGroup]] = [
     Device(name="test_device_3"),
 ]
 
+
 # -----------------------------------------------------------------------------
 # Base Test classes (common set ups)
 # -----------------------------------------------------------------------------
@@ -45,32 +45,36 @@ class BaseDevicesAPIViewListTestCase(APITestCase):
     def setUp(self):
         self.url = reverse_lazy("api:devices_list")
         self.first_member = create_member(**FIRST_MEMBER)
-        
+
         for group in FIRST_MEMBER_GROUPS:
             group.owner = self.first_member
             group.save()
-        
+
         self.first_group = self.first_member.devicegroup_set.first()
         for dev in FIRST_GROUP_DEVICES:
-            dev.uid = Device.generate_device_uid(f"{self.first_member.username}-{self.first_group.name}-{dev.name}")
+            dev.uid = Device.generate_device_uid(
+                f"{self.first_member.username}-{self.first_group.name}-{dev.name}"
+            )
             dev.group = self.first_group
             dev.save()
-        
+
         self.second_member = create_member(**SECOND_MEMBER)
-        
+
         for group in SECOND_MEMBER_GROUPS:
             group.owner = self.second_member
             group.save()
-        
+
         self.third_group = self.second_member.devicegroup_set.first()
         for dev in THIRD_GROUP_DEVICES:
-            dev.uid = Device.generate_device_uid(f"{self.second_member.username}-{self.third_group.name}-{dev.name}")
+            dev.uid = Device.generate_device_uid(
+                f"{self.second_member.username}-{self.third_group.name}-{dev.name}"
+            )
             dev.group = self.third_group
             dev.save()
-        
+
         self.request = APIRequestFactory().get("/")
         self.request.user = self.first_member
-        
+
         client_login(self.client, FIRST_MEMBER)
 
 
@@ -80,12 +84,14 @@ class BaseDevicesAPIViewDetailsTestCase(BaseDevicesAPIViewListTestCase):
         url = reverse_lazy("api:devices_list")
         request = APIRequestFactory().get(url)
         request.user = self.first_member
-        self.device = DeviceSerializer(self.first_group.device_set.first(), context={"request": request})
+        self.device = DeviceSerializer(
+            self.first_group.device_set.first(), context={"request": request}
+        )
         self.url = reverse_lazy(
-            "api:device_details", 
+            "api:device_details",
             kwargs=dict(
                 pk=Device.objects.filter(group__owner=self.first_member).first().id
-            )
+            ),
         )
         return ret
 
@@ -107,37 +113,37 @@ class TestDevicesAPISerializer(BaseDevicesAPIViewListTestCase):
             creation_date=timezone.now(),
         )
         return ret
-    
+
     def test_api_device_serializer_fields(self):
         serializer = DeviceSerializer()
-        
+
         self.assertIsNotNone(serializer.fields.get("url"))
         self.assertIsNotNone(serializer.fields.get("name"))
         self.assertIsNotNone(serializer.fields.get("uid"))
         self.assertIsNotNone(serializer.fields.get("date_added"))
         self.assertIsNotNone(serializer.fields.get("is_active"))
         self.assertIsNotNone(serializer.fields.get("group"))
-    
+
     def test_api_device_serializer_fields_name(self):
         serializer = DeviceSerializer()
         name_field = serializer.fields.get("name")
         self.assertTrue(name_field.required)
-    
+
     def test_api_device_serializer_fields_uid(self):
         serializer = DeviceSerializer()
         uid_field = serializer.fields.get("uid")
         self.assertTrue(uid_field.required)
-    
+
     def test_api_device_serializer_fields_date_added(self):
         serializer = DeviceSerializer()
         date_field = serializer.fields.get("date_added")
         self.assertFalse(date_field.required)
-    
+
     def test_api_device_serializer_fields_is_active(self):
         serializer = DeviceSerializer()
         is_active = serializer.fields.get("is_active")
         self.assertFalse(is_active.required)
-        
+
     def test_api_device_serializer_fields_group(self):
         serializer = DeviceSerializer()
         group_field = serializer.fields.get("group")
@@ -152,32 +158,26 @@ class TestDevicesAPIViewList(BaseDevicesAPIViewListTestCase):
             follow=True,
         )
         error = response.data["detail"]
-        
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(error, "Authentication credentials were not provided.")
         self.assertEqual(error.code, "not_authenticated")
 
     def test_api_device_list_get_devices(self):
-        response = self.client.get(
-            self.url, 
-            data=dict(
-                format="json"
-            ),
-            follow=True
-        )
-        
+        response = self.client.get(self.url, data=dict(format="json"), follow=True)
+
         self.assertEqual(response.status_code, 200)
-        for index, dev in enumerate(Device.objects.filter(group__owner=self.first_member).order_by("name"), start=0):
+        for index, dev in enumerate(
+            Device.objects.filter(group__owner=self.first_member).order_by("name"),
+            start=0,
+        ):
             self.assertEqual(response.data[index]["name"], dev.name)
 
 
 class TestDevicesViewAPIDetails(BaseDevicesAPIViewDetailsTestCase):
     def test_api_device_details_get_device(self):
-        response = self.client.get(
-            self.url,
-            follow=True
-        )
-        
+        response = self.client.get(self.url, follow=True)
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["name"], self.device["name"].value)
         self.assertEqual(response.data["uid"], self.device["uid"].value)
@@ -190,16 +190,13 @@ class TestDevicesViewAPIDetails(BaseDevicesAPIViewDetailsTestCase):
             reverse_lazy("api:device_details", kwargs=dict(pk=999999)),
             follow=True,
         )
-        
+
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_api_device_details_non_another_member_device_is_404(self):
         client_logout(self.client)
         client_login(self.client, SECOND_MEMBER)
-        
-        response = self.client.get(
-            self.url,
-            follow=True
-        )
-        
+
+        response = self.client.get(self.url, follow=True)
+
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

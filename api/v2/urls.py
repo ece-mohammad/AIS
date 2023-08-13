@@ -3,7 +3,14 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 # from.views import DeviceDataViewSet
-from.views import DeviceGroupListAPIView, DeviceGroupDetailsAPIView, DeviceListAPIView, DeviceDetailsAPIView, MemberDetailsAPIView
+from .views import (
+    DeviceGroupListAPIView,
+    DeviceGroupDetailsAPIView,
+    DeviceListAPIView,
+    DeviceDetailsAPIView,
+    MemberDetailsAPIView,
+)
+
 # from.views import DeviceGroupAPIViewSet
 
 
@@ -69,32 +76,31 @@ devices_urls = [
 
 device_groups_urls = [
     path("", DeviceGroupListAPIView.as_view(), name="groups_list"),
-    path("<slug:group_name>/", DeviceGroupDetailsAPIView.as_view(), name="group_details"),
+    path(
+        "<slug:group_name>/", DeviceGroupDetailsAPIView.as_view(), name="group_details"
+    ),
     # path("<slug:group_name>/devices/", include(devices_urls)),
 ]
 
 version_1_url_patterns = [
-    # member 
-    path("members/<slug:username>/", MemberDetailsAPIView.as_view(), name="member_details"),
+    # member
+    path(
+        "members/<slug:username>/",
+        MemberDetailsAPIView.as_view(),
+        name="member_details",
+    ),
 ]
 
-version_2_url_patterns = [
-]
+version_2_url_patterns = []
 
 urlpatterns = [
     # path("", include(router.urls)),
-    
     path("v1/", include(version_1_url_patterns)),
-    
     # device groups
     path("groups/", include(device_groups_urls)),
-    
-    
     # devices
     path("devices/", include(devices_urls)),
-    
     # device data
     # path("data/<slug:device_uid>/", DeviceDataListAPIView.as_view(), name="device_data"),
     # path("devices/<slug:device_uid>/data/<int:pk>/", DeviceDataListAPIView.as_view(), name="data_details"),
-    
 ]
