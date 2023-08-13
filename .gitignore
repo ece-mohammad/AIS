@@ -21,3 +21,6 @@ poetry.lock
 *.log
 coverage/
 migrations/
+.env
+openapitools.json
+dev/

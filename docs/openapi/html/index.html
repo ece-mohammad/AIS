@@ -1,0 +1,2562 @@
+<!doctype html>
+<html>
+  <head>
+    <title>API Title</title>
+    <style type="text/css">
+      body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+
+h1	{
+	font-size: 25px;
+}
+h2	{
+	font-size: 20px;
+}
+h3	{
+	font-size: 16px;
+	font-weight: bold;
+}
+hr	{
+	height: 1px;
+	border: 0;
+	color: #ddd;
+	background-color: #ddd;
+}
+
+.app-desc {
+  clear: both;
+  margin-left: 20px;
+}
+.param-name {
+  width: 100%;
+}
+.license-info {
+  margin-left: 20px;
+}
+
+.license-url {
+  margin-left: 20px;
+}
+
+.model {
+  margin: 0 0 0px 20px;
+}
+
+.method {
+  margin-left: 20px;
+}
+
+.method-notes	{
+	margin: 10px 0 20px 0;
+	font-size: 90%;
+	color: #555;
+}
+
+pre {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+.http-method {
+ text-transform: uppercase;
+}
+
+pre.get {
+  background-color: #0f6ab4;
+}
+
+pre.post {
+  background-color: #10a54a;
+}
+
+pre.put {
+  background-color: #c5862b;
+}
+
+pre.delete {
+  background-color: #a41e22;
+}
+
+.huge	{
+	color: #fff;
+}
+
+pre.example {
+  background-color: #f3f3f3;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+code {
+  white-space: pre;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.method-path {
+  font-size: 1.5em;
+  background-color: #0f6ab4;
+}
+
+.up {
+  float:right;
+}
+
+.parameter {
+  width: 500px;
+}
+
+.param {
+  width: 500px;
+  padding: 10px 0 0 20px;
+  font-weight: bold;
+}
+
+.param-desc {
+  width: 700px;
+  padding: 0 0 0 20px;
+  color: #777;
+}
+
+.param-type {
+  font-style: italic;
+}
+
+.param-enum-header {
+width: 700px;
+padding: 0 0 0 60px;
+color: #777;
+font-weight: bold;
+}
+
+.param-enum {
+width: 700px;
+padding: 0 0 0 80px;
+color: #777;
+font-style: italic;
+}
+
+.field-label {
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+.field-items	{
+	padding: 0 0 15px 0;
+	margin-bottom: 15px;
+}
+
+.return-type {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+.param-header {
+  font-weight: bold;
+}
+
+.method-tags {
+  text-align: right;
+}
+
+.method-tag {
+  background: none repeat scroll 0% 0% #24A600;
+  border-radius: 3px;
+  padding: 2px 10px;
+  margin: 2px;
+  color: #FFF;
+  display: inline-block;
+  text-decoration: none;
+}
+
+    </style>
+  </head>
+  <body>
+  <h1>API Title</h1>
+    <div class="app-desc">SIA API Description</div>
+    <div class="app-desc">More information: <a href="https://www.linkedin.com/in/mohammadtolba/">https://www.linkedin.com/in/mohammadtolba/</a></div>
+    <div class="app-desc">Contact Info: <a href="kuro.ece@gmail.com">kuro.ece@gmail.com</a></div>
+    <div class="app-desc">Version: 1.0</div>
+    <div class="app-desc">BasePath:/api/v1</div>
+    <div class="license-info">MIT</div>
+    <div class="license-url">https://opensource.org/licenses/MIT</div>
+  <h2>Access</h2>
+    <ol>
+      <li>HTTP Basic Authentication</li>
+    </ol>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Create">Create</a></h4>
+  <ul>
+  <li><a href="#addDataToDevice"><code><span class="http-method">post</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data</code></a></li>
+  <li><a href="#addDeviceToGroup"><code><span class="http-method">post</span> /members/{username}/groups/{group_name}/devices</code></a></li>
+  <li><a href="#createDeviceGroup"><code><span class="http-method">post</span> /members/{username}/groups</code></a></li>
+  </ul>
+  <h4><a href="#Data">Data</a></h4>
+  <ul>
+  <li><a href="#addDataToDevice"><code><span class="http-method">post</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data</code></a></li>
+  <li><a href="#deleteDataById"><code><span class="http-method">delete</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}</code></a></li>
+  <li><a href="#getDataById"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}</code></a></li>
+  <li><a href="#listDeviceData"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data</code></a></li>
+  </ul>
+  <h4><a href="#Delete">Delete</a></h4>
+  <ul>
+  <li><a href="#deleteDataById"><code><span class="http-method">delete</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}</code></a></li>
+  <li><a href="#deleteDeviceByUID"><code><span class="http-method">delete</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></a></li>
+  <li><a href="#deleteDeviceGroupByName"><code><span class="http-method">delete</span> /members/{username}/groups/{group_name}</code></a></li>
+  </ul>
+  <h4><a href="#Details">Details</a></h4>
+  <ul>
+  <li><a href="#getDataById"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}</code></a></li>
+  <li><a href="#getDeviceByUID"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></a></li>
+  <li><a href="#getDeviceGroupByName"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}</code></a></li>
+  <li><a href="#getMemberByUsername"><code><span class="http-method">get</span> /members/{username}</code></a></li>
+  </ul>
+  <h4><a href="#DeviceGroups">DeviceGroups</a></h4>
+  <ul>
+  <li><a href="#createDeviceGroup"><code><span class="http-method">post</span> /members/{username}/groups</code></a></li>
+  <li><a href="#deleteDeviceGroupByName"><code><span class="http-method">delete</span> /members/{username}/groups/{group_name}</code></a></li>
+  <li><a href="#getDeviceGroupByName"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}</code></a></li>
+  <li><a href="#listUserDeviceGroups"><code><span class="http-method">get</span> /members/{username}/groups</code></a></li>
+  <li><a href="#partialUpdateDeviceGroupByName"><code><span class="http-method">patch</span> /members/{username}/groups/{group_name}</code></a></li>
+  <li><a href="#updateDeviceGroupByName"><code><span class="http-method">put</span> /members/{username}/groups/{group_name}</code></a></li>
+  </ul>
+  <h4><a href="#Devices">Devices</a></h4>
+  <ul>
+  <li><a href="#addDeviceToGroup"><code><span class="http-method">post</span> /members/{username}/groups/{group_name}/devices</code></a></li>
+  <li><a href="#deleteDeviceByUID"><code><span class="http-method">delete</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></a></li>
+  <li><a href="#getDeviceByUID"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></a></li>
+  <li><a href="#listDevicesInGroup"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices</code></a></li>
+  <li><a href="#partialUpdateDeviceByUID"><code><span class="http-method">patch</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></a></li>
+  <li><a href="#updateDeviceByUID"><code><span class="http-method">put</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></a></li>
+  </ul>
+  <h4><a href="#List">List</a></h4>
+  <ul>
+  <li><a href="#listDeviceData"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data</code></a></li>
+  <li><a href="#listDevicesInGroup"><code><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices</code></a></li>
+  <li><a href="#listUserDeviceGroups"><code><span class="http-method">get</span> /members/{username}/groups</code></a></li>
+  </ul>
+  <h4><a href="#Members">Members</a></h4>
+  <ul>
+  <li><a href="#getMemberByUsername"><code><span class="http-method">get</span> /members/{username}</code></a></li>
+  </ul>
+  <h4><a href="#PartialUpdate">PartialUpdate</a></h4>
+  <ul>
+  <li><a href="#partialUpdateDeviceByUID"><code><span class="http-method">patch</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></a></li>
+  <li><a href="#partialUpdateDeviceGroupByName"><code><span class="http-method">patch</span> /members/{username}/groups/{group_name}</code></a></li>
+  </ul>
+  <h4><a href="#Update">Update</a></h4>
+  <ul>
+  <li><a href="#updateDeviceByUID"><code><span class="http-method">put</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></a></li>
+  <li><a href="#updateDeviceGroupByName"><code><span class="http-method">put</span> /members/{username}/groups/{group_name}</code></a></li>
+  </ul>
+
+  <h1><a name="Create">Create</a></h1>
+  <div class="method"><a name="addDataToDevice"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data</code></pre></div>
+    <div class="method-summary">Add data to a device (<span class="nickname">addDataToDevice</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Data <a href="#Data">Data</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Data">Data</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id",
+  "message" : {
+    "temperature" : 25,
+    "humidity" : 50
+  },
+  "date" : "2021-01-01T00:00:00Z",
+  "device" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#Data">Data</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#BadRequestErrorResponse">BadRequestErrorResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="addDeviceToGroup"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /members/{username}/groups/{group_name}/devices</code></pre></div>
+    <div class="method-summary">Add a device to a device group.
+The device UID is a unique identifier for each device. And it's created automatically  by the server.
+A device name must be unique for each user. For example:
+user_1 can't have two devices named device_1. But user_2 and user_1 can both have a device named device_1.
+A device name can't contain any of the following characters: / ? &lt; &gt; \ : * | &quot; ' or spaces. (<span class="nickname">addDeviceToGroup</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Device <a href="#Device">Device</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Device">Device</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#Device">Device</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#BadRequestErrorResponse">BadRequestErrorResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="createDeviceGroup"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /members/{username}/groups</code></pre></div>
+    <div class="method-summary">Create a new device group.
+A device group name must be unique for each user. For example:
+user_1 can't have two groups named group_1. But user_2 and user_1 can both have a group named group_1.
+A device group name can't contain any of the following characters: / ? &lt; &gt; \ : * | &quot; ' or spaces. (<span class="nickname">createDeviceGroup</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Group <a href="#Group">Group</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Group">Group</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#Group">Group</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#BadRequestErrorResponse">BadRequestErrorResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Data">Data</a></h1>
+  <div class="method"><a name="addDataToDevice"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data</code></pre></div>
+    <div class="method-summary">Add data to a device (<span class="nickname">addDataToDevice</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Data <a href="#Data">Data</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Data">Data</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id",
+  "message" : {
+    "temperature" : 25,
+    "humidity" : 50
+  },
+  "date" : "2021-01-01T00:00:00Z",
+  "device" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#Data">Data</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#BadRequestErrorResponse">BadRequestErrorResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteDataById"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}</code></pre></div>
+    <div class="method-summary">Delete data by its ID (<span class="nickname">deleteDataById</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div><div class="param">data_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The UID of the device data message default: null format: int64</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "detail" : "No content."
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getDataById"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}</code></pre></div>
+    <div class="method-summary">Get data by its ID (<span class="nickname">getDataById</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div><div class="param">data_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The UID of the device data message default: null format: int64</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Data">Data</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id",
+  "message" : {
+    "temperature" : 25,
+    "humidity" : 50
+  },
+  "date" : "2021-01-01T00:00:00Z",
+  "device" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Data">Data</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="listDeviceData"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data</code></pre></div>
+    <div class="method-summary">Get all data sent by a device (<span class="nickname">listDeviceData</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Data">Data</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id",
+  "message" : {
+    "temperature" : 25,
+    "humidity" : 50
+  },
+  "date" : "2021-01-01T00:00:00Z",
+  "device" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid"
+}, {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id",
+  "message" : {
+    "temperature" : 25,
+    "humidity" : 50
+  },
+  "date" : "2021-01-01T00:00:00Z",
+  "device" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Delete">Delete</a></h1>
+  <div class="method"><a name="deleteDataById"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}</code></pre></div>
+    <div class="method-summary">Delete data by its ID (<span class="nickname">deleteDataById</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div><div class="param">data_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The UID of the device data message default: null format: int64</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "detail" : "No content."
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteDeviceByUID"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></pre></div>
+    <div class="method-summary">Delete a device by its UID (<span class="nickname">deleteDeviceByUID</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "detail" : "No content."
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteDeviceGroupByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /members/{username}/groups/{group_name}</code></pre></div>
+    <div class="method-summary">Delete a device group by its name (<span class="nickname">deleteDeviceGroupByName</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "detail" : "No content."
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Details">Details</a></h1>
+  <div class="method"><a name="getDataById"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data/{data_id}</code></pre></div>
+    <div class="method-summary">Get data by its ID (<span class="nickname">getDataById</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div><div class="param">data_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The UID of the device data message default: null format: int64</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Data">Data</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id",
+  "message" : {
+    "temperature" : 25,
+    "humidity" : 50
+  },
+  "date" : "2021-01-01T00:00:00Z",
+  "device" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Data">Data</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getDeviceByUID"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></pre></div>
+    <div class="method-summary">Get a device by its UID (<span class="nickname">getDeviceByUID</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Device">Device</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Device">Device</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getDeviceGroupByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}</code></pre></div>
+    <div class="method-summary">Get a device group by its name (<span class="nickname">getDeviceGroupByName</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Group">Group</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Group">Group</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getMemberByUsername"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}</code></pre></div>
+    <div class="method-summary">Get a member by its username (<span class="nickname">getMemberByUsername</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Member">Member</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username",
+  "id" : 1,
+  "username" : "username",
+  "first_name" : "first_name",
+  "last_name" : "last_name",
+  "email" : "member@example.com",
+  "is_active" : true,
+  "is_staff" : false,
+  "date_joined" : "2021-01-01T00:00:00Z",
+  "devicegroup_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name_1", "https://localhost:8000/api/v1/members/username/groups/group_name_2", "https://localhost:8000/api/v1/members/username/groups/group_name_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Member">Member</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="DeviceGroups">DeviceGroups</a></h1>
+  <div class="method"><a name="createDeviceGroup"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /members/{username}/groups</code></pre></div>
+    <div class="method-summary">Create a new device group.
+A device group name must be unique for each user. For example:
+user_1 can't have two groups named group_1. But user_2 and user_1 can both have a group named group_1.
+A device group name can't contain any of the following characters: / ? &lt; &gt; \ : * | &quot; ' or spaces. (<span class="nickname">createDeviceGroup</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Group <a href="#Group">Group</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Group">Group</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#Group">Group</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#BadRequestErrorResponse">BadRequestErrorResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteDeviceGroupByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /members/{username}/groups/{group_name}</code></pre></div>
+    <div class="method-summary">Delete a device group by its name (<span class="nickname">deleteDeviceGroupByName</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "detail" : "No content."
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getDeviceGroupByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}</code></pre></div>
+    <div class="method-summary">Get a device group by its name (<span class="nickname">getDeviceGroupByName</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Group">Group</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Group">Group</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="listUserDeviceGroups"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups</code></pre></div>
+    <div class="method-summary">Get all device groups for the current user. (<span class="nickname">listUserDeviceGroups</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Group">Group</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}, {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="partialUpdateDeviceGroupByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="patch"><code class="huge"><span class="http-method">patch</span> /members/{username}/groups/{group_name}</code></pre></div>
+    <div class="method-summary">Update some of a device group's data by its name (<span class="nickname">partialUpdateDeviceGroupByName</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Group">Group</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Group">Group</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateDeviceGroupByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /members/{username}/groups/{group_name}</code></pre></div>
+    <div class="method-summary">Update a device group data by its name (<span class="nickname">updateDeviceGroupByName</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Group">Group</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Group">Group</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Devices">Devices</a></h1>
+  <div class="method"><a name="addDeviceToGroup"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /members/{username}/groups/{group_name}/devices</code></pre></div>
+    <div class="method-summary">Add a device to a device group.
+The device UID is a unique identifier for each device. And it's created automatically  by the server.
+A device name must be unique for each user. For example:
+user_1 can't have two devices named device_1. But user_2 and user_1 can both have a device named device_1.
+A device name can't contain any of the following characters: / ? &lt; &gt; \ : * | &quot; ' or spaces. (<span class="nickname">addDeviceToGroup</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Device <a href="#Device">Device</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Device">Device</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#Device">Device</a>
+    <h4 class="field-label">400</h4>
+    Bad Request
+        <a href="#BadRequestErrorResponse">BadRequestErrorResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteDeviceByUID"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></pre></div>
+    <div class="method-summary">Delete a device by its UID (<span class="nickname">deleteDeviceByUID</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "detail" : "No content."
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No Content
+        <a href="#ObjectDeletedResponse">ObjectDeletedResponse</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getDeviceByUID"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></pre></div>
+    <div class="method-summary">Get a device by its UID (<span class="nickname">getDeviceByUID</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Device">Device</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Device">Device</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="listDevicesInGroup"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices</code></pre></div>
+    <div class="method-summary">Get all devices in a device group (<span class="nickname">listDevicesInGroup</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Device">Device</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}, {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="partialUpdateDeviceByUID"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="patch"><code class="huge"><span class="http-method">patch</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></pre></div>
+    <div class="method-summary">Update some of a device's data by its UID (<span class="nickname">partialUpdateDeviceByUID</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Device">Device</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Device">Device</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateDeviceByUID"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></pre></div>
+    <div class="method-summary">Update device's data by its UID (<span class="nickname">updateDeviceByUID</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Device">Device</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Device">Device</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="List">List</a></h1>
+  <div class="method"><a name="listDeviceData"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices/{device_uid}/data</code></pre></div>
+    <div class="method-summary">Get all data sent by a device (<span class="nickname">listDeviceData</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Data">Data</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id",
+  "message" : {
+    "temperature" : 25,
+    "humidity" : 50
+  },
+  "date" : "2021-01-01T00:00:00Z",
+  "device" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid"
+}, {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id",
+  "message" : {
+    "temperature" : 25,
+    "humidity" : 50
+  },
+  "date" : "2021-01-01T00:00:00Z",
+  "device" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="listDevicesInGroup"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups/{group_name}/devices</code></pre></div>
+    <div class="method-summary">Get all devices in a device group (<span class="nickname">listDevicesInGroup</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Device">Device</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}, {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="listUserDeviceGroups"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}/groups</code></pre></div>
+    <div class="method-summary">Get all device groups for the current user. (<span class="nickname">listUserDeviceGroups</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Group">Group</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}, {
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Members">Members</a></h1>
+  <div class="method"><a name="getMemberByUsername"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /members/{username}</code></pre></div>
+    <div class="method-summary">Get a member by its username (<span class="nickname">getMemberByUsername</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Member">Member</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username",
+  "id" : 1,
+  "username" : "username",
+  "first_name" : "first_name",
+  "last_name" : "last_name",
+  "email" : "member@example.com",
+  "is_active" : true,
+  "is_staff" : false,
+  "date_joined" : "2021-01-01T00:00:00Z",
+  "devicegroup_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name_1", "https://localhost:8000/api/v1/members/username/groups/group_name_2", "https://localhost:8000/api/v1/members/username/groups/group_name_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Member">Member</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="PartialUpdate">PartialUpdate</a></h1>
+  <div class="method"><a name="partialUpdateDeviceByUID"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="patch"><code class="huge"><span class="http-method">patch</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></pre></div>
+    <div class="method-summary">Update some of a device's data by its UID (<span class="nickname">partialUpdateDeviceByUID</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Device">Device</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Device">Device</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="partialUpdateDeviceGroupByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="patch"><code class="huge"><span class="http-method">patch</span> /members/{username}/groups/{group_name}</code></pre></div>
+    <div class="method-summary">Update some of a device group's data by its name (<span class="nickname">partialUpdateDeviceGroupByName</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Group">Group</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Group">Group</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Update">Update</a></h1>
+  <div class="method"><a name="updateDeviceByUID"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /members/{username}/groups/{group_name}/devices/{device_uid}</code></pre></div>
+    <div class="method-summary">Update device's data by its UID (<span class="nickname">updateDeviceByUID</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div><div class="param">device_uid (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The unique UID of the device default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Device">Device</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid",
+  "name" : "device_name",
+  "uid" : "device_uid",
+  "date_added" : "2021-01-01T00:00:00Z",
+  "is_active" : true,
+  "group" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "data_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid/data/data_id_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Device">Device</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateDeviceGroupByName"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /members/{username}/groups/{group_name}</code></pre></div>
+    <div class="method-summary">Update a device group data by its name (<span class="nickname">updateDeviceGroupByName</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">username (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The username of the member default: null </div><div class="param">group_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The name of the device group default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Group">Group</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "url" : "https://localhost:8000/api/v1/members/username/groups/group_name",
+  "name" : "group_name",
+  "id" : 1,
+  "description" : "group_description",
+  "creation_date" : "2021-01-01T00:00:00Z",
+  "owner" : "https://localhost:8000/api/v1/members/username",
+  "device_set" : [ "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_1", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_2", "https://localhost:8000/api/v1/members/username/groups/group_name/devices/device_uid_3" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Group">Group</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized
+        <a href="#UnauthorizedErrorResponse">UnauthorizedErrorResponse</a>
+    <h4 class="field-label">404</h4>
+    Not Found
+        <a href="#ObjectNotFoundErrorResponse">ObjectNotFoundErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#BadRequestErrorResponse"><code>BadRequestErrorResponse</code> - BadRequestErrorResponse</a></li>
+    <li><a href="#Data"><code>Data</code> - Data</a></li>
+    <li><a href="#Device"><code>Device</code> - Device</a></li>
+    <li><a href="#Group"><code>Group</code> - Group</a></li>
+    <li><a href="#Member"><code>Member</code> - Member</a></li>
+    <li><a href="#ObjectDeletedResponse"><code>ObjectDeletedResponse</code> - ObjectDeletedResponse</a></li>
+    <li><a href="#ObjectNotFoundErrorResponse"><code>ObjectNotFoundErrorResponse</code> - ObjectNotFoundErrorResponse</a></li>
+    <li><a href="#UnauthorizedErrorResponse"><code>UnauthorizedErrorResponse</code> - UnauthorizedErrorResponse</a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="BadRequestErrorResponse"><code>BadRequestErrorResponse</code> - BadRequestErrorResponse</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">detail (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Data"><code>Data</code> - Data</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">url (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">URI</a></span>  format: uri</div>
+<div class="param">message (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  format: json</div>
+<div class="param">date (optional)</div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">device (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">URI</a></span>  format: uri</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Device"><code>Device</code> - Device</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">url (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">URI</a></span>  format: uri</div>
+<div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">uid (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">date_added (optional)</div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">is_active (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+<div class="param">group (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">URI</a></span>  format: uri</div>
+<div class="param">data_set (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">array[URI]</a></span>  format: uri</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Group"><code>Group</code> - Group</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">url (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">URI</a></span>  format: uri</div>
+<div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#long">Long</a></span>  format: int64</div>
+<div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">creation_date (optional)</div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">owner (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">URI</a></span>  format: uri</div>
+<div class="param">device_set (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">array[URI]</a></span>  format: uri</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Member"><code>Member</code> - Member</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">url (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">URI</a></span>  format: uri</div>
+<div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#long">Long</a></span>  format: int64</div>
+<div class="param">username (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">first_name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">last_name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">email (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  format: email</div>
+<div class="param">is_active (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+<div class="param">is_staff (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+<div class="param">date_joined (optional)</div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">devicegroup_set (optional)</div><div class="param-desc"><span class="param-type"><a href="#URI">array[URI]</a></span>  format: uri</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ObjectDeletedResponse"><code>ObjectDeletedResponse</code> - ObjectDeletedResponse</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">detail (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ObjectNotFoundErrorResponse"><code>ObjectNotFoundErrorResponse</code> - ObjectNotFoundErrorResponse</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">detail (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UnauthorizedErrorResponse"><code>UnauthorizedErrorResponse</code> - UnauthorizedErrorResponse</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">detail (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>

@@ -10,17 +10,22 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import (CreateView, DeleteView, FormView,
-                                        UpdateView)
+from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 
 from accounts.forms import MemberConfirmActionForm
 from common.views.mixins import MemberLoginRequiredMixin
 
-from .forms import (DeviceCreateForm, DeviceEditForm, DeviceGroupCreateForm,
-                    DeviceGroupEditForm, DeviceSearchForm)
+from .forms import (
+    DeviceCreateForm,
+    DeviceEditForm,
+    DeviceGroupCreateForm,
+    DeviceGroupEditForm,
+    DeviceSearchForm,
+)
 from .models import Device, DeviceData, DeviceGroup
 
 # Create your views here.
+
 
 class SearchBarMixin:
     extra_context = dict(
@@ -32,7 +37,6 @@ class SearchBarMixin:
 # Device Group Mixins
 # -----------------------------------------------------------------------
 class DeviceGroupByOwnerMixin:
-    
     def get_queryset(self) -> QuerySet[Any]:
         return super().get_queryset().filter(owner=self.request.user)
 
@@ -53,7 +57,9 @@ class DeviceBySlugMixin(DevicesByOwnerMixin):
 # -----------------------------------------------------------------------
 # Base device group views
 # -----------------------------------------------------------------------
-class BaseDeviceGroupView(MemberLoginRequiredMixin, SearchBarMixin, DeviceGroupByOwnerMixin):
+class BaseDeviceGroupView(
+    MemberLoginRequiredMixin, SearchBarMixin, DeviceGroupByOwnerMixin
+):
     model = DeviceGroup
 
     def get_form_kwargs(self) -> Dict[str, Any]:
@@ -77,6 +83,7 @@ class BaseDeviceGroupEditView(BaseDeviceGroupBySlugView):
 # -----------------------------------------------------------------------
 class DeviceGroupCreateView(BaseDeviceGroupView, CreateView):
     """Create a new device group"""
+
     form_class = DeviceGroupCreateForm
     template_name = "devices/group/create.html"
     extra_context = None
@@ -84,11 +91,12 @@ class DeviceGroupCreateView(BaseDeviceGroupView, CreateView):
 
 class DeviceGroupListView(BaseDeviceGroupView, ListView):
     """List all device groups for the current user"""
+
     context_object_name = "device_groups"
     template_name = "devices/group/list.html"
     allow_empty = True
     paginate_by = settings.PAGINATION_SIZE
-    
+
     def get_queryset(self) -> QuerySet[Any]:
         qs = super().get_queryset()
         return qs.annotate(device_count=Count("device"))
@@ -96,9 +104,10 @@ class DeviceGroupListView(BaseDeviceGroupView, ListView):
 
 class DeviceGroupDetailView(BaseDeviceGroupBySlugView, DetailView):
     """Details view for a device group"""
+
     template_name = "devices/group/details.html"
     context_object_name = "device_group"
-    
+
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["device_count"] = self.object.device_set.count()
@@ -108,6 +117,7 @@ class DeviceGroupDetailView(BaseDeviceGroupBySlugView, DetailView):
 
 class DeviceGroupEditView(BaseDeviceGroupEditView, UpdateView):
     """Device group edit view"""
+
     form_class = DeviceGroupEditForm
     template_name = "devices/group/edit.html"
     context_object_name = "device_group"
@@ -115,6 +125,7 @@ class DeviceGroupEditView(BaseDeviceGroupEditView, UpdateView):
 
 class DeviceGroupDeleteView(BaseDeviceGroupEditView, DeleteView):
     """Delete device group"""
+
     form_class = MemberConfirmActionForm
     template_name = "devices/group/delete.html"
     success_url = reverse_lazy("devices:group_list")
@@ -125,7 +136,7 @@ class DeviceGroupDeleteView(BaseDeviceGroupEditView, DeleteView):
 # Base Device views
 # -----------------------------------------------------------------------
 class BaseDeviceView(MemberLoginRequiredMixin, SearchBarMixin):
-    model = Device 
+    model = Device
 
 
 class BaseDeviceWithMemberFormView(BaseDeviceView):
@@ -153,23 +164,29 @@ class DeviceCreateView(BaseDeviceWithMemberFormView, CreateView):
 
 class DeviceListView(BaseDeviceView, DevicesByOwnerMixin, ListView):
     fields = [
-        'name', 
+        "name",
         "uid",
-        'group',
-        'owner',
-        'date_added',
-        'last_updated',
-        'is_active'
+        "group",
+        "owner",
+        "date_added",
+        "last_updated",
+        "is_active",
     ]
-    template_name = 'devices/device/list.html'
-    context_object_name = 'device_list'
+    template_name = "devices/device/list.html"
+    context_object_name = "device_list"
     paginate_by = settings.PAGINATION_SIZE
-    
+
     def get_queryset(self) -> QuerySet[Any]:
-        qs = super().get_queryset().filter(is_active=True).annotate(
-            group_name=F("group__name"),
-            owner_name=F("group__owner__username"),
-        ).order_by("group_name", "name")
+        qs = (
+            super()
+            .get_queryset()
+            .filter(is_active=True)
+            .annotate(
+                group_name=F("group__name"),
+                owner_name=F("group__owner__username"),
+            )
+            .order_by("group_name", "name")
+        )
         return qs
 
 
@@ -184,12 +201,14 @@ class DeviceDetailView(BaseDeviceBySlugDetailsView, DetailView):
 
     template_name = "devices/device/details.html"
     context_object_name = "device"
-    
+
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context_data =  super().get_context_data(**kwargs)
+        context_data = super().get_context_data(**kwargs)
         context_data["device_group"] = self.object.group
         context_data["device_owner"] = self.object.group.owner
-        context_data["device_data_list"] = self.object.devicedata_set.all().order_by("-date")[:settings.MOST_RECENT_SIZE]
+        context_data["device_data_list"] = self.object.devicedata_set.all().order_by(
+            "-date"
+        )[: settings.MOST_RECENT_SIZE]
         last_data = context_data["device_data_list"].first()
         context_data["last_update"] = last_data.date if last_data else None
         return context_data
@@ -210,16 +229,18 @@ class DeviceDataHistoryView(BaseDeviceBySlugDetailsView, ListView):
     template_name = "devices/device/data_history.html"
     context_object_name = "device_data_list"
     paginate_by = settings.PAGINATION_SIZE
-    
+
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        self.device = get_object_or_404(Device, uid=kwargs["device_uid"], group__owner=request.user)
+        self.device = get_object_or_404(
+            Device, uid=kwargs["device_uid"], group__owner=request.user
+        )
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["device"] = self.device
         return context
-    
+
     def get_queryset(self) -> QuerySet[Any]:
         return self.device.devicedata_set.all().order_by("-date")
 
@@ -234,7 +255,9 @@ class BaseDeviceDataView(MemberLoginRequiredMixin, SearchBarMixin):
 class DeviceDataByMember(BaseDeviceDataView):
     def get_queryset(self) -> QuerySet[Any]:
         # TODO active devices only
-        device_member_filter = Q(device__group__owner=self.request.user) # & Q(device__is_active=True)
+        device_member_filter = Q(
+            device__group__owner=self.request.user
+        )  # & Q(device__is_active=True)
         return super().get_queryset().filter(device_member_filter)
 
 
@@ -265,27 +288,30 @@ class DeviceSearchResultsView(MemberLoginRequiredMixin, FormView):
     context_object_name = "search_results"
     ordering = ["name"]
     template_name = "devices/search.html"
-    
-    
+
     def get_queryset(self):
         search_for = self.request.GET.get("search_for", None)
         name = self.request.GET.get("name", None)
-        
+
         if search_for is None or name is None:
             return Device.objects.none()
-        
+
         if search_for == DeviceSearchForm.SearchFor.DEVICE:
-            self.queryset = Device.objects.filter(group__owner=self.request.user, name__icontains=name)
+            self.queryset = Device.objects.filter(
+                group__owner=self.request.user, name__icontains=name
+            )
         else:
-            self.queryset = DeviceGroup.objects.filter(owner=self.request.user, name__icontains=name)
-        
+            self.queryset = DeviceGroup.objects.filter(
+                owner=self.request.user, name__icontains=name
+            )
+
         queryset = self.queryset.all()
-        
+
         ordering = self.ordering
         queryset = queryset.order_by(*ordering)
 
         return queryset
-    
+
     def paginate_queryset(self, queryset, page_size):
         paginator = self.paginator_class(
             queryset,
@@ -314,11 +340,11 @@ class DeviceSearchResultsView(MemberLoginRequiredMixin, FormView):
                 _("Invalid page (%(page_number)s): %(message)s")
                 % {"page_number": page_number, "message": str(e)}
             )
-    
+
     def get_context_object_name(self, object_list):
         """Get the name of the item to be used in the context."""
         return self.context_object_name
-    
+
     def get_context_data(self, *, object_list=None, **kwargs):
         """Get the context for this view."""
         queryset = object_list if object_list is not None else self.get_queryset()
@@ -341,7 +367,7 @@ class DeviceSearchResultsView(MemberLoginRequiredMixin, FormView):
                 "is_paginated": False,
                 "object_list": queryset,
             }
-        
+
         context[context_object_name] = queryset
         context.update(kwargs)
         return super().get_context_data(**context)
@@ -359,12 +385,12 @@ class DeviceSearchResultsView(MemberLoginRequiredMixin, FormView):
     def get(self, request, *args, **kwargs):
         form = self.get_form()
         form_context = dict(search_form=form)
-        
+
         self.object_list = self.get_queryset()
         context = self.get_context_data()
         context.update(form_context)
         return self.render_to_response(context)
-    
+
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         """Method is not allowed"""
         return HttpResponse(status=405)

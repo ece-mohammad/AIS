@@ -1,0 +1,163 @@
+[
+  {
+    "model": "devices.devicegroup",
+    "pk": 1,
+    "fields": {
+      "name": "default",
+      "description": "pegasus's default device group",
+      "creation_date": "2023-07-01T13:00:35.451Z",
+      "owner": 1
+    }
+  },
+  {
+    "model": "devices.devicegroup",
+    "pk": 2,
+    "fields": {
+      "name": "garage",
+      "description": "pegasus's garage device group",
+      "creation_date": "2023-07-01T13:36:53.038Z",
+      "owner": 1
+    }
+  },
+  {
+    "model": "devices.devicegroup",
+    "pk": 3,
+    "fields": {
+      "name": "default",
+      "description": "new jojo's default device group",
+      "creation_date": "2023-07-03T15:49:24.799Z",
+      "owner": 2
+    }
+  },
+  {
+    "model": "devices.device",
+    "pk": 1,
+    "fields": {
+      "uid": "42636824-3e98-5dba-a5b1-39bbe64f8e64",
+      "name": "first_device",
+      "is_active": true,
+      "date_added": "2023-07-07T09:54:57.358Z",
+      "group": 3
+    }
+  },
+  {
+    "model": "devices.device",
+    "pk": 2,
+    "fields": {
+      "uid": "b9c8e8bb-766b-536d-b43e-512eae944e68",
+      "name": "second_device",
+      "is_active": true,
+      "date_added": "2023-07-10T00:27:37.363Z",
+      "group": 3
+    }
+  },
+  {
+    "model": "devices.device",
+    "pk": 3,
+    "fields": {
+      "uid": "35e5207f-e513-56f5-87f0-08c26e9be2c6",
+      "name": "first_device",
+      "is_active": true,
+      "date_added": "2023-07-17T02:59:16.211Z",
+      "group": 1
+    }
+  },
+  {
+    "model": "devices.device",
+    "pk": 4,
+    "fields": {
+      "uid": "a40a2446-ff88-564a-a480-dd7b0d04b5fd",
+      "name": "third_device",
+      "is_active": true,
+      "date_added": "2023-07-19T14:30:59.611Z",
+      "group": 3
+    }
+  },
+  {
+    "model": "devices.devicedata",
+    "pk": 1,
+    "fields": {
+      "message": {
+        "battery_level": 83.27,
+        "temperaure": 32.19,
+        "r_humidity": 20.94
+      },
+      "date": "2023-07-17T16:28:29.742Z",
+      "device": 1
+    }
+  },
+  {
+    "model": "devices.devicedata",
+    "pk": 2,
+    "fields": {
+      "message": {
+        "battery_level": 71.64,
+        "temperaure": 35.09,
+        "r_humidity": 29.16
+      },
+      "date": "2023-07-17T16:29:19.819Z",
+      "device": 1
+    }
+  },
+  {
+    "model": "devices.devicedata",
+    "pk": 3,
+    "fields": {
+      "message": {
+        "battery_level": 68.12,
+        "temperaure": 37.32,
+        "r_humidity": 35.28
+      },
+      "date": "2023-07-17T16:31:00.399Z",
+      "device": 1
+    }
+  },
+  {
+    "model": "devices.devicedata",
+    "pk": 4,
+    "fields": {
+      "message": {
+        "battery_level": 93.71,
+        "status": 1
+      },
+      "date": "2023-07-17T16:31:30.124Z",
+      "device": 2
+    }
+  },
+  {
+    "model": "devices.devicedata",
+    "pk": 5,
+    "fields": {
+      "message": {
+        "battery_level": 95.81,
+        "status": 1
+      },
+      "date": "2023-07-17T16:32:57.630Z",
+      "device": 2
+    }
+  },
+  {
+    "model": "devices.devicedata",
+    "pk": 6,
+    "fields": {
+      "message": {
+        "battery_level": 90.12,
+        "status": 0
+      },
+      "date": "2023-07-17T16:33:09.100Z",
+      "device": 2
+    }
+  },
+  {
+    "model": "devices.devicedata",
+    "pk": 7,
+    "fields": {
+      "message": {
+        "battery_level": 20.61,
+        "status": 0
+      },
+      "date": "2023-07-26T20:33:09.100Z",
+      "device": 1
+    }
+  }
+]

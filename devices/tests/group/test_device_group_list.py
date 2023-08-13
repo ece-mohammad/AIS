@@ -1,12 +1,16 @@
 from test.pages.common import DeviceGroupList, LogIn
-from test.utils.helpers import client_login, client_logout, create_member, page_in_response
+from test.utils.helpers import (
+    client_login,
+    client_logout,
+    create_member,
+    page_in_response,
+)
 from typing import *
 
 from django.test import TestCase
 from django.test.client import Client
 
 from devices.models import DeviceGroup
-
 
 FIRST_MEMBER: Final[Dict[str, str]] = dict(
     username="first_member",
@@ -19,30 +23,41 @@ SECOND_MEMBER: Final[Dict[str, str]] = dict(
 )
 
 FIRST_DEVICE_GROUPS_DATA: Final[List[Dict[str, str]]] = [
-    dict(name="test_group_1", description="first member test description 1",),
-    dict(name="test_group_2", description="first member test description 2",),
-    dict(name="test_group_3", description="first member test description 3",),
-    dict(name="test_group_4", description="first member test description 4",),
+    dict(
+        name="test_group_1",
+        description="first member test description 1",
+    ),
+    dict(
+        name="test_group_2",
+        description="first member test description 2",
+    ),
+    dict(
+        name="test_group_3",
+        description="first member test description 3",
+    ),
+    dict(
+        name="test_group_4",
+        description="first member test description 4",
+    ),
 ]
+
 
 class BaseTestDeviceGroupListTestCase(TestCase):
     def setUp(self) -> None:
         self.first_member = create_member(**FIRST_MEMBER)
         self.second_member = create_member(**SECOND_MEMBER)
-        
+
         self.first_device_groups = DeviceGroup.objects.bulk_create(
             [
-                DeviceGroup(
-                    **group_data, 
-                    owner=self.first_member
-                ) for group_data in FIRST_DEVICE_GROUPS_DATA
+                DeviceGroup(**group_data, owner=self.first_member)
+                for group_data in FIRST_DEVICE_GROUPS_DATA
             ],
             ignore_conflicts=True,
         )
-        
+
         client_login(self.client, FIRST_MEMBER)
         return super().setUp()
-    
+
 
 class TestDeviceGroupListRendering(BaseTestDeviceGroupListTestCase):
     def test_device_group_list_rendering(self):
@@ -50,7 +65,7 @@ class TestDeviceGroupListRendering(BaseTestDeviceGroupListTestCase):
             DeviceGroupList.get_url(),
             follow=True,
         )
-        
+
         self.assertEqual(response.status_code, 200)
         self.assertTrue(page_in_response(DeviceGroupList, response)[0])
 
@@ -64,7 +79,7 @@ class TestDeviceGroupListView(BaseTestDeviceGroupListTestCase):
             follow=True,
         )
         next_url = f"{LogIn.get_url()}?next={DeviceGroupList.get_url()}"
-        
+
         self.assertRedirects(response, next_url, 302, 200, fetch_redirect_response=True)
 
     def test_device_group_list_member_no_groups(self):
@@ -74,7 +89,7 @@ class TestDeviceGroupListView(BaseTestDeviceGroupListTestCase):
         response = self.client.get(
             DeviceGroupList.get_url(),
         )
-        
+
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You don't have any device groups yet.")
 
@@ -85,25 +100,33 @@ class TestDeviceGroupListView(BaseTestDeviceGroupListTestCase):
         )
 
         page_device_groups = response.context.get("object_list")
-        
+
         self.assertEqual(response.status_code, 200)
         for dev_group in self.first_device_groups:
             self.assertContains(response, dev_group.name)
-        
+
         self.assertEqual(len(page_device_groups), len(self.first_device_groups))
-        for (idx, dev_group) in enumerate(page_device_groups, start=0):
+        for idx, dev_group in enumerate(page_device_groups, start=0):
             self.assertEqual(dev_group.owner, self.first_member)
-            self.assertEqual(dev_group.description, self.first_device_groups[idx].description)
+            self.assertEqual(
+                dev_group.description, self.first_device_groups[idx].description
+            )
 
     def test_device_group_display_device_count(self):
         """Test that device group list displays the number of devices in each group"""
         response = self.client.get(
             DeviceGroupList.get_url(),
         )
-        
+
         self.assertEqual(response.status_code, 200)
         for dev_group in self.first_device_groups:
-            dev_group = DeviceGroup.objects.get(name=dev_group.name, owner=self.first_member)
+            dev_group = DeviceGroup.objects.get(
+                name=dev_group.name, owner=self.first_member
+            )
             device_count = dev_group.device_set.count()
-            text = f"{device_count} device" if device_count == 1 else f"{device_count} devices"
+            text = (
+                f"{device_count} device"
+                if device_count == 1
+                else f"{device_count} devices"
+            )
             self.assertContains(response, f"({text})")

@@ -9,8 +9,11 @@ readme = "README.md"
 python = "^3.11"
 django = "^4.2.2"
 django-rest-framework = "^0.1.0"
-paho-mqtt = "^1.6.1"
 django-tastypie = "^0.14.5"
+django-environ = "^0.10.0"
+jinja2 = "^3.1.2"
+django-extensions = "^3.2.3"
+
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.14.0"
@@ -18,18 +21,31 @@ pytest = "^7.3.2"
 pytest-django = "^4.5.2"
 pytest-xdist = "^3.3.1"
 pytest-cov = "^4.1.0"
-jinja2 = "^3.1.2"
-selenium = "^4.10.0"
 coverage = "^7.2.7"
-pip = "^23.1.2"
 django-coverage-plugin = "^3.1.0"
 django-debug-toolbar = "^4.1.0"
 pytest-skip-slow = "^0.0.5"
 pytest-sugar = "^0.9.7"
+httpie = "^3.2.2"
+pre-commit = "^3.3.3"
+django-filter = "^23.2"
+
+
+[tool.poetry.group.new_features.dependencies]
+werkzeug = "^2.3.6"
+rules = "^3.3"
+django-rest-knox = "^4.2.0"
+httpie = "^3.2.2"
+paho-mqtt = "^1.6.1"
+selenium = "^4.11.2"
+uritemplate = "^4.1.1"
+pyyaml = "^6.0.1"
+pika = "^1.3.2"
 
 [tool.pytest.ini_options]
-addopts = "-x -n 4 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
-# addopts = "-x -n 4 -v"
+addopts = "-x -n 8 -v --cov --cov-report html --cov-report term-missing --cov-report lcov --cov-report xml --cov-report json"
+# addopts = "-x -n 8 -v"
+# addopts = "-x -v"
 console_output_style = "count"
 required_plugins = "pytest-django pytest-xdist pytest-cov"
 DJANGO_SETTINGS_MODULE = "sia.settings"
@@ -39,10 +55,11 @@ python_files = [
     "dashboard/tests/test_*.py",
     "mqtt/tests/test_*.py",
     "tests/utils/tests/test_*.py",
+    "api/v1/tests/test_*.py",
 ]
 
 [tool.coverage.run]
-# plugins = ["django_coverage_plugin"]
+plugins = ["django_coverage_plugin"]
 
 data_file = "coverage/.coverage"
 
@@ -51,6 +68,7 @@ branch = true
 source = [
     "accounts",
     "devices",
+    "api",
 ]
 
 omit = [
@@ -59,6 +77,8 @@ omit = [
     "*/admin.py",
     "*/apps.py",
     "*/__init__.py",
+    "api/v2/*",
+    "api/v3/*",
 ]
 
 [tool.coverage.report]
@@ -85,6 +105,8 @@ pretty_print = true
 [tool.coverage.lcov]
 output = "coverage/lcov/coverage.lcov"
 
+[tool.black]
+target_version = ["py310", "py311"]
 
 [build-system]
 requires = ["poetry-core"]

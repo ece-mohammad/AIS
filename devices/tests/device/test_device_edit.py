@@ -3,8 +3,8 @@ from test.utils.helpers import client_login, create_member, page_in_response
 from typing import *
 
 from django.test import TestCase
-from devices.models import Device, DeviceGroup
 
+from devices.models import Device, DeviceGroup
 
 FIRST_MEMBER: Final[Dict[str, str]] = dict(
     username="first_member",
@@ -38,31 +38,36 @@ TEST_DEVICE_NAME: Final[str] = "test_device"
 class BaseDeviceEditTestCase(TestCase):
     def setUp(self) -> None:
         self.first_member = create_member(**FIRST_MEMBER)
-        self.first_group = self.first_member.devicegroup_set.create(**FIRST_DEVICE_GROUP)
+        self.first_group = self.first_member.devicegroup_set.create(
+            **FIRST_DEVICE_GROUP
+        )
         self.first_device = self.create_device(FIRST_DEVICE_NAME, self.first_group)
-        
+
         self.second_member = create_member(**SECOND_MEMBER)
-        self.second_group = self.first_member.devicegroup_set.create(**SECOND_DEVICE_GROUP)
+        self.second_group = self.first_member.devicegroup_set.create(
+            **SECOND_DEVICE_GROUP
+        )
         self.second_device = self.create_device(SECOND_DEVICE_NAME, self.second_group)
-        
+
         client_login(self.client, FIRST_MEMBER)
-        
+
         return super().setUp()
 
     def create_device(self, device_name: str, device_group: DeviceGroup) -> Device:
         return device_group.device_set.create(
             name=device_name,
-            uid=Device.generate_device_uid(f"{device_group.owner.username}-{device_group.name}-{device_name}"),
+            uid=Device.generate_device_uid(
+                f"{device_group.owner.username}-{device_group.name}-{device_name}"
+            ),
         )
 
 
 class testDeviceEditRendering(BaseDeviceEditTestCase):
     def test_device_edit_rendering(self):
         response = self.client.get(
-            DeviceEdit.get_url(device_uid=self.first_device.uid),
-            follow=True
+            DeviceEdit.get_url(device_uid=self.first_device.uid), follow=True
         )
-        
+
         self.assertEqual(response.status_code, 200)
         self.assertTrue(page_in_response(DeviceEdit, response))
 
@@ -71,8 +76,7 @@ class TestDeviceEditForm(BaseDeviceEditTestCase):
     def setUp(self):
         ret = super().setUp()
         self.response = self.client.get(
-            DeviceEdit.get_url(device_uid=self.first_device.uid),
-            follow=True
+            DeviceEdit.get_url(device_uid=self.first_device.uid), follow=True
         )
         self.form = self.response.context.get("form")
         self.name_filed = self.form.fields.get("name")
@@ -93,11 +97,15 @@ class TestDeviceEditForm(BaseDeviceEditTestCase):
         self.assertEqual(self.name_filed.label, "Device name")
         self.assertEqual(self.name_filed.required, True)
         self.assertEqual(self.name_filed.initial, None)
-    
+
     def test_device_edit_form_fields_group(self):
         self.assertEqual(self.group_field.required, True)
         self.assertEqual(self.group_field.initial, None)
-        self.assertQuerySetEqual(self.group_field.queryset, self.first_member.devicegroup_set.all(), ordered=False)
+        self.assertQuerySetEqual(
+            self.group_field.queryset,
+            self.first_member.devicegroup_set.all(),
+            ordered=False,
+        )
 
     def test_device_edit_form_fields_is_active(self):
         self.assertEqual(self.is_active_field.label, "Is device enabled")
@@ -110,93 +118,110 @@ class TestDeviceEditView(BaseDeviceEditTestCase):
         """Test that the device name is required"""
         response = self.client.post(
             DeviceEdit.get_url(device_uid=self.first_device.uid),
-            data=dict(
-                name="", 
-                group=self.first_device.group.pk
-            ),
+            data=dict(name="", group=self.first_device.group.pk),
             follow=True,
         )
-        
+
         form = response.context.get("form")
         self.assertFormError(form, "name", ["This field is required."])
-        
+
     def test_device_edit_group_required(self):
         """Test that device group is required"""
         response = self.client.post(
             DeviceEdit.get_url(device_uid=self.first_device.uid),
             data=dict(
-                name=self.first_device.name, 
+                name=self.first_device.name,
             ),
             follow=True,
         )
-        
+
         form = response.context.get("form")
         self.assertFormError(form, "group", ["This field is required."])
-        
+
     def test_device_edit_changes_device_name(self):
         """Test that device edit page changes device name"""
         device_new_name = f"{self.first_device.name}_new"
         response = self.client.post(
             DeviceEdit.get_url(device_uid=self.first_device.uid),
             data=dict(
-                name=device_new_name, 
+                name=device_new_name,
                 group=self.first_device.group.pk,
                 is_active=True,
             ),
             follow=True,
         )
         self.first_device.refresh_from_db()
-        
-        self.assertRedirects(response, DeviceDetails.get_url(device_uid=self.first_device.uid), 302, 200, fetch_redirect_response=True)
+
+        self.assertRedirects(
+            response,
+            DeviceDetails.get_url(device_uid=self.first_device.uid),
+            302,
+            200,
+            fetch_redirect_response=True,
+        )
         self.assertEqual(self.first_device.name, device_new_name)
         self.assertEqual(self.first_device.group, self.first_group)
         self.assertEqual(self.first_device.is_active, True)
-        
+
     def test_device_edit_changes_device_group(self):
         """Test that device edit page changes device group"""
         response = self.client.post(
             DeviceEdit.get_url(device_uid=self.first_device.uid),
             data=dict(
-                name=self.first_device.name, 
+                name=self.first_device.name,
                 group=self.second_group.pk,
                 is_active=True,
             ),
             follow=True,
         )
         self.first_device.refresh_from_db()
-        
-        self.assertRedirects(response, DeviceDetails.get_url(device_uid=self.first_device.uid), 302, 200, fetch_redirect_response=True)
+
+        self.assertRedirects(
+            response,
+            DeviceDetails.get_url(device_uid=self.first_device.uid),
+            302,
+            200,
+            fetch_redirect_response=True,
+        )
         self.assertEqual(self.first_device.name, self.first_device.name)
         self.assertEqual(self.first_device.group, self.second_group)
         self.assertEqual(self.first_device.is_active, True)
-        
+
     def test_device_edit_no_changes(self):
         """Test that device edit page doesn't save if no changes were made"""
         response = self.client.get(
             DeviceEdit.get_url(device_uid=self.first_device.uid),
         )
-        
+
         form_data = response.context.get("form").initial
-        
+
         response = self.client.post(
             DeviceEdit.get_url(device_uid=self.first_device.uid),
             data=form_data,
             follow=True,
         )
-        
-        self.assertRedirects(response, DeviceDetails.get_url(device_uid=self.first_device.uid), 302, 200, fetch_redirect_response=True)
-    
+
+        self.assertRedirects(
+            response,
+            DeviceDetails.get_url(device_uid=self.first_device.uid),
+            302,
+            200,
+            fetch_redirect_response=True,
+        )
+
     def test_device_edit_another_member_device_404(self):
         """Test device edit returns 404 if device belongs to another member"""
         new_group = self.second_member.devicegroup_set.create(name="new device group")
         new_device = new_group.device_set.create(
             name="new device",
-            uid=Device.generate_device_uid(f"{self.second_member.username}-{new_group.name}-new device"),
+            uid=Device.generate_device_uid(
+                f"{self.second_member.username}-{new_group.name}-new device"
+            ),
             group=new_group,
         )
-        
+
         response = self.client.get(
             DeviceEdit.get_url(device_uid=new_device.uid),
         )
-        
+
         self.assertEqual(response.status_code, 404)

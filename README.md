@@ -47,14 +47,16 @@ SIA is not a home automation system!!! There's an awesome open source home autom
   - [x] device edit
   - [x] device delete
 
-- [ ] DeviceData
-  - [ ] list device data history
-    - [ ] only for logged in users
-    - [ ] only for device's owner
+- [x] DeviceData
+  - [x] list device data history
 
+- [x] Search
+  - [x] Search device groups
+  - [x] Search devices
+  - [x] Search bar
+
+- [x] API
 - [ ] Dashboard
-- [ ] API
-- [ ] RESTful
 - [ ] Control
 - [ ] MQTT
 - [ ] Websocket

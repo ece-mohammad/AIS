@@ -1,26 +1,35 @@
 from typing import *
 
 from django.contrib.auth import logout
-from django.contrib.auth.views import (LoginView, LogoutView,
-                                        PasswordChangeDoneView,
-                                        PasswordChangeView,
-                                        PasswordResetCompleteView,
-                                        PasswordResetConfirmView,
-                                        PasswordResetDoneView,
-                                        PasswordResetView)
+from django.contrib.auth.views import (
+    LoginView,
+    LogoutView,
+    PasswordChangeDoneView,
+    PasswordChangeView,
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
+)
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.http.response import HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
-from common.views.mixins import (AnonymousUserRequiredMixin,
-                                MemberLoginRequiredMixin,
-                                OwnerMemberRequiredMixin)
+from common.views.mixins import (
+    AnonymousUserRequiredMixin,
+    MemberLoginRequiredMixin,
+    OwnerMemberRequiredMixin,
+)
 
-from .forms import (MemberConfirmActionForm, MemberEditForm,
-                    MemberPasswordChangeForm, MemberPasswordResetConfirmForm,
-                    MemberSignUpForm)
+from .forms import (
+    MemberConfirmActionForm,
+    MemberEditForm,
+    MemberPasswordChangeForm,
+    MemberPasswordResetConfirmForm,
+    MemberSignUpForm,
+)
 from .models import Member
 
 # Create your views here.
@@ -51,6 +60,7 @@ class MemberProfileEditView(MemberProfileAccessView):
 # -----------------------------------------------------------------------------
 class MemberSignUpView(AnonymousUserRequiredMixin, CreateView):
     """User signup view"""
+
     model = Member
     form_class = MemberSignUpForm
     template_name = "accounts/registration/signup.html"
@@ -60,33 +70,35 @@ class MemberSignUpView(AnonymousUserRequiredMixin, CreateView):
 
 class MemberDeactivateView(MemberProfileEditView, UpdateView):
     """Deactivate member account"""
+
     form_class = MemberConfirmActionForm
     template_name = "accounts/registration/member_deactivate_confirm.html"
     success_url = reverse_lazy("homepage")
-    
+
     def form_valid(self, form: Any) -> HttpResponse:
-        """Override form_valid to deactivate user account, 
+        """Override form_valid to deactivate user account,
         as MemberConfirmAction uses NoSaveMixin to not save the form
-        
-        Note: manually logout current user, instead of redirecting to logout page 
+
+        Note: manually logout current user, instead of redirecting to logout page
         because django will deprecate using GET method for logout, and it
         looks better that way
         """
         # deactivate current user
         self.request.user.is_active = False
         self.request.user.save()
-        
+
         # logout current user
         logout(self.request)
-        
+
         return super().form_valid(form)
-    
+
     def get_success_url(self) -> str:
         return self.success_url
 
 
 class MemberDeleteView(MemberProfileEditView, DeleteView):
     """Deactivate member account"""
+
     form_class = MemberConfirmActionForm
     template_name = "accounts/registration/member_delete_confirm.html"
     success_url = reverse_lazy("homepage")
@@ -102,6 +114,7 @@ class MemberEditView(MemberProfileAccessView, UpdateView):
 # -----------------------------------------------------------------------------
 class MemberLoginView(LoginView):
     """User login view"""
+
     template_name = "accounts/registration/login.html"
     redirect_authenticated_user = True
     success_url = reverse_lazy("homepage")
@@ -109,6 +122,7 @@ class MemberLoginView(LoginView):
 
 class MemberLogoutView(LogoutView):
     """User logout view"""
+
     template_name = "accounts/registration/logout.html"
     next_page = reverse_lazy("homepage")
 
@@ -123,6 +137,7 @@ class MemberLogoutView(LogoutView):
 # -----------------------------------------------------------------------------
 class MemberProfileView(MemberLoginRequiredMixin, DetailView):
     """User profile view"""
+
     model = Member
     template_name = "accounts/profile.html"
     slug_field = "username"
@@ -132,8 +147,13 @@ class MemberProfileView(MemberLoginRequiredMixin, DetailView):
 
 class MemberOwnProfileView(MemberLoginRequiredMixin, View):
     """User's own profile"""
+
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        return HttpResponseRedirect(reverse_lazy("accounts:profile", kwargs={"user_name": request.user.username}))
+        return HttpResponseRedirect(
+            reverse_lazy(
+                "accounts:profile", kwargs={"user_name": request.user.username}
+            )
+        )
 
 
 # -----------------------------------------------------------------------------
@@ -146,6 +166,7 @@ class MemberOwnProfileView(MemberLoginRequiredMixin, View):
 # -----------------------------------------------------------------------------
 class MemberPasswordResetView(AnonymousUserRequiredMixin, PasswordResetView):
     """User password reset view"""
+
     template_name = "accounts/registration/password_reset_form.html"
     success_url = reverse_lazy("accounts:password_reset_done")
     redirect_url = reverse_lazy("homepage")
@@ -155,19 +176,26 @@ class MemberPasswordResetView(AnonymousUserRequiredMixin, PasswordResetView):
 
 class MemberPasswordResetDoneView(AnonymousUserRequiredMixin, PasswordResetDoneView):
     """User password reset done view"""
+
     template_name = "accounts/registration/password_reset_done.html"
 
 
-class MemberPasswordResetConfirmView(AnonymousUserRequiredMixin, PasswordResetConfirmView):
+class MemberPasswordResetConfirmView(
+    AnonymousUserRequiredMixin, PasswordResetConfirmView
+):
     """User password reset confirm view"""
+
     form_class = MemberPasswordResetConfirmForm
     template_name = "accounts/registration/password_reset_confirm.html"
     success_url = reverse_lazy("accounts:password_reset_complete")
     title = "Password Reset Confirm"
 
 
-class MemberPasswordResetCompleteView(AnonymousUserRequiredMixin, PasswordResetCompleteView):
+class MemberPasswordResetCompleteView(
+    AnonymousUserRequiredMixin, PasswordResetCompleteView
+):
     """User password reset complete view"""
+
     template_name = "accounts/registration/password_reset_complete.html"
     redirect_url = reverse_lazy("homepage")
 
@@ -177,6 +205,7 @@ class MemberPasswordResetCompleteView(AnonymousUserRequiredMixin, PasswordResetC
 # -----------------------------------------------------------------------------
 class MemberPasswordChangeView(PasswordChangeView):
     """User password change view"""
+
     form_class = MemberPasswordChangeForm
     template_name = "accounts/registration/password_change_form.html"
     login_url = reverse_lazy("accounts:login")
@@ -185,6 +214,6 @@ class MemberPasswordChangeView(PasswordChangeView):
 
 class MemberPasswordChangeDoneView(PasswordChangeDoneView):
     """User password change done view"""
+
     template_name = "accounts/registration/password_change_done.html"
     login_url = reverse_lazy("accounts:login")
-

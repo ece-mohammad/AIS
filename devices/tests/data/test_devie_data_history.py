@@ -61,41 +61,48 @@ DATA_HISTORY_PAGE_COUNT: Final[int] = settings.PAGINATION_SIZE
 
 class BaseDeviceDataHistoryTestCase(TestCase):
     """Base test case for device data details views"""
-    
+
     def setUp(self) -> None:
         ret = super().setUp()
-        
+
         self.first_member = create_member(**FIRST_MEMBER)
         for group in FIRST_MEMBER_GROUPS:
             group.owner = self.first_member
             group.save()
-            
+
         for index, device in enumerate(FIRST_MEMBER_DEVICES):
             device.group = FIRST_MEMBER_GROUPS[0 if index < 2 else 1]
-            device.uid = Device.generate_device_uid(f"{self.first_member.username}-{device.group.name}-{device.name}")
+            device.uid = Device.generate_device_uid(
+                f"{self.first_member.username}-{device.group.name}-{device.name}"
+            )
             device.save()
-        
-        self.first_device = Device.objects.filter(group__owner=self.first_member).first()
+
+        self.first_device = Device.objects.filter(
+            group__owner=self.first_member
+        ).first()
         for index, data in enumerate(FIRST_DEVICE_DATA):
             data.device = self.first_device
             data.date += timedelta(minutes=index + 1)
             data.save()
-        
-        
+
         self.second_member = create_member(**SECOND_MEMBER)
         for group in SECOND_MEMBER_GROUPS:
             group.owner = self.second_member
             group.save()
-        
+
         for index, device in enumerate(SECOND_MEMBER_DEVICES):
             device.group = SECOND_MEMBER_GROUPS[0 if index < 2 else 1]
-            device.uid = Device.generate_device_uid(f"{self.second_member.username}-{device.group.name}-{device.name}")
+            device.uid = Device.generate_device_uid(
+                f"{self.second_member.username}-{device.group.name}-{device.name}"
+            )
             device.save()
-        
-        self.second_device = Device.objects.filter(group__owner=self.second_member).first()
+
+        self.second_device = Device.objects.filter(
+            group__owner=self.second_member
+        ).first()
 
         client_login(self.client, FIRST_MEMBER)
-        
+
         return ret
 
 
@@ -105,10 +112,10 @@ class TestDeviceDataHistoryView(BaseDeviceDataHistoryTestCase):
             DeviceDataHistory.get_url(device_uid=self.first_device.uid),
             follow=True,
         )
-        
+
         self.assertEqual(response.status_code, 200)
         self.assertTrue(page_in_response(DeviceDataHistory, response)[0])
-        
+
     def test_device_data_history_show_device_data(self):
         response = self.client.get(
             DeviceDataHistory.get_url(device_uid=self.first_device.uid),
@@ -119,7 +126,7 @@ class TestDeviceDataHistoryView(BaseDeviceDataHistoryTestCase):
         for data in FIRST_DEVICE_DATA[::-1][:data_count]:
             self.assertContains(response, data.message)
             self.assertContains(response, data.date.strftime("%Y/%m/%d, %H:%M:%S"))
-        
+
     def test_device_data_history_show_message_when_no_data(self):
         client = Client()
         client_login(client, SECOND_MEMBER)
@@ -127,32 +134,40 @@ class TestDeviceDataHistoryView(BaseDeviceDataHistoryTestCase):
             DeviceDataHistory.get_url(device_uid=self.second_device.uid),
             follow=True,
         )
-        
+
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "The device has not sent any data yet.")
-    
+
     def test_device_data_history_pagination(self):
         DeviceData.objects.bulk_create(
             [
                 DeviceData(
-                    device=self.first_device, 
+                    device=self.first_device,
                     message=f"test_message_{index}",
                     date=FIRST_DEVICE_DATA[0].date + timedelta(minutes=index),
-                ) 
+                )
                 for index in range(11, DATA_HISTORY_PAGE_COUNT + 1)
             ]
         )
-        
-        device_data = DeviceData.objects.filter(device=self.first_device).order_by("-date")
+
+        device_data = DeviceData.objects.filter(device=self.first_device).order_by(
+            "-date"
+        )
         history_page_count = (len(device_data) // DATA_HISTORY_PAGE_COUNT) + 1
-        
+
         for page_index in range(history_page_count):
-            page_data = device_data[page_index * DATA_HISTORY_PAGE_COUNT: (page_index + 1) * DATA_HISTORY_PAGE_COUNT]
+            page_data = device_data[
+                page_index
+                * DATA_HISTORY_PAGE_COUNT : (page_index + 1)
+                * DATA_HISTORY_PAGE_COUNT
+            ]
             response = self.client.get(
-                DeviceDataHistory.get_url(device_uid=self.first_device.uid, page=page_index + 1),
+                DeviceDataHistory.get_url(
+                    device_uid=self.first_device.uid, page=page_index + 1
+                ),
                 follow=True,
             )
-            
+
             self.assertEqual(response.status_code, 200)
             for data in page_data:
                 self.assertContains(response, data.message)
@@ -163,5 +178,5 @@ class TestDeviceDataHistoryView(BaseDeviceDataHistoryTestCase):
             DeviceDataHistory.get_url(device_uid=self.second_device.uid),
             follow=True,
         )
-        
+
         self.assertEqual(response.status_code, 404)
